@@ -19,6 +19,8 @@ function App() {
       break;
   }
 
+  console.log("using api: " + API_BASE_URL);
+
   let [test, setTest] = useState(null);
 
   useEffect(()=>{
