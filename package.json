@@ -4,7 +4,7 @@
   "description": "This project will translate a code snippet between a variety of programming languages with the assistance of GPT-3.",
   "main": "backend/server.js",
   "scripts": {
-    "start": "node backend/server.js --env-file='backend/.env'",
+    "start": "node backend/server.js",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
