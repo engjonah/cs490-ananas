@@ -4,15 +4,19 @@ import './App.css';
 
 function App() {
   const env = process.env.STAGE;
+  console.log(env);
   let API_BASE_URL = 'http://localhost:3000';
   switch (env) {
     case 'staging':
+      console.log('switch to staging');
       API_BASE_URL = 'https://cs490-ananas-beta-1b968f276a45.herokuapp.com';
       break;
     case 'prod':
+      console.log('switch to prod');
       API_BASE_URL = 'https://cs490-ananas-2b50a43be02e.herokuapp.com';
       break; 
     case 'review':
+      console.log('switch to review');
       API_BASE_URL = 'https://' + process.env.HEROKU_APP_NAME + '.herokuapp.com';
       break;
     default:
