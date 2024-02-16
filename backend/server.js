@@ -13,6 +13,9 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
+const testRouter = require('./routes/test');  
+app.use('/test', testRouter);
+
 const path = require("path");
 
 if (process.env.NODE_ENV === "production") {
