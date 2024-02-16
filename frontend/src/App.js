@@ -3,9 +3,21 @@ import logo from './logo.svg';
 import './App.css';
 
 function App() {
-  const API_BASE_URL = process.env.NODE_ENV === 'production' ?
-    'https://cs490-ananas-2b50a43be02e.herokuapp.com' :
-    'http://localhost:3000';
+  const env = process.env.STAGE;
+  let API_BASE_URL = 'http://localhost:3000';
+  switch (env) {
+    case 'staging':
+      API_BASE_URL = 'https://cs490-ananas-beta-1b968f276a45.herokuapp.com';
+      break;
+    case 'prod':
+      API_BASE_URL = 'https://cs490-ananas-2b50a43be02e.herokuapp.com';
+      break; 
+    case 'review':
+      API_BASE_URL = 'https://' + process.env.HEROKU_APP_NAME + '.herokuapp.com';
+      break;
+    default:
+      break;
+  }
 
   let [test, setTest] = useState(null);
 
