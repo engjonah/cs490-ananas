@@ -15,7 +15,7 @@ function App() {
       .then(res=>{
         setTest(res)
       })
-  });
+  },[]);
   return (
     <div className="App">
       <header className="App-header">
