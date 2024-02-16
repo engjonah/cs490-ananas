@@ -23,6 +23,7 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
+        <p>Backend Status:</p>
         {!test && <p>API not working</p>}
         {test && test.map((item, index) => (<p>{item.test}</p>))}
         <a
