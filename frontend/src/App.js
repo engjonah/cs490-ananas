@@ -7,8 +7,6 @@ function App() {
     window.location.origin:
     'http://localhost:3000';
 
-  console.log("using api: " + API_BASE_URL);
-
   let [test, setTest] = useState(null);
 
   useEffect(()=>{
