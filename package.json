@@ -1,0 +1,20 @@
+{
+  "name": "cs490-ananas",
+  "version": "1.0.0",
+  "description": "This project will translate a code snippet between a variety of programming languages with the assistance of GPT-3.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/engjonah/cs490-ananas.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/engjonah/cs490-ananas/issues"
+  },
+  "homepage": "https://github.com/engjonah/cs490-ananas#readme"
+}
