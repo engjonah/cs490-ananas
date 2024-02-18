@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
+import BackendStatus from './components/BackendStatus';
 import './App.css';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         setTest(res)
       })
   },[]);
+  
   return (
     <div className="App">
       <header className="App-header">
@@ -23,9 +25,9 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <p>Backend Status:</p>
-        {!test && <p>API not working</p>}
-        {test && test.map((item, index) => (<p>{item.test}</p>))}
+
+        <BackendStatus status={test}/>
+        
         <a
           className="App-link"
           href="https://reactjs.org"
