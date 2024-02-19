@@ -1,39 +1,21 @@
+const app = require('./app');
 const express = require('express')
-const cors = require('cors');
-
 require('dotenv').config();
-
-const connectDB = require("./db/conn");
-
-const app = express()
-const port = process.env.PORT || 3000;
-
-connectDB();
-
-app.use(cors());
-app.use(express.json());
-
-const testRouter = require('./routes/test');  
-app.use('/test', testRouter);
 
 const path = require("path");
 
+//link frontend on heroku
 if (process.env.NODE_ENV === "production") {
 
-    app.use(express.static("frontend/build"));
+  app.use(express.static("frontend/build"));
 
-    app.get("*", (req, res) => {
-
+  app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
-
-   });
-
+  });
 }
 
-/* app.get('/', (req, res) => {
-  res.send('Hello World!')
-}) */
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
-    console.log(`Server is running on port: ${port}`);
+  console.log(`Server is running on port: ${port}`);
 });
