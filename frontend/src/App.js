@@ -16,7 +16,7 @@ function App() {
       .then(res=>{
         setTest(res)
       })
-  },[]);
+  },[API_BASE_URL]);
   
   return (
     <div className="App">
