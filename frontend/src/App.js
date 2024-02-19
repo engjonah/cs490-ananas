@@ -11,7 +11,7 @@ function App() {
   let [test, setTest] = useState(null);
 
   useEffect(()=>{
-    fetch(`${API_BASE_URL}/test`)
+    fetch(`${API_BASE_URL}/api/test`)
       .then(res=>res.json())
       .then(res=>{
         setTest(res)
