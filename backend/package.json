@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --coverage --verbose --detectOpenHandles"
+    "test": "./node_modules/.bin/jest --coverage --verbose --detectOpenHandles"
   },
   "keywords": [],
   "author": "",
