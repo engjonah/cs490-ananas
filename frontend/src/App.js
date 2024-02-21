@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import BackendStatus from './components/BackendStatus';
+import CodeSubmissionBox from './components/CodeSubmissionBox';
 import './App.css';
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
               </Container>
               <Container maxWidth="sm" style={{"backgroundColor":"green", "display": "inline-block", "minHeight": "50vh"}}>
                 Code Input placeholder  
+                <CodeSubmissionBox />
               </Container>
             </Grid>
             <Grid xs={6}>
