@@ -31,7 +31,7 @@ function App() {
               <Container maxWidth="sm" style={{"backgroundColor":"blue", "display": "inline-block", "minHeight": "10vh"}}>
                 Code upload placeholder
               </Container>
-              <Container maxWidth="sm" style={{"backgroundColor":"green", "display": "inline-block", "minHeight": "50vh", "borderRadius": '5%'}}>
+              <Container maxWidth="sm" style={{"backgroundColor":"green", "display": "inline-block", "minHeight": "50vh"}}>
                 Code Input placeholder  
               </Container>
             </Grid>
