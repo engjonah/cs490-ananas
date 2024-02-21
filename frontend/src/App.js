@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Unstable_Grid2';
 import BackendStatus from './components/BackendStatus';
 import './App.css';
 
@@ -20,23 +21,29 @@ function App() {
   
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-
+      <div className="App-header">
+        <div id='navbar'>Navbar Placeholder</div>
+      </div>
+      <div className="div">
+        <Container id="translation" maxWidth="lg" style={{"backgroundColor":"gray"}}>
+          <Grid container spacing={2}>
+            <Grid xs={6}>
+              <Container maxWidth="sm" style={{"backgroundColor":"blue", "display": "inline-block", "minHeight": "10vh"}}>
+                Code upload placeholder
+              </Container>
+              <Container maxWidth="sm" style={{"backgroundColor":"green", "display": "inline-block", "minHeight": "50vh", "borderRadius": '5%'}}>
+                Code Input placeholder  
+              </Container>
+            </Grid>
+            <Grid xs={6}>
+              <Container maxWidth="sm" style={{"backgroundColor":"red", "display": "inline-block", "minHeight": "60vh"}}>
+                Code Output placeholder
+              </Container>
+            </Grid>
+          </Grid>
+        </Container>
         <BackendStatus status={test}/>
-        
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      </div>
     </div>
   );
 }
