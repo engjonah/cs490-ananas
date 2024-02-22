@@ -13,23 +13,19 @@ const StarsWrapper = styled('div')({
     display: 'flex',
     justifyContent: 'flex-end', // Align stars to the right
     alignItems: 'flex-start', // Align stars to the top
-    marginTop: '-20px', // Adjust margin to position stars
-    paddingRight: '10px', // Add some padding to align with the title
+    marginTop: '-50px',
+    marginBottom: '-10px', // Adjust margin to position stars
+    paddingRight: '4px', // Add some padding to align with the title
   });
   
   
 // Styled component for rounded rectangle outline
-const StyledRatingWrapper = styled('div')({
-  display: 'inline-block',
-  borderRadius: '8px', // Adjust border radius as needed
-  border: '2px solid #ccc',
-  padding: '10px',
-});
+
 
 function FeedbackForm(props) {
   const [open, setOpen] = useState(false);
   const [comment, setComment] = useState('');
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(5);
 
   const handleOpen = () => {
     setOpen(true);
@@ -37,6 +33,10 @@ function FeedbackForm(props) {
 
   const handleClose = () => {
     setOpen(false);
+    
+    setComment('');
+    setRating(5);
+    
   };
 
   const handleCommentChange = (event) => {
@@ -56,22 +56,22 @@ function FeedbackForm(props) {
 
   return (
     <div>
-      <Button variant="contained" color="primary" onClick={handleOpen}>
+      <Button variant="contained" style={{ backgroundColor: '#CACACA', color: 'black'}} onClick={handleOpen}>
         {props.buttonLabel}
       </Button>
-      <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+      <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth ="md">
         <DialogTitle
           style={{
-            fontSize: '24px',
+            fontSize: '30px',
             fontWeight: 'bold',
-            backgroundColor: '#D9D9D9', // Grey background color
-            borderRadius: '8px', // Rounded corners
-            padding: '20px', // Increase padding
+            backgroundColor: '#CACACA', // Grey background color
+            borderRadius: '8px'// Rounded corners
+             // Increase padding
           }}
         >
-          Feedback Form
+          Rate This Translation
           <StarsWrapper> {/* Align stars to the top right */}
-            <StyledRatingWrapper> {/* Rounded rectangle outline */}
+            
               <Rating
                 name="feedback-rating"
                 value={rating}
@@ -80,26 +80,34 @@ function FeedbackForm(props) {
                 }}
                 size="large" // Make stars bigger
               />
-            </StyledRatingWrapper>
+            
           </StarsWrapper>
         </DialogTitle>
-        <DialogContent>
+        <DialogContent
+        style={{
+            backgroundColor: '#CACACA'
+        }}
+            >
           <TextField
             autoFocus
-            margin="dense"
-            label="Comments"
+            margin="normal"
+            label="Leave a review"
             type="text"
             fullWidth
             value={comment}
             onChange={handleCommentChange}
-            style={{ fontSize: '18px' }} 
+            style={{ fontSize: '2px' }} 
+            multiline='true'
+            
+            
           />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
+        <DialogActions
+        style={{ backgroundColor: '#CACACA'}}>
+          <Button onClick={handleClose} style={{ color: 'black'}}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit} color="primary">
+          <Button onClick={handleSubmit} style={{ color: 'black'}}>
             Submit
           </Button>
         </DialogActions>

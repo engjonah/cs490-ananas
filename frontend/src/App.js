@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import BackendStatus from './components/BackendStatus';
 import Feedback from './components/Feedback';
+import RateDialog from './components/sample';
 import './App.css';
 
 function App() {
@@ -26,7 +27,7 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <Feedback />
+        <Feedback/>
 
         <BackendStatus status={test}/>
         
