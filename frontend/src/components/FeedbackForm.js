@@ -57,14 +57,14 @@ function FeedbackForm(props) {
   return (
     <div>
       <Button variant="contained" style={{ backgroundColor: '#CACACA', color: 'black'}} onClick={handleOpen}>
-        {props.buttonLabel}
+        Feedback
       </Button>
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth ="md">
         <DialogTitle
           style={{
             fontSize: '30px',
-            fontWeight: 'bold',
-            backgroundColor: '#CACACA', // Grey background color
+            fontWeight: 'normal',
+            backgroundColor: '#d3d3d3', // Grey background color
             borderRadius: '8px'// Rounded corners
              // Increase padding
           }}
@@ -85,12 +85,12 @@ function FeedbackForm(props) {
         </DialogTitle>
         <DialogContent
         style={{
-            backgroundColor: '#CACACA'
+            backgroundColor: '#d3d3d3'
         }}
             >
           <TextField
             autoFocus
-            margin="normal"
+            margin="dense"
             label="Leave a review"
             type="text"
             fullWidth
@@ -103,7 +103,7 @@ function FeedbackForm(props) {
           />
         </DialogContent>
         <DialogActions
-        style={{ backgroundColor: '#CACACA'}}>
+        style={{ backgroundColor: '#d3d3d3'}}>
           <Button onClick={handleClose} style={{ color: 'black'}}>
             Cancel
           </Button>

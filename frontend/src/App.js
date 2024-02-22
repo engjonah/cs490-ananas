@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import BackendStatus from './components/BackendStatus';
-import Feedback from './components/Feedback';
-import RateDialog from './components/sample';
+
 import './App.css';
+import FeedbackForm from './components/FeedbackForm';
 
 function App() {
   const API_BASE_URL = process.env.NODE_ENV === 'production' ?
@@ -27,8 +27,7 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <Feedback/>
-
+        <FeedbackForm/>
         <BackendStatus status={test}/>
         
         <a
