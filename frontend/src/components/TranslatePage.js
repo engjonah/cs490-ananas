@@ -4,6 +4,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import BackendStatus from './BackendStatus';
 import CodeSubmissionBox from './CodeSubmissionBox';
 import './App.css';
+import FeedbackForm from './FeedbackForm';
 
 function TranslatePage() {
   const API_BASE_URL = process.env.NODE_ENV === 'production' ?
@@ -44,6 +45,7 @@ function TranslatePage() {
             </Grid>
           </Grid>
         </Container>
+        <FeedbackForm/>
         <BackendStatus status={test}/>
       </div>
     </div>
