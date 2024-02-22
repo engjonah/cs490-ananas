@@ -12,6 +12,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "firebase": "^10.8.0",
     "mongoose": "^8.0.0"
   },
   "repository": {
@@ -24,5 +25,8 @@
   "bugs": {
     "url": "https://github.com/engjonah/cs490-ananas/issues"
   },
-  "homepage": "https://github.com/engjonah/cs490-ananas#readme"
+  "homepage": "https://github.com/engjonah/cs490-ananas#readme",
+  "devDependencies": {
+    "react-router-dom": "^6.22.1"
+  }
 }

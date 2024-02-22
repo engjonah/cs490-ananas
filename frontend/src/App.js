@@ -3,6 +3,8 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import BackendStatus from './components/BackendStatus';
 import CodeSubmissionBox from './components/CodeSubmissionBox';
+import SignUp from './components/Sign-up';
+import Button from '@mui/material/Button';
 import './App.css';
 
 function App() {
@@ -45,6 +47,7 @@ function App() {
           </Grid>
         </Container>
         <BackendStatus status={test}/>
+        <SignUp/>
       </div>
     </div>
   );
