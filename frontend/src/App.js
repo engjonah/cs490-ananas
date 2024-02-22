@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import MainApp from './components/MainApp';
+import TranslatePage from './components/TranslatePage';
 import HomeScreen from './components/HomeScreen';
 import Navbar from './components/Navbar';
 
@@ -11,7 +11,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<HomeScreen />} />
-          <Route path="/main" element={<MainApp />} />
+          <Route path="/translate" element={<TranslatePage />} />
         </Routes>
       </div>
     </Router>

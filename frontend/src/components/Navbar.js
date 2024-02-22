@@ -9,7 +9,7 @@ function Navbar() {
           <Link to="/">Home</Link>
         </li>
         <li>
-          <Link to="/main">Main App</Link>
+          <Link to="/translate">Translate</Link>
         </li>
       </ul>
     </nav>
