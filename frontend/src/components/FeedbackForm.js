@@ -10,33 +10,27 @@ import { styled } from '@mui/system';
 
 // Styled component for stars wrapper
 const StarsWrapper = styled('div')({
-    display: 'flex',
-    justifyContent: 'flex-end', // Align stars to the right
-    alignItems: 'flex-start', // Align stars to the top
-    marginTop: '-40px',
-    marginBottom: '-10px', // Adjust margin to position stars
-    paddingRight: '4px', // Add some padding to align with the title
-  });
+  display: 'flex',
+  justifyContent: 'flex-end', // Align stars to the right
+  alignItems: 'flex-start', // Align stars to the top
+  marginTop: '-40px',
+  marginBottom: '-10px', // Adjust margin to position stars
+  paddingRight: '4px', // Add some padding to align with the title
+});
   
-  
-// Styled component for rounded rectangle outline
-
-
 function FeedbackForm(props) {
   const [open, setOpen] = useState(false);
   const [comment, setComment] = useState('');
   const [rating, setRating] = useState(5);
 
   const handleOpen = () => {
+    setComment('');
+    setRating(5);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    
-    setComment('');
-    setRating(5);
-    
   };
 
   const handleCommentChange = (event) => {
@@ -59,56 +53,51 @@ function FeedbackForm(props) {
       <Button variant="contained" style={{ backgroundColor: '#CACACA', color: 'black'}} onClick={handleOpen}>
         Feedback
       </Button>
-      <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth ="md">
+      <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth={true}>
         <DialogTitle
           style={{
             fontSize: '30px',
             fontWeight: 'normal',
             backgroundColor: '#d3d3d3', // Grey background color
             borderRadius: '8px',
-            
           }}
         >
           Rate This Translation
           <StarsWrapper> {/* Align stars to the top right */}
-            
-              <Rating
-                name="feedback-rating"
-                value={rating}
-                onChange={(event, newValue) => {
-                  handleRatingChange(newValue);
-                }}
-                size="large" // Make stars bigger
-              />
-            
+            <Rating
+              name="feedback-rating"
+              value={rating}
+              onChange={(event, newValue) => {
+                handleRatingChange(newValue);
+              }}
+              size="large" // Make stars bigger
+            />
           </StarsWrapper>
         </DialogTitle>
         <DialogContent
-        style={{
+          style={{
             backgroundColor: '#d3d3d3',
             paddingTop: '10px'
-        }}
-            >
+          }}
+        >
           <TextField
             autoFocus
             margin="normal"
             label="Leave a review"
             type="text"
-            fullWidth
+            fullWidth={true}
             value={comment}
             onChange={handleCommentChange}
             style={{ fontSize: '2px' }} 
-            multiline='true'
-            
-            
+            multiline={true}
           />
         </DialogContent>
         <DialogActions
         style={{ backgroundColor: '#d3d3d3'}}>
-          <Button onClick={handleClose} style={{ color: 'black'}}>
+          <Button onClick={handleClose} style={{color: 'black'}}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit} style={{ color: 'black'}}>
+          <Button onClick={handleSubmit} style={{color: 'black'}}>
             Submit
           </Button>
         </DialogActions>
