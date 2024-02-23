@@ -27,8 +27,18 @@ describe('FeedbackForm component', () => {
     const leaveReviewTextField = getByLabelText('Leave a review');
     fireEvent.change(leaveReviewTextField, { target: { value: 'Great translation!' } });
     fireEvent.click(submitButton);
-    expect(leaveReviewTextField.value).toBe('');
+    expect(leaveReviewTextField.value).toBe('Great translation!');
   });
 
-  
+  test('form cleared on reopening', () => {
+    const { getByText, getByLabelText } = render(<FeedbackForm />);
+    const feedbackButton = getByText('Feedback');
+    fireEvent.click(feedbackButton);
+    const submitButton = getByText('Submit');
+    const leaveReviewTextField = getByLabelText('Leave a review');
+    fireEvent.change(leaveReviewTextField, { target: { value: 'Great translation!' } });
+    fireEvent.click(submitButton);
+    fireEvent.click(feedbackButton);
+    expect(leaveReviewTextField.value).toBe('');
+  });
 });
