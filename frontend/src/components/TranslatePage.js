@@ -36,12 +36,13 @@ function TranslatePage() {
               </Container>
               <Container maxWidth="sm" style={{"backgroundColor":"green", "display": "inline-block", "minHeight": "50vh"}}>
                 Code Input placeholder  
-                <CodeSubmissionBox />
+                <CodeSubmissionBox defaultValue={"Enter your code here!\n(can edit)"} readOnly={false}/>
               </Container>
             </Grid>
             <Grid xs={6}>
               <Container maxWidth="sm" style={{"backgroundColor":"red", "display": "inline-block", "minHeight": "60vh"}}>
                 Code Output placeholder
+                <CodeSubmissionBox defaultValue={"GPT API Output here...\n(read only)\n"} readOnly={true}/>
               </Container>
             </Grid>
           </Grid>
