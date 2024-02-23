@@ -2,7 +2,7 @@ import Editor from '@monaco-editor/react';
 import React, { useRef } from 'react';
 import Container from '@mui/material/Container';
 
-export default function CodeSubmissionBox() {
+export default function CodeSubmissionBox({defaultValue, readOnly}) {
   const editorRef = useRef(null);
 
   function handleEditorDidMount(editor, monaco) {
@@ -18,7 +18,8 @@ export default function CodeSubmissionBox() {
           <Editor 
             height="40vh" 
             theme="light" 
-            defaultValue="//Add your code here!"
+            defaultValue={defaultValue}
+            options={{"readOnly":readOnly}}
             onMount={handleEditorDidMount}
           />
           <button onClick={showValue}>Proof of concept to export code somewhere</button>
