@@ -1,6 +1,6 @@
 import Editor from '@monaco-editor/react';
 import React, { useRef, useState } from 'react';
-import Container from '@mui/material/Container';
+import { Button, Container, Tooltip }  from '@mui/material';
 
 export default function CodeSubmissionBox({defaultValue, readOnly}) {
   const editorRef = useRef(null);
@@ -31,7 +31,11 @@ export default function CodeSubmissionBox({defaultValue, readOnly}) {
             onMount={handleEditorDidMount}
             onChange={updateCurrentInput}
           />
-          <button disabled={!inputExists} onClick={showValue}>Proof of concept to export code somewhere</button>
+          <Tooltip title={!inputExists ? "Add some code first!" : "Submit your code here"}>
+            <span>
+              <Button variant="outlined" disabled={!inputExists} onClick={showValue}>Proof of concept to export code somewhere</Button>
+            </span>
+          </Tooltip>
       </Container>
     </>
   )
