@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { AppBar, Toolbar, Typography } from '@mui/material'
+import { AppBar, Toolbar, Tooltip, Typography } from '@mui/material'
 import { Icon } from './Icon.js'
 import { ReactComponent as TranslateIcon } from '../icons/TranslateIcon.svg'
 import { ReactComponent as DocumentationIcon } from '../icons/DocumentationIcon.svg'
@@ -11,17 +11,19 @@ function Navbar() {
     <AppBar position="static" sx={{ bgcolor: '#D9D9D9' }}>
       <Toolbar>
         <Link style={{ color: 'inherit', textDecoration: 'none' }} to="/">
-          <Typography variant='h4' style={{ color: 'black', fontFamily: 'Fira Code' }} edge="start">Ananas</Typography>
+          <Tooltip title="Home">
+            <Typography variant='h4' style={{ color: 'black', fontFamily: 'Fira Code' }} edge="start">Ananas</Typography>
+          </Tooltip>
         </Link>
         <div style={{ flexGrow: 1 }} />
         <Link to="/translate">
-          <Icon icon={TranslateIcon} />
+          <Icon icon={TranslateIcon} tooltip="Translate" />
         </Link>
         <Link to="/documentation">
-          <Icon icon={DocumentationIcon} />
+          <Icon icon={DocumentationIcon} tooltip="Documentation" />
         </Link>
         <Link to="/account">
-          <Icon icon={AccountIcon} />
+          <Icon icon={AccountIcon} tooltip="Account" />
         </Link>
       </Toolbar>
     </AppBar>
