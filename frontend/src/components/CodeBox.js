@@ -9,7 +9,7 @@ export default function CodeSubmissionBox({defaultValue, readOnly}) {
 
   function updateCurrentInput() {
     const currValue = editorRef.current.getValue();
-    setInputExists(readOnly || (currValue != defaultValue && currValue != ''));
+    setInputExists(readOnly || (currValue !== defaultValue && currValue !== ''));
   }
 
   function handleEditorDidMount(editor, monaco) {
