@@ -12,6 +12,7 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import GoogleButton from 'react-google-button'
  
 const SignUp = () => {
  
@@ -103,36 +104,35 @@ const SignUp = () => {
                   label="I agree to the privacy policy."
                 />
               </Grid>
-              
-            </Grid>
-            <Button
+              <Button
               type="submit"
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-            >
+              fullWidth
+              >
               Sign Up
-            </Button>
-            <Grid item xs={12}>
-                OR
-            </Grid>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="#" variant="body2">
-                  Already have an account? Sign in
-                </Link>
+              </Button>
+              <Grid container justifyContent="flex-end">
+                <Grid item>
+                  <Link href="#" variant="body2">
+                    Already have an account? Sign in
+                  </Link>
+                </Grid>
               </Grid>
             </Grid>
+            -----------------------------------   or  ---------------------------------
+
           </Box>
-          <Box component="form" noValidate onSubmit={onSubmitGoogle} sx={{ mt: 3 }}>
-          <Button
-              type="submit"
-              fullwidth
+          
+          <GoogleButton
+              type="dark"
+              onClick={onSubmitGoogle}
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
               Sign In With Google
-            </Button>
-          </Box>
+            </GoogleButton>
+          
         </Box>
       </Container>
     </main>

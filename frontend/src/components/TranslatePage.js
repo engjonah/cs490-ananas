@@ -5,7 +5,6 @@ import BackendStatus from './BackendStatus';
 import CodeBox from './CodeBox';
 import './App.css';
 import FeedbackForm from './FeedbackForm';
-import SignUp from './Sign-up';
 
 function TranslatePage() {
   const API_BASE_URL = process.env.NODE_ENV === 'production' ?
@@ -46,7 +45,7 @@ function TranslatePage() {
         </Container>
         <FeedbackForm/>
         <BackendStatus status={test}/>
-        <SignUp/>
+
       </div>
     </div>
   );
