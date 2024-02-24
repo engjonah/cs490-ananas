@@ -25,7 +25,6 @@ function TranslatePage() {
   return (
     <div className="App">
       <div className="App-header">
-        <div id='navbar'>Navbar Placeholder</div>
       </div>
       <div className="div">
         <Container id="translation" maxWidth="lg" style={{"backgroundColor":"gray"}}>
