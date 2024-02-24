@@ -24,8 +24,6 @@ function TranslatePage() {
   
   return (
     <div className="App">
-      <div className="App-header">
-      </div>
       <div className="div">
         <Container id="translation" maxWidth="lg" style={{"backgroundColor":"gray"}}>
           <Grid container spacing={2}>
