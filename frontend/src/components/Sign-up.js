@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import { registerWithEmailAndPassword,signInWithGoogle } from '../firebase';
+import { useNavigate } from "react-router-dom";
+import { registerWithEmailAndPassword,signInWithGoogle,signInWithGithub } from '../firebase';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,22 +13,25 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import GoogleButton from 'react-google-button'
- 
+import GoogleButton from 'react-google-button';
+import GithubButton from 'react-github-login-button'; 
 const SignUp = () => {
  
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
- 
+    const navigate = useNavigate();
+
     const onSubmitEmailPass = async (event) => {     
         event.preventDefault();
         try {
             await registerWithEmailAndPassword(name, email, password);
             console.log("done!")
+            navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {
             console.log(error.message);
+            alert(error.message);
         }
       
     }
@@ -36,6 +40,18 @@ const SignUp = () => {
         try {
             await signInWithGoogle();
             console.log("done!")
+            navigate("/translate")
+        // Handle successful signup (e.g., redirect to protected content)
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+    const onSubmitGithub = async (event) => {
+      event.preventDefault();
+        try {
+            await signInWithGithub();
+            console.log("done!")
+            navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {
             console.log(error.message);
@@ -104,20 +120,20 @@ const SignUp = () => {
                   label="I agree to the privacy policy."
                 />
               </Grid>
-              <Button
-              type="submit"
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              fullWidth
-              >
-              Sign Up
-              </Button>
+              <Grid item xs={12}>
+                <Button
+                type="submit"
+                variant="contained"
+                xs={12}
+                fullWidth
+                >
+                  Sign Up
+                </Button>
+              </Grid>           
               <Grid container justifyContent="flex-end">
-                <Grid item>
                   <Link href="#" variant="body2">
                     Already have an account? Sign in
-                  </Link>
-                </Grid>
+                  </Link>    
               </Grid>
             </Grid>
             -----------------------------------   or  ---------------------------------
@@ -131,7 +147,18 @@ const SignUp = () => {
               sx={{ mt: 3, mb: 2 }}
             >
               Sign In With Google
-            </GoogleButton>
+          </GoogleButton>
+          <div></div>
+          <GithubButton
+              type="dark"
+              onClick={onSubmitGithub}
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign In With Github
+          </GithubButton>
+          
+
           
         </Box>
       </Container>
