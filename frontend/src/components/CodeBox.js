@@ -80,11 +80,13 @@ export default function CodeSubmissionBox({defaultValue, readOnly}) {
             onMount={handleEditorDidMount}
             onChange={updateCurrentInput}
           />
-          <Tooltip title={!inputExists ? "Add some code first!" : "Submit your code here"}>
-            <span>
-              <Button variant="outlined" disabled={!inputExists} onClick={showValue}>Proof of concept to export code somewhere</Button>
-            </span>
-          </Tooltip>
+          {!readOnly && 
+            <Tooltip title={!inputExists ? "Add some code first!" : "Submit your code here"}>
+              <span>
+                <Button variant="outlined" disabled={!inputExists} onClick={showValue}>Translate</Button>
+              </span>
+            </Tooltip>
+          }
           <Tooltip title={"Download"}>
             <IconButton onClick={downloadCodeFile} aria-label="delete" size="large">
               <DownloadRoundedIcon/>
