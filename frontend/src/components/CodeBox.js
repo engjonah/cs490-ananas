@@ -26,7 +26,7 @@ export default function CodeSubmissionBox({defaultValue, readOnly}) {
   }
 
   function showValue() {
-    alert(code);
+    alert(code + "\n" + "language: " + (languageMap[readOnly? currTab:currTab-1] ? languageMap[readOnly? currTab:currTab-1].name : "detect this language") + "\n^ This gets submitted to API");
   }
 
   const downloadCodeFile = () => {
