@@ -45,6 +45,12 @@ const registerUserToMongo = async(name,email,uid) =>{
     })
 };
 
+const thirdPartySignin = async(provider) => {
+    const response = await signInWithPopup(auth, provider );
+    const user = response.user;
+    await registerUserToMongo(user.displayName, user.email, user.uid);   
+}
+
 const registerWithEmailAndPassword = async(name,email,password) => {
     try{
         const response = await createUserWithEmailAndPassword(auth, email, password)
@@ -58,11 +64,7 @@ const registerWithEmailAndPassword = async(name,email,password) => {
 
 const signInWithGoogle = async() => {
     try{
-        const response = await signInWithPopup(auth, googleProvider);
-        const user = response.user;
-        console.log(user);
-
-        await registerUserToMongo(user.displayName, user.email, user.uid) 
+       thirdPartySignin(googleProvider);
     }catch (error){
         console.log(error);
         alert(error.message);
@@ -71,10 +73,7 @@ const signInWithGoogle = async() => {
 
 const signInWithGithub = async() => {
     try {
-        const response = await signInWithPopup(auth, githubProvider );
-        const user = response.user;
-
-        await registerUserToMongo(user.displayName, user.email, user.uid);
+        thirdPartySignin(githubProvider);
     } catch (error) {
         console.log(error)
         alert(error.message)

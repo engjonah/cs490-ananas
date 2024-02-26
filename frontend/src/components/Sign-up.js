@@ -1,18 +1,8 @@
 import React, {useState} from 'react';
 import { useNavigate } from "react-router-dom";
 import { registerWithEmailAndPassword,signInWithGoogle,signInWithGithub } from '../firebase';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
+import {Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Divider} from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import GoogleButton from 'react-google-button';
 import GithubButton from 'react-github-login-button/dist/react-github-button'; 
 const SignUp = () => {
@@ -76,7 +66,7 @@ const SignUp = () => {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={onSubmitEmailPass} sx={{ mt: 3 }}>
+          <Box component="form" noValidate onSubmit={onSubmitEmailPass} sx={{ mt: 3, mb: 2}}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -115,12 +105,6 @@ const SignUp = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I agree to the privacy policy."
-                />
-              </Grid>
-              <Grid item xs={12}>
                 <Button
                 type="submit"
                 variant="contained"
@@ -130,33 +114,32 @@ const SignUp = () => {
                   Sign Up
                 </Button>
               </Grid>           
-              <Grid container justifyContent="flex-end">
+              <Grid container justifyContent="center" alignContent="center" margin={1}>
                   <Link href="#" variant="body2">
                     Already have an account? Sign in
                   </Link>    
               </Grid>
             </Grid>
-            -----------------------------------   or  ---------------------------------
-
+            <Divider color = "black" marginBottom = {2}/>
+          </Box>
+          <Box marginTop={2}>
+            <Grid container spacing={2}></Grid>
+            <GoogleButton
+                type="dark"
+                onClick={onSubmitGoogle}
+                variant="contained"
+              >
+                Sign Up With Google
+            </GoogleButton>
+            <GithubButton
+                type="dark"
+                onClick={onSubmitGithub}
+                variant="contained"
+              >
+                Sign Up With Github
+            </GithubButton>
           </Box>
           
-          <GoogleButton
-              type="dark"
-              onClick={onSubmitGoogle}
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In With Google
-          </GoogleButton>
-          <div></div>
-          <GithubButton
-              type="dark"
-              onClick={onSubmitGithub}
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In With Github
-          </GithubButton>
           
 
           
