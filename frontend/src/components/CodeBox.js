@@ -18,7 +18,7 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
 
   useEffect(() => {
     setInputExists(readOnly || (code !== defaultValue && code !== ''));
- }, [code]);
+ }, [code, readOnly, defaultValue]);
 
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
@@ -28,8 +28,8 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
   function showValue() {
     alert(
       code + 
-      "\n" + "input language: " + (languageMap[readOnly? currTab:currTab-1] ? languageMap[readOnly? currTab:currTab-1].name : "detect this language") + 
-      "\n" + "output language: " + languageMap[outputLang].name + 
+      "\ninput language: " + (languageMap[readOnly? currTab:currTab-1] ? languageMap[readOnly? currTab:currTab-1].name : "detect this language") + 
+      "\noutput language: " + languageMap[outputLang].name + 
       "\n^ This gets submitted to API");
   }
 
