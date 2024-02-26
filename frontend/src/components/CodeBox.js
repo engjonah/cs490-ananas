@@ -1,5 +1,5 @@
 import Editor from '@monaco-editor/react';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Container, Tooltip }  from '@mui/material';
 import { IconButton, Box, Tab, Tabs } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -8,14 +8,17 @@ import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 export default function CodeSubmissionBox({defaultValue, readOnly}) {
   const editorRef = useRef(null);
 
-  let [inputExists, setInputExists] = useState(false)
+  const [inputExists, setInputExists] = useState(false)
   const [code, setCode] = useState(defaultValue);
   const [currTab, setCurrTab] = React.useState(0);
 
   function updateCurrentInput() {
     setCode(editorRef.current.getValue());
-    setInputExists(readOnly || (code !== defaultValue && code !== ''));
   }
+
+  useEffect(() => {
+    setInputExists(readOnly || (code !== defaultValue && code !== ''));
+ }, [code]);
 
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
