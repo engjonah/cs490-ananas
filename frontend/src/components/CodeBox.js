@@ -1,6 +1,7 @@
 import Editor from '@monaco-editor/react';
-import React, { useEffect, useRef, useState } from 'react';
 import Container from '@mui/material/Container';
+import React, { useRef, useState } from 'react';
+import { Button, Container, Tooltip }  from '@mui/material';
 import { IconButton } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
@@ -45,21 +46,30 @@ export default function CodeSubmissionBox({defaultValue, isInput}) {
   return (
     <>
       <Container style={{"borderRadius": '5%', "padding": "6px", "backgroundColor": "white"}}>
-          <LanguageBar data={tabsData}></LanguageBar>
+          <LanguageBar tabsData={tabsData}/>
           <Editor
             height="40vh" 
             theme="light" 
             defaultValue={defaultValue}
             options={{"readOnly":!isInput}}
             onMount={handleEditorDidMount}
+            onChange={updateCurrentInput}
           />
-          <button onClick={showValue}>Proof of concept to export code somewhere</button>
-          <IconButton onClick={downloadCodeFile} aria-label="delete" size="large">
-            <DownloadRoundedIcon></DownloadRoundedIcon>
-          </IconButton>
-          <IconButton onClick={() => {navigator.clipboard.writeText(code)}}>
-            <ContentCopyIcon></ContentCopyIcon>
-          </IconButton>
+          <Tooltip title={!inputExists ? "Add some code first!" : "Submit your code here"}>
+            <span>
+              <Button variant="outlined" disabled={!inputExists} onClick={showValue}>Proof of concept to export code somewhere</Button>
+            </span>
+          </Tooltip>
+          <Tooltip title={"Download"}>
+            <IconButton onClick={downloadCodeFile} aria-label="delete" size="large">
+              <DownloadRoundedIcon/>
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={"Copy"}>
+            <IconButton onClick={() => {navigator.clipboard.writeText(code)}}>
+              <ContentCopyIcon/>
+            </IconButton>
+          </Tooltip>
       </Container>
     </>
   )
