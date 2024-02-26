@@ -1,7 +1,7 @@
 import Editor from '@monaco-editor/react';
-import Container from '@mui/material/Container';
 import React, { useRef, useState } from 'react';
 import { Button, Container, Tooltip }  from '@mui/material';
+import Container from '@mui/material/Container';
 import { IconButton } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
@@ -17,8 +17,16 @@ export default function CodeSubmissionBox({defaultValue, isInput}) {
     }
   }, []);
 
+  let [inputExists, setInputExists] = useState(false)
+
+  function updateCurrentInput() {
+    const currValue = editorRef.current.getValue();
+    setInputExists(readOnly || (currValue !== defaultValue && currValue !== ''));
+  }
+
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
+    updateCurrentInput();
   }
 
   function showValue() {

@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithPopup , GoogleAuthProvider, GithubAuthProvider} from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -19,6 +19,8 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+const githubProvider = new GithubAuthProvider();
 
 const registerUserToMongo = async(name,email,uid) =>{
     const API_BASE_URL = process.env.NODE_ENV === 'production' ?
@@ -43,6 +45,12 @@ const registerUserToMongo = async(name,email,uid) =>{
     })
 };
 
+const thirdPartySignin = async(provider) => {
+    const response = await signInWithPopup(auth, provider );
+    const user = response.user;
+    await registerUserToMongo(user.displayName, user.email, user.uid);   
+}
+
 const registerWithEmailAndPassword = async(name,email,password) => {
     try{
         const response = await createUserWithEmailAndPassword(auth, email, password)
@@ -50,6 +58,26 @@ const registerWithEmailAndPassword = async(name,email,password) => {
         await registerUserToMongo(name, email, user.uid)
     }catch (error){
         console.log(error.message);
+        throw error;
     }
 }
-export { app , auth , registerWithEmailAndPassword };
+
+const signInWithGoogle = async() => {
+    try{
+       thirdPartySignin(googleProvider);
+    }catch (error){
+        console.log(error);
+        alert(error.message);
+    }
+}
+
+const signInWithGithub = async() => {
+    try {
+        thirdPartySignin(githubProvider);
+    } catch (error) {
+        console.log(error)
+        alert(error.message)
+    }
+
+}
+export { app , auth , registerWithEmailAndPassword, signInWithGoogle, signInWithGithub };
