@@ -5,11 +5,6 @@ import BackendStatus from './BackendStatus';
 import CodeBox from './CodeBox';
 import './App.css';
 import FeedbackForm from './FeedbackForm';
-<<<<<<< HEAD
-import SignUp from './Sign-up';
-import LanguageBar from './LanguageBar';
-=======
->>>>>>> 21211a98eaa24a04fdb783f3f134104051152c55
 
 function TranslatePage() {
   const API_BASE_URL = process.env.NODE_ENV === 'production' ?
@@ -37,14 +32,13 @@ function TranslatePage() {
               </Container>
               <Container maxWidth="sm" style={{"backgroundColor":"green", "display": "inline-block", "minHeight": "50vh"}}>
                 Code Input placeholder  
-                <CodeBox defaultValue={"Enter your code here!\n(can edit)"} isInput={true}/>
+                <CodeBox defaultValue={"Enter your code here!\n(can edit)"} readOnly={false}/>
               </Container>
             </Grid>
             <Grid xs={6}>
-              <LanguageBar></LanguageBar>
               <Container maxWidth="sm" style={{"backgroundColor":"red", "display": "inline-block", "minHeight": "60vh"}}>
                 Code Output placeholder
-                <CodeBox defaultValue={"GPT API Output here...\n(read only)\n"} isInput={false}/>
+                <CodeBox defaultValue={"GPT API Output here...\n(read only)\n"} readOnly={true}/>
               </Container>
             </Grid>
           </Grid>
