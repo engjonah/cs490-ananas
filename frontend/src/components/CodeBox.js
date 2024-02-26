@@ -5,7 +5,7 @@ import { IconButton, Box, Tab, Tabs } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 
-export default function CodeSubmissionBox({defaultValue, readOnly}) {
+export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLang}) {
   const editorRef = useRef(null);
 
   const [inputExists, setInputExists] = useState(false)
@@ -26,7 +26,11 @@ export default function CodeSubmissionBox({defaultValue, readOnly}) {
   }
 
   function showValue() {
-    alert(code + "\n" + "language: " + (languageMap[readOnly? currTab:currTab-1] ? languageMap[readOnly? currTab:currTab-1].name : "detect this language") + "\n^ This gets submitted to API");
+    alert(
+      code + 
+      "\n" + "input language: " + (languageMap[readOnly? currTab:currTab-1] ? languageMap[readOnly? currTab:currTab-1].name : "detect this language") + 
+      "\n" + "output language: " + languageMap[outputLang].name + 
+      "\n^ This gets submitted to API");
   }
 
   const downloadCodeFile = () => {
@@ -40,6 +44,9 @@ export default function CodeSubmissionBox({defaultValue, readOnly}) {
 
   const handleTabChange = (event, newTab) => {
     setCurrTab(newTab);
+    if (readOnly) {
+      setOutputLang(newTab);
+    }
   };
 
   const languageMap = [
