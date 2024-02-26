@@ -20,6 +20,8 @@ function TranslatePage() {
         setTest(res)
       })
   },[API_BASE_URL]);
+
+  const [outputLang, setOutputLang] = React.useState(0);
   
   return (
     <div className="App">
@@ -32,13 +34,13 @@ function TranslatePage() {
               </Container>
               <Container maxWidth="sm" style={{"backgroundColor":"green", "display": "inline-block", "minHeight": "50vh"}}>
                 Code Input placeholder  
-                <CodeBox defaultValue={"Enter your code here!\n(can edit)"} readOnly={false}/>
+                <CodeBox defaultValue={"Enter your code here!\n(can edit)"} readOnly={false} outputLang={outputLang} />
               </Container>
             </Grid>
             <Grid xs={6}>
               <Container maxWidth="sm" style={{"backgroundColor":"red", "display": "inline-block", "minHeight": "60vh"}}>
                 Code Output placeholder
-                <CodeBox defaultValue={"GPT API Output here...\n(read only)\n"} readOnly={true}/>
+                <CodeBox defaultValue={"GPT API Output here...\n(read only)\n"} readOnly={true} setOutputLang={setOutputLang} />
               </Container>
             </Grid>
           </Grid>

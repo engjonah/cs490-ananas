@@ -10,8 +10,8 @@ describe("CodeBox Component", () => {
     render(<CodeBox />);
     expect(screen.getByText('Loading...')).toBeInTheDocument();
   })
-  test('Proof of concept button shows up', () => {
+  test('Translate button shows up', () => {
     render(<CodeBox />);
-    expect(screen.getByText('Proof of concept to export code somewhere')).toBeInTheDocument();
+    expect(screen.getByText('Translate')).toBeInTheDocument();
   })  
 })

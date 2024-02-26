@@ -1,21 +1,24 @@
 import Editor from '@monaco-editor/react';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Container, Tooltip }  from '@mui/material';
 import { IconButton, Box, Tab, Tabs } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 
-export default function CodeSubmissionBox({defaultValue, readOnly}) {
+export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLang}) {
   const editorRef = useRef(null);
 
-  let [inputExists, setInputExists] = useState(false)
+  const [inputExists, setInputExists] = useState(false)
   const [code, setCode] = useState(defaultValue);
   const [currTab, setCurrTab] = React.useState(0);
 
   function updateCurrentInput() {
     setCode(editorRef.current.getValue());
-    setInputExists(readOnly || (code !== defaultValue && code !== ''));
   }
+
+  useEffect(() => {
+    setInputExists(readOnly || (code !== defaultValue && code !== ''));
+ }, [code, readOnly, defaultValue]);
 
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
@@ -23,7 +26,11 @@ export default function CodeSubmissionBox({defaultValue, readOnly}) {
   }
 
   function showValue() {
-    alert(code);
+    alert(
+      code + 
+      "\ninput language: " + (languageMap[readOnly? currTab:currTab-1] ? languageMap[readOnly? currTab:currTab-1].name : "detect this language") + 
+      "\noutput language: " + languageMap[outputLang].name + 
+      "\n^ This gets submitted to API");
   }
 
   const downloadCodeFile = () => {
@@ -37,6 +44,9 @@ export default function CodeSubmissionBox({defaultValue, readOnly}) {
 
   const handleTabChange = (event, newTab) => {
     setCurrTab(newTab);
+    if (readOnly) {
+      setOutputLang(newTab);
+    }
   };
 
   const languageMap = [
@@ -77,11 +87,13 @@ export default function CodeSubmissionBox({defaultValue, readOnly}) {
             onMount={handleEditorDidMount}
             onChange={updateCurrentInput}
           />
-          <Tooltip title={!inputExists ? "Add some code first!" : "Submit your code here"}>
-            <span>
-              <Button variant="outlined" disabled={!inputExists} onClick={showValue}>Proof of concept to export code somewhere</Button>
-            </span>
-          </Tooltip>
+          {!readOnly && 
+            <Tooltip title={!inputExists ? "Add some code first!" : "Submit your code here"}>
+              <span>
+                <Button variant="outlined" disabled={!inputExists} onClick={showValue}>Translate</Button>
+              </span>
+            </Tooltip>
+          }
           <Tooltip title={"Download"}>
             <IconButton onClick={downloadCodeFile} aria-label="delete" size="large">
               <DownloadRoundedIcon/>
