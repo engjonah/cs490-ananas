@@ -5,6 +5,7 @@ import {Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Con
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import GoogleButton from 'react-google-button';
 import GithubButton from 'react-github-login-button/dist/react-github-button'; 
+import toast from 'react-hot-toast';
 const SignUp = () => {
  
     const [email, setEmail] = useState('');
@@ -16,12 +17,12 @@ const SignUp = () => {
         event.preventDefault();
         try {
             await registerWithEmailAndPassword(name, email, password);
-            console.log("done!")
+            toast.success("User registered!",300)
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {
             console.log(error.message);
-            alert(error.message);
+            toast.error(error.message);
         }
       
     }
@@ -34,6 +35,7 @@ const SignUp = () => {
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {
             console.log(error.message);
+            toast.error(error.message)        
         }
     }
     const onSubmitGithub = async (event) => {
@@ -45,6 +47,7 @@ const SignUp = () => {
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {
             console.log(error.message);
+            toast.error(error.message)        
         }
     }
  
@@ -74,7 +77,7 @@ const SignUp = () => {
                     fullWidth
                     name="Name"
                     type="text"
-                    label="name"
+                    label="Name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}  
                     required                                    
@@ -128,16 +131,14 @@ const SignUp = () => {
                 type="dark"
                 onClick={onSubmitGoogle}
                 variant="contained"
-              >
-                Sign Up With Google
-            </GoogleButton>
+                label='Sign up With Google'
+            />                
             <GithubButton
                 type="dark"
                 onClick={onSubmitGithub}
                 variant="contained"
-              >
-                Sign Up With Github
-            </GithubButton>
+                lable='Sign up With Github'
+            />
           </Box>
           
           

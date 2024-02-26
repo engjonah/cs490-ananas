@@ -17,6 +17,7 @@
     "react-dom": "^18.2.0",
     "react-github-login-button": "^1.0.1",
     "react-google-button": "^0.7.2",
+    "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.22.1",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
