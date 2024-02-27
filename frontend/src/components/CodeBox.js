@@ -5,7 +5,7 @@ import { IconButton, Box, Tab, Tabs } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 
-export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLang}) {
+export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLang, codeUpload}) {
   const editorRef = useRef(null);
 
   const [inputExists, setInputExists] = useState(false)
@@ -18,7 +18,13 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
 
   useEffect(() => {
     setInputExists(readOnly || (code !== defaultValue && code !== ''));
- }, [code, readOnly, defaultValue]);
+  }, [code, readOnly, defaultValue]);
+
+  useEffect(() => {
+    if (codeUpload) {
+      editorRef.current.setValue(codeUpload);
+    }
+  }, [codeUpload])
 
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
