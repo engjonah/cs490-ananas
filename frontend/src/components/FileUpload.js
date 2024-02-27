@@ -21,7 +21,7 @@ export default function FileUpload({setCodeUpload}) {
   const {getRootProps, getInputProps} = useDropzone({onDrop})
 
   return (
-    <Container {...getRootProps()} maxWidth={false} disableGutters={true} style={{"backgroundColor":"white", "borderRadius": '10px'}}>
+    <Container {...getRootProps()} maxWidth={false} disableGutters={true} style={{"backgroundColor":"#f5f5f5", "borderRadius": '15px'}}>
       <input {...getInputProps()} />
       <Button style={{"minHeight":"10vh"}}>Drop files here or click to upload </Button>
     </Container>

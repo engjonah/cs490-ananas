@@ -27,6 +27,15 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
   }, [codeUpload])
 
   function handleEditorDidMount(editor, monaco) {
+    monaco.editor.defineTheme('gray', {
+      base: 'vs',
+      inherit: true,
+      rules: [],
+      colors: {
+        'editor.background': '#f5f5f5',
+      },
+    });
+    monaco.editor.setTheme('gray')
     editorRef.current = editor;
     updateCurrentInput();
   }
@@ -69,7 +78,7 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
   
   return (
     <>
-      <Container style={{"borderRadius": '5%', "padding": "6px", "backgroundColor": "white"}}>
+      <Container style={{"borderRadius": '15px', "padding": "6px", "backgroundColor": "#f5f5f5"}}>
           <Box sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <Tabs 
