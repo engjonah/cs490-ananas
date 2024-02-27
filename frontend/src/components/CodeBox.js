@@ -10,10 +10,12 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
 
   const [inputExists, setInputExists] = useState(false)
   const [code, setCode] = useState(defaultValue);
-  const [currTab, setCurrTab] = React.useState(0);
+  const [currTab, setCurrTab] = useState(0);
+  const [lineCount, setLineCount] = useState(0);
 
   function updateCurrentInput() {
     setCode(editorRef.current.getValue());
+    setLineCount(editorRef.current.getModel().getLineCount());
   }
 
   useEffect(() => {
@@ -103,9 +105,9 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
             onChange={updateCurrentInput}
           />
           {!readOnly && 
-            <Tooltip title={!inputExists ? "Add some code first!" : "Submit your code here"}>
+            <Tooltip title={!inputExists ? "Add some code first!" : (lineCount > 100 ? "Input exceeded max limit" : "Submit your code here")}>
               <span>
-                <Button variant="outlined" disabled={!inputExists} onClick={showValue}>Translate</Button>
+                <Button variant="outlined" disabled={!inputExists || lineCount > 100} onClick={showValue}>Translate</Button>
               </span>
             </Tooltip>
           }
