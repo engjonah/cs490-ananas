@@ -42,10 +42,11 @@ function TranslatePage() {
               <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "60vh"}}>
                 <CodeBox defaultValue={"GPT API Output here...\n(read only)\n"} readOnly={true} setOutputLang={setOutputLang} />
               </Container>
+              <FeedbackForm/>
             </Grid>
           </Grid>
         </Container>
-        <FeedbackForm/>
+        
         <BackendStatus status={test}/>
 
       </div>
