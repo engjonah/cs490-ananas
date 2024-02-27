@@ -21,7 +21,7 @@ const FeedbackSchema = new Schema({
         required: true,
     },
     rating:{
-        type: Int32,
+        type: String,
         required: true,
     },
     review:{
