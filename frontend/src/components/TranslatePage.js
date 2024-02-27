@@ -5,6 +5,7 @@ import BackendStatus from './BackendStatus';
 import CodeBox from './CodeBox';
 import './App.css';
 import FeedbackForm from './FeedbackForm';
+import FileUpload from './FileUpload';
 
 function TranslatePage() {
   const API_BASE_URL = process.env.NODE_ENV === 'production' ?
@@ -21,7 +22,8 @@ function TranslatePage() {
       })
   },[API_BASE_URL]);
 
-  const [outputLang, setOutputLang] = React.useState(0);
+  const [outputLang, setOutputLang] = useState(0);
+  const [codeUpload, setCodeUpload] = useState("");
   
   return (
     <div className="App">
@@ -30,11 +32,11 @@ function TranslatePage() {
           <Grid container spacing={2}>
             <Grid xs={6}>
               <Container maxWidth="sm" style={{"backgroundColor":"blue", "display": "inline-block", "minHeight": "10vh"}}>
-                Code upload placeholder
+                <FileUpload setCodeUpload={setCodeUpload}/>
               </Container>
               <Container maxWidth="sm" style={{"backgroundColor":"green", "display": "inline-block", "minHeight": "50vh"}}>
                 Code Input placeholder  
-                <CodeBox defaultValue={"Enter your code here!\n(can edit)"} readOnly={false} outputLang={outputLang} />
+                <CodeBox defaultValue={"Enter your code here!\n(can edit)"} readOnly={false} outputLang={outputLang} codeUpload={codeUpload} />
               </Container>
             </Grid>
             <Grid xs={6}>
