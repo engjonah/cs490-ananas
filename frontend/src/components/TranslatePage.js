@@ -31,15 +31,15 @@ function TranslatePage() {
         <Container id="translation" disableGutters={true} maxWidth="lg">
           <Grid container spacing={4}>
             <Grid xs={6}>
-              <Container maxWidth="sm" disableGutters={true} style={{"backgroundColor":"blue", "display": "inline-block", "minHeight": "10vh"}}>
+              <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "10vh"}}>
                 <FileUpload setCodeUpload={setCodeUpload}/>
               </Container>
-              <Container maxWidth="sm" disableGutters={true} style={{"backgroundColor":"green", "display": "inline-block", "minHeight": "50vh"}}>
+              <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "50vh"}}>
                 <CodeBox defaultValue={"Enter your code here!\n(can edit)"} readOnly={false} outputLang={outputLang} codeUpload={codeUpload} />
               </Container>
             </Grid>
             <Grid xs={6}>
-              <Container maxWidth="sm" disableGutters={true} style={{"backgroundColor":"red", "display": "inline-block", "minHeight": "60vh"}}>
+              <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "60vh"}}>
                 <CodeBox defaultValue={"GPT API Output here...\n(read only)\n"} readOnly={true} setOutputLang={setOutputLang} />
               </Container>
             </Grid>
