@@ -28,13 +28,13 @@ function TranslatePage() {
   return (
     <div className="App">
       <div className="div">
-        <Container id="translation" disableGutters={true} maxWidth="lg" style={{"padding-top":"30px"}}>
+        <Container id="translation" disableGutters={true} maxWidth="lg" style={{"paddingTop":"30px"}}>
           <Grid container spacing={4}>
             <Grid xs={6}>
               <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "10vh"}}>
                 <FileUpload setCodeUpload={setCodeUpload}/>
               </Container>
-              <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "50vh", "padding-top":"15px"}}>
+              <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "50vh", "paddingTop":"15px"}}>
                 <CodeBox defaultValue={"Enter your code here!\n(can edit)"} readOnly={false} outputLang={outputLang} codeUpload={codeUpload} />
               </Container>
             </Grid>
