@@ -117,9 +117,9 @@ const SignUp = () => {
                   Sign Up
                 </Button>
               </Grid>           
-              <Grid container justifyContent="center" alignContent="center" margin={1}>
+              <Grid container justifyContent="center" alignContent="center" margin={2}>
                   <Link href="/SignIn" variant="body2">
-                    Already have an account? Sign in
+                    Already have an account? Log in
                   </Link>    
               </Grid>
             </Grid>

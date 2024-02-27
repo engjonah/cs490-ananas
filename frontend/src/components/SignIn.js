@@ -1,27 +1,28 @@
 import React, {useState} from 'react';
 import { useNavigate } from "react-router-dom";
-import { signInWithGoogle,signInWithGithub } from '../firebase';
+import { logInWithEmailAndPassword, signInWithGoogle,signInWithGithub } from '../firebase';
 import {Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Divider} from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import GoogleButton from 'react-google-button';
 import GithubButton from 'react-github-login-button/dist/react-github-button'; 
-const SignIn = () => {
+import toast from 'react-hot-toast';
+
+const LogIn = () => {
  
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [name, setName] = useState('');
     const navigate = useNavigate();
 
     const onSubmitEmailPass = async (event) => {     
         event.preventDefault();
         try {
-            await registerWithEmailAndPassword(name, email, password);
-            console.log("done!")
+            await logInWithEmailAndPassword(email, password);
+            toast.success("Logged in!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {
             console.log(error.message);
-            alert(error.message);
+            toast.error(error.message);
         }
       
     }
@@ -29,22 +30,24 @@ const SignIn = () => {
       event.preventDefault();
         try {
             await signInWithGoogle();
-            console.log("done!")
+            toast.success("Logged in")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {
-            console.log(error.message);
+          console.log(error.message);
+          toast.error(error.message);
         }
     }
     const onSubmitGithub = async (event) => {
       event.preventDefault();
         try {
             await signInWithGithub();
-            console.log("done!")
+            toast.success("Logged in!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {
-            console.log(error.message);
+          console.log(error.message);
+          toast.error(error.message);
         }
     }
  
@@ -64,7 +67,7 @@ const SignIn = () => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            Sign In
           </Typography>
           <Box component="form" noValidate onSubmit={onSubmitEmailPass} sx={{ mt: 3, mb: 2}}>
             <Grid container spacing={2}>
@@ -84,7 +87,7 @@ const SignIn = () => {
                     required
                     fullWidth
                     type="password"
-                    label="Create password"
+                    label="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)} 
                     placeholder="Password"
@@ -97,13 +100,20 @@ const SignIn = () => {
                 xs={12}
                 fullWidth
                 >
-                  Sign Up
+                  Sign In
                 </Button>
               </Grid>           
-              <Grid container justifyContent="center" alignContent="center" margin={1}>
+              <Grid container marginTop={2} marginBottom={2} marginLeft={2}>
+                <Grid item xs>
                   <Link href="#" variant="body2">
-                    Already have an account? Sign in
-                  </Link>    
+                    Forgot password?
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href="/SignUp" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
               </Grid>
             </Grid>
             <Divider color = "black" marginBottom = {2}/>
@@ -115,14 +125,14 @@ const SignIn = () => {
                 onClick={onSubmitGoogle}
                 variant="contained"
               >
-                Sign Up With Google
+                Log In With Google
             </GoogleButton>
             <GithubButton
                 type="dark"
                 onClick={onSubmitGithub}
                 variant="contained"
               >
-                Sign Up With Github
+                Log In With Github
             </GithubButton>
           </Box>
           
@@ -138,4 +148,4 @@ const SignIn = () => {
   )
 }
  
-export default SignUp
+export default LogIn
