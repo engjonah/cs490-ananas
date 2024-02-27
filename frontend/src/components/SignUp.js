@@ -17,7 +17,7 @@ const SignUp = () => {
         event.preventDefault();
         try {
             await registerWithEmailAndPassword(name, email, password);
-            toast.success("User registered!",300)
+            toast.success("User registered!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {
@@ -30,7 +30,7 @@ const SignUp = () => {
       event.preventDefault();
         try {
             await signInWithGoogle();
-            console.log("done!")
+            toast.success("User registered!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {
@@ -42,7 +42,7 @@ const SignUp = () => {
       event.preventDefault();
         try {
             await signInWithGithub();
-            console.log("done!")
+            toast.success("User registered!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {

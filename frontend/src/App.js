@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import TranslatePage from './components/TranslatePage';
-import SignUp from './components/Sign-up';
+import SignUp from './components/SignUp';
 import HomeScreen from './components/HomeScreen';
 import Navbar from './components/Navbar';
 import {Toaster} from 'react-hot-toast';
