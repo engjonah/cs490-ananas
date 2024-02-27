@@ -137,7 +137,7 @@ const SignUp = () => {
                 type="dark"
                 onClick={onSubmitGithub}
                 variant="contained"
-                lable='Sign up With Github'
+                label='Sign up With Github'
             />
           </Box>
           
