@@ -57,7 +57,7 @@ const thirdPartySignin = async(provider) => {
 
 const registerWithEmailAndPassword = async(name,email,password) => {
     try{
-        if (name == '' || email == '' || password=='') {
+        if (name === '' || email === '' || password ==='') {
             throw Error("Please fill in all fields!")
         }
         const response = await createUserWithEmailAndPassword(auth, email, password)
