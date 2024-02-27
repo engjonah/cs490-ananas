@@ -16,7 +16,7 @@ export default function FileUpload({setCodeUpload}) {
       //reader.readAsArrayBuffer(file)
       reader.readAsText(file)
     })
-  }, [])
+  }, [setCodeUpload])
 
   const {getRootProps, getInputProps} = useDropzone({onDrop})
 
