@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithPopup , GoogleAuthProvider, GithubAuthProvider} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithPopup , GoogleAuthProvider, GithubAuthProvider, AuthErrorCodes} from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -46,37 +46,60 @@ const registerUserToMongo = async(name,email,uid) =>{
 };
 
 const thirdPartySignin = async(provider) => {
-    const response = await signInWithPopup(auth, provider );
-    const user = response.user;
-    await registerUserToMongo(user.displayName, user.email, user.uid);   
+    try {
+        const response = await signInWithPopup(auth, provider );
+        const user = response.user;
+        await registerUserToMongo(user.displayName, user.email, user.uid);
+    } catch (error){
+        throw error;
+    }   
 }
 
 const registerWithEmailAndPassword = async(name,email,password) => {
     try{
+        if (name === '' || email === '' || password ==='') {
+            throw Error("Please fill in all fields!")
+        }
         const response = await createUserWithEmailAndPassword(auth, email, password)
         const user = response.user
         await registerUserToMongo(name, email, user.uid)
-    }catch (error){
-        console.log(error.message);
-        throw error;
+    }catch (e){
+        console.log(e.message);
+        if (e.message.includes(AuthErrorCodes.WEAK_PASSWORD)){
+            throw Error("Please choose a stronger password!")
+        }else if (e.message.includes(AuthErrorCodes.EMAIL_EXISTS)){
+            throw Error("This email is already in use!")
+        }else if (e.message.includes(AuthErrorCodes.INVALID_EMAIL)){
+            throw Error("Invalid email!")
+        }else {
+            throw e;
+        }
     }
 }
 
 const signInWithGoogle = async() => {
     try{
-       thirdPartySignin(googleProvider);
+       await thirdPartySignin(googleProvider);
     }catch (error){
         console.log(error);
-        alert(error.message);
+        if (error.message.includes(AuthErrorCodes.NEED_CONFIRMATION)){
+            throw Error("This email is in use through different service!")
+        }else{
+            throw error;
+        }
     }
 }
 
 const signInWithGithub = async() => {
     try {
-        thirdPartySignin(githubProvider);
+        await thirdPartySignin(githubProvider);
     } catch (error) {
         console.log(error)
-        alert(error.message)
+        if (error.message.includes(AuthErrorCodes.NEED_CONFIRMATION)){
+            throw Error("This email is in use through different service!")
+        }else{
+            throw error;
+        }
     }
 
 }
