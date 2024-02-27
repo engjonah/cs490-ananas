@@ -1,12 +1,11 @@
 import React, {useState} from 'react';
 import { useNavigate } from "react-router-dom";
-import { registerWithEmailAndPassword,signInWithGoogle,signInWithGithub } from '../firebase';
+import { signInWithGoogle,signInWithGithub } from '../firebase';
 import {Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Divider} from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import GoogleButton from 'react-google-button';
 import GithubButton from 'react-github-login-button/dist/react-github-button'; 
-import toast from 'react-hot-toast';
-const SignUp = () => {
+const SignIn = () => {
  
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -17,12 +16,12 @@ const SignUp = () => {
         event.preventDefault();
         try {
             await registerWithEmailAndPassword(name, email, password);
-            toast.success("User registered!")
+            console.log("done!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {
             console.log(error.message);
-            toast.error(error.message);
+            alert(error.message);
         }
       
     }
@@ -30,24 +29,22 @@ const SignUp = () => {
       event.preventDefault();
         try {
             await signInWithGoogle();
-            toast.success("User registered!")
+            console.log("done!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {
             console.log(error.message);
-            toast.error(error.message)        
         }
     }
     const onSubmitGithub = async (event) => {
       event.preventDefault();
         try {
             await signInWithGithub();
-            toast.success("User registered!")
+            console.log("done!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {
             console.log(error.message);
-            toast.error(error.message)        
         }
     }
  
@@ -71,20 +68,6 @@ const SignUp = () => {
           </Typography>
           <Box component="form" noValidate onSubmit={onSubmitEmailPass} sx={{ mt: 3, mb: 2}}>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                    autoComplete="given-name"
-                    fullWidth
-                    name="Name"
-                    type="text"
-                    label="Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}  
-                    required                                    
-                    placeholder="Name"
-                    autoFocus
-                />
-              </Grid>
               <Grid item xs={12}>
                 <TextField
                     required
@@ -118,7 +101,7 @@ const SignUp = () => {
                 </Button>
               </Grid>           
               <Grid container justifyContent="center" alignContent="center" margin={1}>
-                  <Link href="/SignIn" variant="body2">
+                  <Link href="#" variant="body2">
                     Already have an account? Sign in
                   </Link>    
               </Grid>
@@ -131,14 +114,16 @@ const SignUp = () => {
                 type="dark"
                 onClick={onSubmitGoogle}
                 variant="contained"
-                label='Sign up With Google'
-            />                
+              >
+                Sign Up With Google
+            </GoogleButton>
             <GithubButton
                 type="dark"
                 onClick={onSubmitGithub}
                 variant="contained"
-                label='Sign up With Github'
-            />
+              >
+                Sign Up With Github
+            </GithubButton>
           </Box>
           
           
