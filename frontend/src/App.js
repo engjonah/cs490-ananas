@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import TranslatePage from './components/TranslatePage';
+import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import HomeScreen from './components/HomeScreen';
 import Navbar from './components/Navbar';
@@ -18,6 +19,8 @@ function App() {
           <Route path="/translate" element={<TranslatePage />} />
           <Route path="/account" element={<SignUp/>}/>
           <Route path="/documentation" element={<Documentation />} />
+          <Route path="/SignIn" element={<SignIn/>}/>
+          <Route path="/SignUp" element={<SignUp/>}/>
         </Routes>
       </div>
     </Router>

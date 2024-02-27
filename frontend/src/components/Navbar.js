@@ -22,7 +22,7 @@ function Navbar() {
         <Link to="/documentation">
           <Icon icon={DocumentationIcon} tooltip="Documentation" />
         </Link>
-        <Link to="/account">
+        <Link to="/SignIn">
           <Icon icon={AccountIcon} tooltip="Account" />
         </Link>
       </Toolbar>

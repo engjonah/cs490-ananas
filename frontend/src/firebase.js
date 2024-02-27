@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithPopup , GoogleAuthProvider, GithubAuthProvider, AuthErrorCodes} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup , GoogleAuthProvider, GithubAuthProvider, AuthErrorCodes} from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -103,4 +103,22 @@ const signInWithGithub = async() => {
     }
 
 }
-export { app , auth , registerWithEmailAndPassword, signInWithGoogle, signInWithGithub };
+
+const logInWithEmailAndPassword = async(email, password) => {
+    try{
+        if ( email === '' || password === '') {
+            throw Error("Please fill in all fields!")
+        }
+        const response = await signInWithEmailAndPassword(auth, email, password)
+        const user = response.user
+    }catch(error){
+        console.log(error.message)
+        if (error.message.includes(AuthErrorCodes.INVALID_IDP_RESPONSE)){
+            throw Error("The email and/or password you entered is incorrect!")
+        }else{
+            throw error;
+        }
+    }
+}
+
+export { app , auth , registerWithEmailAndPassword, signInWithGoogle, signInWithGithub, logInWithEmailAndPassword};
