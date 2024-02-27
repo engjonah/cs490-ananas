@@ -8,10 +8,6 @@ const FeedbackSchema = new Schema({
         type: String,
         required: true,
     },
-    feedbackid:{
-        type: String,
-        required: true,
-    },
     inputLang:{
         type: String,
         required: true,
