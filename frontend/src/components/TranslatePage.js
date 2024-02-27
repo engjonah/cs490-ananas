@@ -28,20 +28,18 @@ function TranslatePage() {
   return (
     <div className="App">
       <div className="div">
-        <Container id="translation" maxWidth="lg" style={{"backgroundColor":"gray"}}>
-          <Grid container spacing={2}>
+        <Container id="translation" disableGutters={true} maxWidth="lg">
+          <Grid container spacing={4}>
             <Grid xs={6}>
-              <Container maxWidth="sm" style={{"backgroundColor":"blue", "display": "inline-block", "minHeight": "10vh"}}>
+              <Container maxWidth="sm" disableGutters={true} style={{"backgroundColor":"blue", "display": "inline-block", "minHeight": "10vh"}}>
                 <FileUpload setCodeUpload={setCodeUpload}/>
               </Container>
-              <Container maxWidth="sm" style={{"backgroundColor":"green", "display": "inline-block", "minHeight": "50vh"}}>
-                Code Input placeholder  
+              <Container maxWidth="sm" disableGutters={true} style={{"backgroundColor":"green", "display": "inline-block", "minHeight": "50vh"}}>
                 <CodeBox defaultValue={"Enter your code here!\n(can edit)"} readOnly={false} outputLang={outputLang} codeUpload={codeUpload} />
               </Container>
             </Grid>
             <Grid xs={6}>
-              <Container maxWidth="sm" style={{"backgroundColor":"red", "display": "inline-block", "minHeight": "60vh"}}>
-                Code Output placeholder
+              <Container maxWidth="sm" disableGutters={true} style={{"backgroundColor":"red", "display": "inline-block", "minHeight": "60vh"}}>
                 <CodeBox defaultValue={"GPT API Output here...\n(read only)\n"} readOnly={true} setOutputLang={setOutputLang} />
               </Container>
             </Grid>
