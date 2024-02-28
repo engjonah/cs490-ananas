@@ -4,6 +4,7 @@ import TranslatePage from './components/TranslatePage';
 import SignUp from './components/SignUp';
 import HomeScreen from './components/HomeScreen';
 import Navbar from './components/Navbar';
+import Documentation from './components/Documentation';
 import {Toaster} from 'react-hot-toast';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<HomeScreen />} />
           <Route path="/translate" element={<TranslatePage />} />
           <Route path="/account" element={<SignUp/>}/>
+          <Route path="/documentation" element={<Documentation />} />
         </Routes>
       </div>
     </Router>
