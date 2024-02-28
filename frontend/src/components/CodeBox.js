@@ -10,7 +10,7 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
 
   const [inputExists, setInputExists] = useState(false)
   const [code, setCode] = useState(defaultValue);
-  const [currTab, setCurrTab] = React.useState(0);
+  const [currTab, setCurrTab] = React.useState(1);
 
   function updateCurrentInput() {
     setCode(editorRef.current.getValue());
@@ -43,7 +43,7 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
   function showValue() {
     alert(
       code + 
-      "\ninput language: " + (languageMap[readOnly? currTab:currTab-1] ? languageMap[readOnly? currTab:currTab-1].name : "detect this language") + 
+      "\ninput language: " + (currTab !== 0? languageMap[currTab-1].name : "detect this language") + 
       "\noutput language: " + languageMap[outputLang].name + 
       "\n^ This gets submitted to API");
   }
@@ -52,7 +52,7 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
     const element = document.createElement("a");
     const file = new Blob([code], {type: 'text/plain'});
     element.href = URL.createObjectURL(file);
-    element.download = "placeholder" + languageMap[readOnly? currTab:currTab-1].extension;
+    element.download = "placeholder" + (currTab !== 0? languageMap[currTab-1].extension : ".detectlang");
     document.body.appendChild(element);
     element.click();
   }
@@ -65,14 +65,12 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
   };
 
   const languageMap = [
-    { name: "Python", extension: ".py" },
-    { name: "Java", extension: ".java" },
-    { name: "C++", extension: ".cpp" },
-    { name: "Ruby", extension: ".rb" },
-    { name: "C#", extension: ".cs" },
-    { name: "Kotlin", extension: ".kt" },
-    { name: "Go", extension: ".go" },
-    { name: "Matlab", extension: ".m" },
+    { syntaxName: "python", name: "Python", extension: ".py" },
+    { syntaxName: "java", name: "Java", extension: ".java" },
+    { syntaxName: "cpp", name: "C++", extension: ".cpp" },
+    { syntaxName: "ruby", name: "Ruby", extension: ".rb" },
+    { syntaxName: "csharp", name: "C#", extension: ".cs" },
+    { syntaxName: "javascript", name: "JavaScript", extension: ".js" },
     // add more languages here
   ];
   
@@ -87,9 +85,9 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
                 variant="scrollable"
                 scrollButtons="auto"
               >
-                {!readOnly && <Tab label={"Detect Language"} key={0} />}
+                {!readOnly && <Tab label={"Detect Language"} value={0} key={0}/>}
                 {languageMap.map((language, index) => (
-                  <Tab label={language.name} key={index + 1} />
+                  <Tab label={language.name} value={index+1} key={index+1}/>
                 ))}
               </Tabs>
             </Box>
@@ -97,7 +95,10 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
           <Editor
             height="40vh" 
             theme="light" 
+            loading="Loading your pudgy penguins..."
             defaultValue={defaultValue}
+            defaultLanguage='python'
+            language={currTab !== 0 ? languageMap[currTab-1].syntaxName : "detect this language"}
             options={{"readOnly":readOnly}}
             onMount={handleEditorDidMount}
             onChange={updateCurrentInput}
