@@ -47,7 +47,7 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
   function showValue() {
     alert(
       code + 
-      "\ninput language: " + (languageMap[readOnly? currTab:currTab-1] ? languageMap[readOnly? currTab:currTab-1].name : "detect this language") + 
+      "\ninput language: " + (currTab !== 0? languageMap[currTab-1].name : "detect this language") + 
       "\noutput language: " + languageMap[outputLang].name + 
       "\n^ This gets submitted to API");
   }
@@ -56,7 +56,7 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
     const element = document.createElement("a");
     const file = new Blob([code], {type: 'text/plain'});
     element.href = URL.createObjectURL(file);
-    element.download = "placeholder" + languageMap[readOnly? currTab:currTab-1].extension;
+    element.download = "placeholder" + (currTab !== 0? languageMap[currTab-1].extension : ".detectlang");
     document.body.appendChild(element);
     element.click();
   }
@@ -102,7 +102,7 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
             loading="Loading your pudgy penguins..."
             defaultValue={defaultValue}
             defaultLanguage='python'
-            language={languageMap[readOnly? currTab:currTab-1] ? languageMap[readOnly? currTab:currTab-1].syntaxName : "detect this language"}
+            language={currTab !== 0 ? languageMap[currTab-1].syntaxName : "detect this language"}
             options={{"readOnly":readOnly}}
             onMount={handleEditorDidMount}
             onChange={updateCurrentInput}
