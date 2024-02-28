@@ -26,10 +26,6 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
     }
   }, [codeUpload])
 
-  useEffect(() => {
-    console.log(currTab);
-  }, [currTab])
-
   function handleEditorDidMount(editor, monaco) {
     monaco.editor.defineTheme('gray', {
       base: 'vs',
