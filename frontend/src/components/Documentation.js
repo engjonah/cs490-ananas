@@ -9,13 +9,37 @@ function Documentation() {
         <h1 className="title">Documentation</h1>
       </div>
       <div className="content">
-        <h2>$19 Fortnite Card Documentation</h2>
+        <h2>MERN</h2>
         <p>
-          This documentation page provides information about the $19 Fortnite card.
-          The $19 Fortnite card is a prepaid card that can be used to purchase in-game currency (V-Bucks) in Fortnite, a popular online video game developed by Epic Games.
-          With the $19 Fortnite card, players can enhance their gaming experience by purchasing various in-game items such as outfits, skins, emotes, and battle passes.
-          To redeem the $19 Fortnite card, players need to visit the official Fortnite website or launch the Fortnite game client and navigate to the "Store" or "V-Bucks" section. They will then be prompted to enter the code found on the back of the card to add the funds to their account.
-          It's important to note that the $19 Fortnite card can only be redeemed for V-Bucks in Fortnite and cannot be used for purchases in other games or platforms.
+          This documentation page provides basic information about the MERN (MongoDB, Express.js, React.js, Node.js) stack.
+          The MERN stack is a popular web development stack used for building full-stack web applications.
+          It consists of four main components:
+          <ul>
+            <li><strong>MongoDB:</strong> A NoSQL database used for storing application data.</li>
+            <li><strong>Express.js:</strong> A web application framework for Node.js used for building server-side applications.</li>
+            <li><strong>React.js:</strong> A JavaScript library for building user interfaces.</li>
+            <li><strong>Node.js:</strong> A JavaScript runtime environment that executes JavaScript code server-side.</li>
+          </ul>
+          Developers use the MERN stack for its flexibility, efficiency, and ease of learning. It enables rapid development of scalable and maintainable web applications.
+          To get started with the MERN stack, developers typically set up a development environment, configure the necessary tools and dependencies, and begin building their application.
+          Resources such as tutorials, documentation, and community forums are available to assist developers in learning and mastering the MERN stack.
+        </p>
+      </div>
+      <div className="content">
+        <h2>MERN</h2>
+        <p>
+          This documentation page provides basic information about the MERN (MongoDB, Express.js, React.js, Node.js) stack.
+          The MERN stack is a popular web development stack used for building full-stack web applications.
+          It consists of four main components:
+          <ul>
+            <li><strong>MongoDB:</strong> A NoSQL database used for storing application data.</li>
+            <li><strong>Express.js:</strong> A web application framework for Node.js used for building server-side applications.</li>
+            <li><strong>React.js:</strong> A JavaScript library for building user interfaces.</li>
+            <li><strong>Node.js:</strong> A JavaScript runtime environment that executes JavaScript code server-side.</li>
+          </ul>
+          Developers use the MERN stack for its flexibility, efficiency, and ease of learning. It enables rapid development of scalable and maintainable web applications.
+          To get started with the MERN stack, developers typically set up a development environment, configure the necessary tools and dependencies, and begin building their application.
+          Resources such as tutorials, documentation, and community forums are available to assist developers in learning and mastering the MERN stack.
         </p>
       </div>
     </div>
