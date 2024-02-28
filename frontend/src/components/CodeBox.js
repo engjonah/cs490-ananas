@@ -89,9 +89,9 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
                 variant="scrollable"
                 scrollButtons="auto"
               >
-                {!readOnly && <Tab label={"Detect Language"} value={0} />}
+                {!readOnly && <Tab label={"Detect Language"} value={0} key={0}/>}
                 {languageMap.map((language, index) => (
-                  <Tab label={language.name} value={index+1} />
+                  <Tab label={language.name} value={index+1} key={index+1}/>
                 ))}
               </Tabs>
             </Box>
