@@ -4,8 +4,18 @@ import userEvent from '@testing-library/user-event'
 import { BrowserRouter as Router } from 'react-router-dom';
 import Navbar from "../components/Navbar.js"
 import { act } from 'react-dom/test-utils';
+import { useAuthContext } from '../hooks/useAuthContext.js';
+
+jest.mock('../hooks/useAuthContext', () => ({
+  useAuthContext: jest.fn(),
+}));
 
 describe("Navbar component", () => {
+
+    beforeEach(() => {
+      useAuthContext.mockReturnValue(true);
+    })
+
     const RoutedNavbar = () => {
         return (
         <Router>
@@ -28,7 +38,7 @@ describe("Navbar component", () => {
         render(<RoutedNavbar />)
         act(() => {
             const triggerElements = screen.getAllByRole("link")
-            const pageNames = ["/", "/translate", "/documentation", "/account"]
+            const pageNames = ["/", "/translate", "/documentation", "/SignIn"]
             for (let i = 0; i < triggerElements.length; i++) {
                 userEvent.click(triggerElements[i])
                 expect(window.location.pathname).toBe(pageNames[i]); 
@@ -42,7 +52,7 @@ describe("Navbar component", () => {
             global.innerHeight = 480;
             global.dispatchEvent(new Event('resize'));
             const triggerElements = screen.getAllByRole("link")
-            const pageNames = ["/", "/translate", "/documentation", "/account"]
+            const pageNames = ["/", "/translate", "/documentation", "/SignIn"]
             for (let i = 0; i < triggerElements.length; i++) {
                 userEvent.click(triggerElements[i])
                 expect(window.location.pathname).toBe(pageNames[i]); 
