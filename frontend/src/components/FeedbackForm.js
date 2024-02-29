@@ -41,7 +41,37 @@ function FeedbackForm(props) {
     setRating(newValue);
   };
 
+  const storeFeedback = async(rating,comment) =>{
+    const API_BASE_URL = process.env.NODE_ENV === 'production' ?
+     window.location.origin:
+     'http://localhost:3000';
+    await fetch(`${API_BASE_URL}/api/feedback`,{
+        method: "POST",
+        body: JSON.stringify({
+            rating,
+            comment
+        }),
+        headers:{
+            "Content-type": "application/json"
+        },
+    })
+    .then(() => {
+        console.log("User registered");
+    })
+    .catch((err) => {
+        console.log(err.message)
+    })
+};
+
   const handleSubmit = () => {
+    const API_BASE_URL = process.env.NODE_ENV === 'production' ?
+    window.location.origin:
+    'http://localhost:3000';
+
+    
+      
+  
+
     // Handle form submission here
     console.log('Comment:', comment);
     console.log('Rating:', rating);
