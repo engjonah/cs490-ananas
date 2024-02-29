@@ -23,6 +23,7 @@ function TranslatePage() {
   },[API_BASE_URL]);
 
   const [outputLang, setOutputLang] = useState(0);
+  const [inputLang, setInputLang] = useState(0);
   const [codeUpload, setCodeUpload] = useState("");
   
   return (
@@ -35,14 +36,14 @@ function TranslatePage() {
                 <FileUpload setCodeUpload={setCodeUpload}/>
               </Container>
               <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "50vh", "padding-top":"15px"}}>
-                <CodeBox defaultValue={"Enter your code here!\n(can edit)"} readOnly={false} outputLang={outputLang} codeUpload={codeUpload} />
+                <CodeBox defaultValue={"Enter your code here!\n(can edit)"} readOnly={false} outputLang={outputLang} codeUpload={codeUpload} inputLang={inputLang} setInputLang={setInputLang} />
               </Container>
             </Grid>
             <Grid xs={6}>
               <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "60vh"}}>
                 <CodeBox defaultValue={"GPT API Output here...\n(read only)\n"} readOnly={true} setOutputLang={setOutputLang} />
               </Container>
-              <FeedbackForm/>
+              <FeedbackForm uid='placeholder' outputLang={outputLang} inputLang={inputLang}/>
             </Grid>
           </Grid>
         </Container>
