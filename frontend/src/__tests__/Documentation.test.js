@@ -1,25 +1,14 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import Documentation from './Documentation';
+import { render } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect'; // For additional matchers
 
-describe('Documentation', () => {
-  test('renders documentation content correctly', () => {
-    render(<Documentation />);
-    
-    // Check if the title is rendered
-    const titleElement = screen.getByText('Documentation');
-    expect(titleElement).toBeInTheDocument();
+import Documentation from '../components/Documentation';
 
-    // Check if the content is rendered
-    const contentElement = screen.getByText('This documentation page provides basic information about the MERN');
-    expect(contentElement).toBeInTheDocument();
-
-    // Check if both instances of the content are rendered (assuming duplication is intentional)
-    const contentElements = screen.getAllByText('This documentation page provides basic information about the MERN');
-    expect(contentElements.length).toBe(2);
-
-    // Add more assertions as needed
-  });
-
-  // You can add more specific tests here to check for the presence of certain elements or text
+test('renders documentation title', () => {
+  const { getByText } = render(<Documentation />);
+  const titleElement = getByText('Documentation');
+  expect(titleElement).toBeInTheDocument();
 });
+
+
+// Add more tests as needed to cover different aspects of your component

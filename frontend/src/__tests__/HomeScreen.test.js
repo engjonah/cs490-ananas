@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom'; // Import MemoryRouter to provide context for Link
-import HomeScreen from './HomeScreen';
+import HomeScreen from '../components/HomeScreen';
 
 describe('HomeScreen', () => {
   test('renders How to Use section', () => {
