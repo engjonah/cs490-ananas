@@ -66,7 +66,6 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
     else
     {
       setInputLang(newTab);
-      console.log("inputLang set to:", inputLang)
     }
   };
 
