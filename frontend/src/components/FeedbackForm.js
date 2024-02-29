@@ -64,7 +64,7 @@ function FeedbackForm(props) {
         },
     })
     .then(() => {
-        console.log("User registered");
+        console.log("Feedback submitted");
     })
     .catch((err) => {
         console.log(err.message)
