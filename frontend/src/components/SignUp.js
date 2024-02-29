@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import { useNavigate } from "react-router-dom";
+import { useSignup } from '../hooks/useSignUp';
 import { registerWithEmailAndPassword,signInWithGoogle,signInWithGithub } from '../firebase';
 import {Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Divider} from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -12,11 +13,13 @@ const SignUp = () => {
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const navigate = useNavigate();
+    const {signup} = useSignup();
 
     const onSubmitEmailPass = async (event) => {     
         event.preventDefault();
         try {
-            await registerWithEmailAndPassword(name, email, password);
+            const uid = await registerWithEmailAndPassword(name, email, password);
+            await signup(name, email, uid)
             toast.success("User registered!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
@@ -29,7 +32,8 @@ const SignUp = () => {
     const onSubmitGoogle = async (event) => {
       event.preventDefault();
         try {
-            await signInWithGoogle();
+            const {name, email ,uid} = await signInWithGoogle();
+            await signup(name, email, uid)
             toast.success("User registered!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
@@ -41,7 +45,8 @@ const SignUp = () => {
     const onSubmitGithub = async (event) => {
       event.preventDefault();
         try {
-            await signInWithGithub();
+            const {name, email ,uid} = await signInWithGithub();
+            await signup(name, email ,uid)
             toast.success("User registered!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
@@ -117,9 +122,9 @@ const SignUp = () => {
                   Sign Up
                 </Button>
               </Grid>           
-              <Grid container justifyContent="center" alignContent="center" margin={2}>
+              <Grid container justifyContent="center" alignContent="center" margin={1}>
                   <Link href="/SignIn" variant="body2">
-                    Already have an account? Log in
+                    Already have an account? Sign in
                   </Link>    
               </Grid>
             </Grid>
