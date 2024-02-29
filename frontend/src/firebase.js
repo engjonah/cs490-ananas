@@ -22,31 +22,6 @@ const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
 
-// const registerUserToMongo = async(name,email,uid) =>{
-//     const API_BASE_URL = process.env.NODE_ENV === 'production' ?
-//      window.location.origin:
-//      'http://localhost:3000';
-//     await fetch(`${API_BASE_URL}/api/register`,{
-//         method: "POST",
-//         body: JSON.stringify({
-//             name,
-//             email,
-//             uid,
-//         }),
-//         headers:{
-//             "Content-type": "application/json"
-//         },
-//     })
-//     .then((response) => {
-//         const json = response.json();
-//         console.log(json.token)
-//         localStorage.setItem("token", json.token);
-//         console.log("User registered");
-//     })
-//     .catch((err) => {
-//         console.log(err.message)
-//     })
-// };
 
 const thirdPartySignin = async(provider) => {
     try {

@@ -59,9 +59,6 @@ function TranslatePage() {
           </Grid>
         </Container>
         <BackendStatus status={test}/>
-        {/* {test && ()}
-        {!test && API} */}
-
       </div>
     </div>
   );
