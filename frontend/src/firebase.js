@@ -22,34 +22,37 @@ const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
 
-const registerUserToMongo = async(name,email,uid) =>{
-    const API_BASE_URL = process.env.NODE_ENV === 'production' ?
-     window.location.origin:
-     'http://localhost:3000';
-    await fetch(`${API_BASE_URL}/api/register`,{
-        method: "POST",
-        body: JSON.stringify({
-            name,
-            email,
-            uid,
-        }),
-        headers:{
-            "Content-type": "application/json"
-        },
-    })
-    .then(() => {
-        console.log("User registered");
-    })
-    .catch((err) => {
-        console.log(err.message)
-    })
-};
+// const registerUserToMongo = async(name,email,uid) =>{
+//     const API_BASE_URL = process.env.NODE_ENV === 'production' ?
+//      window.location.origin:
+//      'http://localhost:3000';
+//     await fetch(`${API_BASE_URL}/api/register`,{
+//         method: "POST",
+//         body: JSON.stringify({
+//             name,
+//             email,
+//             uid,
+//         }),
+//         headers:{
+//             "Content-type": "application/json"
+//         },
+//     })
+//     .then((response) => {
+//         const json = response.json();
+//         console.log(json.token)
+//         localStorage.setItem("token", json.token);
+//         console.log("User registered");
+//     })
+//     .catch((err) => {
+//         console.log(err.message)
+//     })
+// };
 
 const thirdPartySignin = async(provider) => {
     try {
         const response = await signInWithPopup(auth, provider );
         const user = response.user;
-        await registerUserToMongo(user.displayName, user.email, user.uid);
+        return {name: user.displayName, email:user.email, uid:user.uid}
     } catch (error){
         throw error;
     }   
@@ -62,7 +65,8 @@ const registerWithEmailAndPassword = async(name,email,password) => {
         }
         const response = await createUserWithEmailAndPassword(auth, email, password)
         const user = response.user
-        await registerUserToMongo(name, email, user.uid)
+        return user.uid
+        // await registerUserToMongo(name, email, user.uid)
     }catch (e){
         console.log(e.message);
         if (e.message.includes(AuthErrorCodes.WEAK_PASSWORD)){
@@ -79,7 +83,8 @@ const registerWithEmailAndPassword = async(name,email,password) => {
 
 const signInWithGoogle = async() => {
     try{
-       await thirdPartySignin(googleProvider);
+       const {name, email ,uid }= await thirdPartySignin(googleProvider);
+       return {name:name, email: email,uid:uid}
     }catch (error){
         console.log(error);
         if (error.message.includes(AuthErrorCodes.NEED_CONFIRMATION)){
@@ -92,7 +97,8 @@ const signInWithGoogle = async() => {
 
 const signInWithGithub = async() => {
     try {
-        await thirdPartySignin(githubProvider);
+        const {name, email ,uid}  = await thirdPartySignin(githubProvider);
+        return {name:name, email: email,uid:uid}
     } catch (error) {
         console.log(error)
         if (error.message.includes(AuthErrorCodes.NEED_CONFIRMATION)){
@@ -111,6 +117,7 @@ const logInWithEmailAndPassword = async(email, password) => {
         }
         const response = await signInWithEmailAndPassword(auth, email, password)
         const user = response.user
+        return user.uid
     }catch(error){
         console.log(error.message)
         if (error.message.includes(AuthErrorCodes.INVALID_IDP_RESPONSE)){

@@ -6,17 +6,20 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import GoogleButton from 'react-google-button';
 import GithubButton from 'react-github-login-button/dist/react-github-button'; 
 import toast from 'react-hot-toast';
+import { useLogin } from '../hooks/useLogIn';
 
 const LogIn = () => {
  
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const {login} = useLogin();
     const navigate = useNavigate();
 
     const onSubmitEmailPass = async (event) => {     
         event.preventDefault();
         try {
-            await logInWithEmailAndPassword(email, password);
+            const uid = await logInWithEmailAndPassword(email, password);
+            await login(email, uid) 
             toast.success("Logged in!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
@@ -29,7 +32,8 @@ const LogIn = () => {
     const onSubmitGoogle = async (event) => {
       event.preventDefault();
         try {
-            await signInWithGoogle();
+            const {email,uid} = await signInWithGoogle();
+            await login(email,uid)
             toast.success("Logged in")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
@@ -41,7 +45,8 @@ const LogIn = () => {
     const onSubmitGithub = async (event) => {
       event.preventDefault();
         try {
-            await signInWithGithub();
+            const {uid} = await signInWithGithub();
+            await(login, uid)
             toast.success("Logged in!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
