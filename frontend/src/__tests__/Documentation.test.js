@@ -10,5 +10,17 @@ test('renders documentation title', () => {
   expect(titleElement).toBeInTheDocument();
 });
 
+test('renders both MERN sections', () => {
+  const { getAllByText } = render(<Documentation />);
+  const mernSections = getAllByText('MERN');
+  expect(mernSections.length).toBe(2); // Ensure there are two sections titled "MERN"
+});
+
+test('renders background-gif div', () => {
+    const { container } = render(<Documentation />);
+    const backgroundGifDiv = container.querySelector('.background-gif');
+    expect(backgroundGifDiv).toBeInTheDocument();
+  });
+  
 
 // Add more tests as needed to cover different aspects of your component
