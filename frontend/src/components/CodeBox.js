@@ -5,7 +5,7 @@ import { IconButton, Box, Tab, Tabs } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 
-export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLang, codeUpload}) {
+export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLang, codeUpload, inputLang, setInputLang}) {
   const editorRef = useRef(null);
 
   const [inputExists, setInputExists] = useState(false)
@@ -59,8 +59,14 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
 
   const handleTabChange = (event, newTab) => {
     setCurrTab(newTab);
+    
     if (readOnly) {
       setOutputLang(newTab);
+    }
+    else
+    {
+      setInputLang(newTab);
+      console.log("inputLang set to:", inputLang)
     }
   };
 

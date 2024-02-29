@@ -22,6 +22,9 @@ function FeedbackForm(props) {
   const [open, setOpen] = useState(false);
   const [review, setReview] = useState('');
   const [rating, setRating] = useState(5);
+  const outputLang = props.outputLang;
+  const inputLang = props.inputLang;
+  const uid = props.uid;
 
   const handleOpen = () => {
     setReview('');
@@ -48,9 +51,9 @@ function FeedbackForm(props) {
     await fetch(`${API_BASE_URL}/api/feedback`,{
         method: "POST",
         body: JSON.stringify({
-            uid:'guest', //TODO make these first 4 fields actually mean something
-            inputLang:'Java',
-            outputLang:'Python',
+            uid, //TODO make these first 4 fields actually mean something
+            inputLang,
+            outputLang,
             translationid:'1',
             rating,
             review,
