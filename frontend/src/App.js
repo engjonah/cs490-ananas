@@ -1,15 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import TranslatePage from './components/TranslatePage';
-import SignIn from './components/SignIn';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import HomeScreen from './components/HomeScreen';
 import Navbar from './components/Navbar';
 import Documentation from './components/Documentation';
 import {Toaster} from 'react-hot-toast';
-import { useAuthContext } from './hooks/useAuthContext';
 import { useAuthContext } from './hooks/useAuthContext';
 function App() {
   const {user} = useAuthContext();
