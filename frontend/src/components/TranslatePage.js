@@ -6,6 +6,7 @@ import CodeBox from './CodeBox';
 import './App.css';
 import FeedbackForm from './FeedbackForm';
 import FileUpload from './FileUpload';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 function TranslatePage() {
   const API_BASE_URL = process.env.NODE_ENV === 'production' ?
@@ -13,14 +14,24 @@ function TranslatePage() {
     'http://localhost:3000';
 
   let [test, setTest] = useState(null);
-
+  const {user} = useAuthContext()
   useEffect(()=>{
-    fetch(`${API_BASE_URL}/api/test`)
-      .then(res=>res.json())
-      .then(res=>{
-        setTest(res)
+    if (user){
+      fetch(`${API_BASE_URL}/api/test`, {
+        headers: {
+          'Authorization':`Bearer ${user.token}`
+        }
       })
-  },[API_BASE_URL]);
+        .then(res=>res.json())
+        .then(res=>{
+          console.log(res)
+          setTest(res)
+        })
+    }else{
+      setTest([{test:'User must be logged in!'}])
+    }
+    
+  },[API_BASE_URL, user]);
 
   const [outputLang, setOutputLang] = useState(0);
   const [inputLang, setInputLang] = useState(0);
@@ -47,9 +58,7 @@ function TranslatePage() {
             </Grid>
           </Grid>
         </Container>
-        
         <BackendStatus status={test}/>
-
       </div>
     </div>
   );
