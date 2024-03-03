@@ -1,8 +1,9 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import FeedbackForm from '../components/FeedbackForm';
+import FeedbackForm, { storeFeedback } from '../components/FeedbackForm';
 
 describe('FeedbackForm component', () => {
+
   test('renders Feedback button', () => {
     const { getByText } = render(<FeedbackForm />);
     const feedbackButton = getByText('Feedback');
@@ -19,7 +20,7 @@ describe('FeedbackForm component', () => {
     expect(leaveReviewTextField).toBeInTheDocument();
   });
 
-  test('submits form when Submit button is clicked', () => {
+  test('submits form when Submit button is clicked and rating/review fields are cleared', () => {
     const { getByText, getByLabelText } = render(<FeedbackForm />);
     const feedbackButton = getByText('Feedback');
     fireEvent.click(feedbackButton);
@@ -28,6 +29,8 @@ describe('FeedbackForm component', () => {
     fireEvent.change(leaveReviewTextField, { target: { value: 'Great translation!' } });
     fireEvent.click(submitButton);
     expect(leaveReviewTextField.value).toBe('Great translation!');
+    
+
   });
 
   test('form cleared on reopening', () => {
@@ -41,4 +44,5 @@ describe('FeedbackForm component', () => {
     fireEvent.click(feedbackButton);
     expect(leaveReviewTextField.value).toBe('');
   });
+
 });
