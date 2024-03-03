@@ -8,7 +8,7 @@ afterEach(() => {
 describe("CodeBox Component", () => {
   test('CodeBox code box starts rending', async () => {
     render(<CodeBox />);
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
+    expect(screen.getByText('Loading your pudgy penguins...')).toBeInTheDocument();
   })
   test('Translate button shows up', () => {
     render(<CodeBox />);

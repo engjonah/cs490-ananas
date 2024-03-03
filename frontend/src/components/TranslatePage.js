@@ -6,6 +6,7 @@ import CodeBox from './CodeBox';
 import './App.css';
 import FeedbackForm from './FeedbackForm';
 import FileUpload from './FileUpload';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 function TranslatePage() {
   const API_BASE_URL = process.env.NODE_ENV === 'production' ?
@@ -13,16 +14,27 @@ function TranslatePage() {
     'http://localhost:3000';
 
   let [test, setTest] = useState(null);
-
+  const {user} = useAuthContext()
   useEffect(()=>{
-    fetch(`${API_BASE_URL}/api/test`)
-      .then(res=>res.json())
-      .then(res=>{
-        setTest(res)
+    if (user){
+      fetch(`${API_BASE_URL}/api/test`, {
+        headers: {
+          'Authorization':`Bearer ${user.token}`
+        }
       })
-  },[API_BASE_URL]);
+        .then(res=>res.json())
+        .then(res=>{
+          console.log(res)
+          setTest(res)
+        })
+    }else{
+      setTest([{test:'User must be logged in!'}])
+    }
+    
+  },[API_BASE_URL, user]);
 
   const [outputLang, setOutputLang] = useState(0);
+  const [inputLang, setInputLang] = useState(0);
   const [codeUpload, setCodeUpload] = useState("");
   
   return (
@@ -34,8 +46,8 @@ function TranslatePage() {
               <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "10vh"}}>
                 <FileUpload setCodeUpload={setCodeUpload}/>
               </Container>
-              <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "50vh", "paddingTop":"15px"}}>
-                <CodeBox defaultValue={"Enter your code here!\n(can edit)"} readOnly={false} outputLang={outputLang} codeUpload={codeUpload} />
+              <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "50vh", "padding-top":"15px"}}>
+                <CodeBox defaultValue={"Enter your code here!\n(can edit)"} readOnly={false} outputLang={outputLang} codeUpload={codeUpload} inputLang={inputLang} setInputLang={setInputLang} />
               </Container>
             </Grid>
             <Grid xs={6}>
@@ -43,13 +55,11 @@ function TranslatePage() {
               <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "50vh", "paddingTop":"15px"}}>
                 <CodeBox defaultValue={"GPT API Output here...\n(read only)\n"} readOnly={true} setOutputLang={setOutputLang} />
               </Container>
-              <FeedbackForm/>
+              <FeedbackForm uid='placeholder' outputLang={outputLang} inputLang={inputLang}/>
             </Grid>
           </Grid>
         </Container>
-        
         <BackendStatus status={test}/>
-
       </div>
     </div>
   );

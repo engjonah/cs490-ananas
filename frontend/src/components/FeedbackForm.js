@@ -20,11 +20,14 @@ const StarsWrapper = styled('div')({
   
 function FeedbackForm(props) {
   const [open, setOpen] = useState(false);
-  const [comment, setComment] = useState('');
+  const [review, setReview] = useState('');
   const [rating, setRating] = useState(5);
+  const outputLang = props.outputLang;
+  const inputLang = props.inputLang;
+  const uid = props.uid;
 
   const handleOpen = () => {
-    setComment('');
+    setReview('');
     setRating(5);
     setOpen(true);
   };
@@ -33,17 +36,50 @@ function FeedbackForm(props) {
     setOpen(false);
   };
 
-  const handleCommentChange = (event) => {
-    setComment(event.target.value);
+  const handleReviewChange = (event) => {
+    setReview(event.target.value);
   };
 
   const handleRatingChange = (newValue) => {
     setRating(newValue);
   };
 
+  const storeFeedback = async(rating,review) =>{
+    const API_BASE_URL = process.env.NODE_ENV === 'production' ?
+     window.location.origin:
+     'http://localhost:3000';
+    await fetch(`${API_BASE_URL}/api/feedback`,{
+        method: "POST",
+        body: JSON.stringify({
+            uid, //TODO make these first 4 fields actually mean something
+            inputLang,
+            outputLang,
+            translationid:'1',
+            rating,
+            review,
+
+        }),
+        headers:{
+            "Content-type": "application/json"
+        },
+    })
+    .then(() => {
+        console.log("Feedback submitted");
+    })
+    .catch((err) => {
+        console.log(err.message)
+    })
+};
+
   const handleSubmit = () => {
+    storeFeedback(rating, review);
+
+    
+      
+  
+
     // Handle form submission here
-    console.log('Comment:', comment);
+    console.log('review:', review);
     console.log('Rating:', rating);
     handleClose();
   };
@@ -86,8 +122,8 @@ function FeedbackForm(props) {
             label="Leave a review"
             type="text"
             fullWidth={true}
-            value={comment}
-            onChange={handleCommentChange}
+            value={review}
+            onChange={handleReviewChange}
             style={{ fontSize: '2px' }} 
             multiline={true}
           />
