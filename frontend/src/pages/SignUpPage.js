@@ -1,26 +1,26 @@
 import React, {useState} from 'react';
 import { useNavigate } from "react-router-dom";
-import { logInWithEmailAndPassword, signInWithGoogle,signInWithGithub } from '../firebase';
+import { useSignup } from '../hooks/useSignUp';
+import { registerWithEmailAndPassword,signInWithGoogle,signInWithGithub } from '../firebase';
 import {Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Divider} from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import GoogleButton from 'react-google-button';
 import GithubButton from 'react-github-login-button/dist/react-github-button'; 
 import toast from 'react-hot-toast';
-import { useLogin } from '../hooks/useLogIn';
-
-const LogIn = () => {
+const SignUpPage = () => {
  
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const {login} = useLogin();
+    const [name, setName] = useState('');
     const navigate = useNavigate();
+    const {signup} = useSignup();
 
     const onSubmitEmailPass = async (event) => {     
         event.preventDefault();
         try {
-            const uid = await logInWithEmailAndPassword(email, password);
-            await login(email, uid) 
-            toast.success("Logged in!")
+            const uid = await registerWithEmailAndPassword(name, email, password);
+            await signup(name, email, uid)
+            toast.success("User registered!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {
@@ -32,27 +32,27 @@ const LogIn = () => {
     const onSubmitGoogle = async (event) => {
       event.preventDefault();
         try {
-            const {email,uid} = await signInWithGoogle();
-            await login(email,uid)
-            toast.success("Logged in")
+            const {name, email ,uid} = await signInWithGoogle();
+            await signup(name, email, uid)
+            toast.success("User registered!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {
-          console.log(error.message);
-          toast.error(error.message);
+            console.log(error.message);
+            toast.error(error.message)        
         }
     }
     const onSubmitGithub = async (event) => {
       event.preventDefault();
         try {
-            const {uid} = await signInWithGithub();
-            await(login, uid)
-            toast.success("Logged in!")
+            const {name, email ,uid} = await signInWithGithub();
+            await signup(name, email ,uid)
+            toast.success("User registered!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {
-          console.log(error.message);
-          toast.error(error.message);
+            console.log(error.message);
+            toast.error(error.message)        
         }
     }
  
@@ -72,10 +72,24 @@ const LogIn = () => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign In
+            Sign up
           </Typography>
           <Box component="form" noValidate onSubmit={onSubmitEmailPass} sx={{ mt: 3, mb: 2}}>
             <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                    autoComplete="given-name"
+                    fullWidth
+                    name="Name"
+                    type="text"
+                    label="Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}  
+                    required                                    
+                    placeholder="Name"
+                    autoFocus
+                />
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                     required
@@ -92,7 +106,7 @@ const LogIn = () => {
                     required
                     fullWidth
                     type="password"
-                    label="Password"
+                    label="Create password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)} 
                     placeholder="Password"
@@ -105,20 +119,13 @@ const LogIn = () => {
                 xs={12}
                 fullWidth
                 >
-                  Sign In
+                  Sign Up
                 </Button>
               </Grid>           
-              <Grid container marginTop={2} marginBottom={2} marginLeft={2}>
-                <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link href="/SignUp" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
-                </Grid>
+              <Grid container justifyContent="center" alignContent="center" margin={1}>
+                  <Link href="/SignIn" variant="body2">
+                    Already have an account? Sign in
+                  </Link>    
               </Grid>
             </Grid>
             <Divider color = "black" marginBottom = {2}/>
@@ -129,16 +136,14 @@ const LogIn = () => {
                 type="dark"
                 onClick={onSubmitGoogle}
                 variant="contained"
-              >
-                Log In With Google
-            </GoogleButton>
+                label='Sign up With Google'
+            />                
             <GithubButton
                 type="dark"
                 onClick={onSubmitGithub}
                 variant="contained"
-              >
-                Log In With Github
-            </GithubButton>
+                label='Sign up With Github'
+            />
           </Box>
           
           
@@ -153,4 +158,4 @@ const LogIn = () => {
   )
 }
  
-export default LogIn
+export default SignUpPage

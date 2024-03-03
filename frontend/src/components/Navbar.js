@@ -2,9 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { AppBar, Button, Toolbar, Tooltip, Typography } from '@mui/material'
 import { Icon } from './Icon.js'
-import { ReactComponent as TranslateIcon } from '../icons/TranslateIcon.svg'
-import { ReactComponent as DocumentationIcon } from '../icons/DocumentationIcon.svg'
-import { ReactComponent as AccountIcon } from '../icons/AccountIcon.svg'
+import { ReactComponent as TranslateIcon } from '../assets/TranslateIcon.svg'
+import { ReactComponent as DocumentationIcon } from '../assets/DocumentationIcon.svg'
+import { ReactComponent as AccountIcon } from '../assets/AccountIcon.svg'
 import {useLogout} from '../hooks/useLogOut.js'
 import { useAuthContext } from '../hooks/useAuthContext.js';
 

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Grid } from '@mui/material';
-import './HomeScreen.css'; // Import the CSS file for HomeScreen
+import './HomePage.css'; // Import the CSS file for HomePage
 
-const HomeScreen = () => {
+const HomePage = () => {
   return (
-    <div className="HomeScreen">
-      <Grid container spacing={2} justifyContent="center" alignItems="center" className="HomeScreen-content">
+    <div className="HomePage">
+      <Grid container spacing={2} justifyContent="center" alignItems="center" className="HomePage-content">
         <Grid item xs={12} sm={6}>
           <h2>How to Use</h2>
           <ol>
@@ -20,7 +20,7 @@ const HomeScreen = () => {
         </Grid>
       </Grid>
       
-      <Grid container justifyContent="center" className="HomeScreen-button">
+      <Grid container justifyContent="center" className="HomePage-button">
         <Grid item>
           <Link to="/translate">
             <Button variant="contained" style={{ backgroundColor: '#CACACA', color: 'black', font:'Fira Code'}}>Translate Now!</Button>
@@ -31,4 +31,4 @@ const HomeScreen = () => {
   );
 }
 
-export default HomeScreen;
+export default HomePage;

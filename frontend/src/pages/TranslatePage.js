@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
-import BackendStatus from './BackendStatus';
-import CodeBox from './CodeBox';
+import BackendStatus from '../components/BackendStatus';
+import CodeBox from '../components/CodeBox';
 import './App.css';
-import FeedbackForm from './FeedbackForm';
-import FileUpload from './FileUpload';
+import FeedbackForm from '../components/FeedbackForm';
+import FileUpload from '../components/FileUpload';
 import { useAuthContext } from '../hooks/useAuthContext';
 
 function TranslatePage() {

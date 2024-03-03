@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import TranslatePage from './components/TranslatePage';
-import SignIn from './components/SignIn';
-import SignUp from './components/SignUp';
-import HomeScreen from './components/HomeScreen';
+import TranslatePage from './pages/TranslatePage';
+import SignInPage from './pages/SignInPage';
+import SignUpPage from './pages/SignUpPage';
+import HomePage from './pages/HomePage';
+import DocumentationPage from './pages/DocumentationPage';
 import Navbar from './components/Navbar';
-import Documentation from './components/Documentation';
 import {Toaster} from 'react-hot-toast';
 import { useAuthContext } from './hooks/useAuthContext';
 function App() {
@@ -16,11 +16,11 @@ function App() {
         <Toaster/>
         <Navbar />
         <Routes>
-          <Route path="/" element={<HomeScreen />} />
-          <Route path="/documentation" element={<Documentation />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/documentation" element={<DocumentationPage />} />
           <Route path="/translate" element={user ? <TranslatePage /> : <Navigate to='/SignIn'/>} />
-          <Route path="/SignIn" element={!user ? <SignIn/> : <Navigate to='/translate'/>}/>
-          <Route path="/SignUp" element={!user ? <SignUp/> : <Navigate to='/translate'/>}/>
+          <Route path="/SignIn" element={!user ? <SignInPage/> : <Navigate to='/translate'/>}/>
+          <Route path="/SignUp" element={!user ? <SignUpPage/> : <Navigate to='/translate'/>}/>
         </Routes>
       </div>
     </Router>

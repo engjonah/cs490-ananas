@@ -1,7 +1,7 @@
 import React from 'react';
-import './Documentation.css'; // Import CSS for styling
+import './DocumentationPage.css'; // Import CSS for styling
 
-function Documentation() {
+function DocumentationPage() {
   return (
     <div className="documentation-container">
       <div className="header">
@@ -48,4 +48,4 @@ function Documentation() {
   );
 }
 
-export default Documentation;
+export default DocumentationPage;
