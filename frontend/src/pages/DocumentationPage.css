@@ -13,7 +13,7 @@ body {
 .background-gif {
     width: 100%; /* Set width to 100% of the viewport */
     height: 600px; /* Adjust height as needed */
-    background-image: url('giphy.gif'); /* Specify the correct path to your GIF */
+    background-image: url('../assets/DocumentationBackground.gif'); /* Specify the correct path to your GIF */
     background-size: cover;
     background-position: center;
     position: absolute;

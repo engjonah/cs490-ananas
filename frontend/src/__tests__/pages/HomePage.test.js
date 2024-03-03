@@ -1,11 +1,11 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import HomeScreen from '../components/HomeScreen';
+import HomePage from '../../pages/HomePage';
 
-describe('HomeScreen', () => {
+describe('HomePage', () => {
   test('renders How to Use section', () => {
-    render(<HomeScreen />, { wrapper: MemoryRouter });
+    render(<HomePage />, { wrapper: MemoryRouter });
 
     const howToUseHeader = screen.getByText('How to Use');
     expect(howToUseHeader).toBeInTheDocument();
@@ -15,7 +15,7 @@ describe('HomeScreen', () => {
   });
 
   test('renders Translate Now! button and routes correctly', () => {
-    const { container } = render(<HomeScreen />, { wrapper: MemoryRouter });
+    const { container } = render(<HomePage />, { wrapper: MemoryRouter });
 
     const translateButton = screen.getByRole('button', { name: 'Translate Now!' });
     expect(translateButton).toBeInTheDocument();

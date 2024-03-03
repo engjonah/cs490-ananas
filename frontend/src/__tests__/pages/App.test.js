@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import App from '../App';
-import { useAuthContext } from '../hooks/useAuthContext.js';
+import App from '../../App.js';
+import { useAuthContext } from '../../hooks/useAuthContext.js';
 
-jest.mock('../hooks/useAuthContext', () => ({
+jest.mock('../../hooks/useAuthContext', () => ({
   useAuthContext: jest.fn(),
 }));
 
