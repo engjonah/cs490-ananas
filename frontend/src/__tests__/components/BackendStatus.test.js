@@ -1,5 +1,5 @@
 import { render, screen, cleanup } from '@testing-library/react';
-import BackendStatus from "../components/BackendStatus";
+import BackendStatus from "../../components/BackendStatus";
 
 afterEach(() => {
   cleanup(); 

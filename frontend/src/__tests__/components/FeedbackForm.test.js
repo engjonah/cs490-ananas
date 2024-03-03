@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import FeedbackForm, { storeFeedback } from '../components/FeedbackForm';
+import FeedbackForm, { storeFeedback } from '../../components/FeedbackForm';
 
 describe('FeedbackForm component', () => {
 

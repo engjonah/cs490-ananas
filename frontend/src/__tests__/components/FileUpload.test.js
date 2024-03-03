@@ -1,5 +1,5 @@
 import { act, render, screen, cleanup, fireEvent } from '@testing-library/react';
-import FileUpload from "../components/FileUpload";
+import FileUpload from "../../components/FileUpload";
 import React from 'react';
 
 describe("FileUpload Component Functionality", () => {

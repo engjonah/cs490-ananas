@@ -1,5 +1,5 @@
 import { render, screen, cleanup, fireEvent } from '@testing-library/react';
-import CodeBox from "../components/CodeBox";
+import CodeBox from "../../components/CodeBox";
 import React from 'react';
 
 afterEach(() => {

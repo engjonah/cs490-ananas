@@ -2,11 +2,11 @@ import React from 'react'
 import { render, screen, cleanup, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { BrowserRouter as Router } from 'react-router-dom';
-import Navbar from "../components/Navbar.js"
+import Navbar from "../../components/Navbar.js"
 import { act } from 'react-dom/test-utils';
-import { useAuthContext } from '../hooks/useAuthContext.js';
+import { useAuthContext } from '../../hooks/useAuthContext.js';
 
-jest.mock('../hooks/useAuthContext', () => ({
+jest.mock('../../hooks/useAuthContext', () => ({
     useAuthContext: jest.fn(),
 }));
 
