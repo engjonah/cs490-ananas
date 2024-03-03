@@ -10,7 +10,8 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
 
   const [inputExists, setInputExists] = useState(false)
   const [code, setCode] = useState(defaultValue);
-  const [currTab, setCurrTab] = React.useState(1);
+  const [currTab, setCurrTab] = useState(1);
+  const [lineCount, setLineCount] = useState(0);
 
   function updateCurrentInput() {
     setCode(editorRef.current.getValue());
