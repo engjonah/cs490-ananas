@@ -39,7 +39,8 @@ function TranslatePage() {
               </Container>
             </Grid>
             <Grid xs={6}>
-              <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "60vh"}}>
+              <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "10vh"}} />
+              <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "50vh", "padding-top":"15px"}}>
                 <CodeBox defaultValue={"GPT API Output here...\n(read only)\n"} readOnly={true} setOutputLang={setOutputLang} />
               </Container>
               <FeedbackForm/>
