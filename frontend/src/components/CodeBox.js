@@ -1,5 +1,5 @@
 import Editor from '@monaco-editor/react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Button, Container, Tooltip }  from '@mui/material';
 import { IconButton, Box, Tab, Tabs } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -8,10 +8,10 @@ import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLang, codeUpload, inputLang, setInputLang}) {
   const editorRef = useRef(null);
 
-  const [inputExists, setInputExists] = useState(false)
-  const [code, setCode] = useState(defaultValue);
-  const [currTab, setCurrTab] = useState(1);
-  const [lineCount, setLineCount] = useState(0);
+  const [inputExists, setInputExists] = React.useState(false)
+  const [code, setCode] = React.useState(defaultValue);
+  const [currTab, setCurrTab] = React.useState(1);
+  const [lineCount, setLineCount] = React.useState(0);
 
   function updateCurrentInput() {
     setCode(editorRef.current.getValue());

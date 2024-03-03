@@ -34,7 +34,6 @@ export default function FileUpload({setCodeUpload}) {
 
   useEffect(() => {
     setDropColor(isDragActive ? (isDragAccept ? "#77DD77" : "#FFCCCC"): "#f5f5f5");
-    console.log(isDragAccept, isDragReject, dropColor);
   }, [isDragReject, setDropColor, isDragAccept, isDragActive, dropColor])
 
   return (
