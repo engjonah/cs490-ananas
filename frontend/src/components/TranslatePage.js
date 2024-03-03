@@ -40,7 +40,7 @@ function TranslatePage() {
   return (
     <div className="App">
       <div className="div">
-        <Container id="translation" disableGutters={true} maxWidth="lg" style={{"padding-top":"30px"}}>
+        <Container id="translation" disableGutters={true} maxWidth="lg" style={{"paddingTop":"30px"}}>
           <Grid container spacing={4}>
             <Grid xs={6}>
               <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "10vh"}}>
@@ -51,7 +51,8 @@ function TranslatePage() {
               </Container>
             </Grid>
             <Grid xs={6}>
-              <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "60vh"}}>
+              <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "10vh"}} />
+              <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "50vh", "paddingTop":"15px"}}>
                 <CodeBox defaultValue={"GPT API Output here...\n(read only)\n"} readOnly={true} setOutputLang={setOutputLang} />
               </Container>
               <FeedbackForm uid='placeholder' outputLang={outputLang} inputLang={inputLang}/>
