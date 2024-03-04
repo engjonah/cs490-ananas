@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useMediaQuery, useTheme } from "@mui/material";
 import BackendStatus from '../components/BackendStatus';
 import CodeBox from '../components/CodeBox';
 import './App.css';
@@ -33,6 +34,10 @@ function TranslatePage() {
     
   },[API_BASE_URL, user]);
 
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
+  
   const [outputLang, setOutputLang] = useState(1);
   const [inputLang, setInputLang] = useState(0);
   const [codeUpload, setCodeUpload] = useState("");
@@ -42,16 +47,16 @@ function TranslatePage() {
       <div className="div">
         <Container id="translation" disableGutters={true} maxWidth="lg" style={{"paddingTop":"30px"}}>
           <Grid container spacing={4}>
-            <Grid xs={6}>
+            <Grid xs={12} md={6}>
               <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "10vh"}}>
                 <FileUpload setCodeUpload={setCodeUpload}/>
               </Container>
-              <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "50vh", "padding-top":"15px"}}>
+              <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "50vh", "paddingTop":"15px"}}>
                 <CodeBox defaultValue={"Enter your code here!\n(can edit)"} readOnly={false} outputLang={outputLang} codeUpload={codeUpload} inputLang={inputLang} setInputLang={setInputLang} />
               </Container>
             </Grid>
-            <Grid xs={6}>
-              <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "10vh"}} />
+            <Grid xs={12} md={6}>
+              {!isSmallScreen && <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "10vh"}} />}
               <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "50vh", "paddingTop":"15px"}}>
                 <CodeBox defaultValue={"GPT API Output here...\n(read only)\n"} readOnly={true} setOutputLang={setOutputLang} />
               </Container>
