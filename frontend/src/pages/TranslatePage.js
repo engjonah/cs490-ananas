@@ -8,17 +8,14 @@ import './App.css';
 import FeedbackForm from '../components/FeedbackForm';
 import FileUpload from '../components/FileUpload';
 import { useAuthContext } from '../hooks/useAuthContext';
+import ApiUrl from '../ApiUrl';
 
 function TranslatePage() {
-  const API_BASE_URL = process.env.NODE_ENV === 'production' ?
-    window.location.origin:
-    'http://localhost:3000';
-
   let [test, setTest] = useState(null);
   const {user} = useAuthContext()
   useEffect(()=>{
     if (user){
-      fetch(`${API_BASE_URL}/api/test`, {
+      fetch(`${ApiUrl}/api/test`, {
         headers: {
           'Authorization':`Bearer ${user.token}`
         }
@@ -32,7 +29,7 @@ function TranslatePage() {
       setTest([{test:'User must be logged in!'}])
     }
     
-  },[API_BASE_URL, user]);
+  },[user]);
 
 
   const theme = useTheme();

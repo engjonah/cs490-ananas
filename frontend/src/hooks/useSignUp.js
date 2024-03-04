@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
+import ApiUrl from "../ApiUrl";
 
 export const useSignup = () =>{
     const [error, setError] = useState(null)
@@ -8,10 +9,7 @@ export const useSignup = () =>{
     const signup = async(name, email, uid) =>{
         setIsLoading(true)
         setError(null)
-        const API_BASE_URL = process.env.NODE_ENV === 'production' ?
-        window.location.origin:
-        'http://localhost:3000';
-        const response = await fetch(`${API_BASE_URL}/api/register`,{
+        const response = await fetch(`${ApiUrl}/api/register`,{
             method: "POST",
             body: JSON.stringify({
                 name,
