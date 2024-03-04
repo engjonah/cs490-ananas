@@ -34,10 +34,11 @@ function TranslatePage() {
     
   },[API_BASE_URL, user]);
 
+
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
-
-  const [outputLang, setOutputLang] = useState(0);
+  
+  const [outputLang, setOutputLang] = useState(1);
   const [inputLang, setInputLang] = useState(0);
   const [codeUpload, setCodeUpload] = useState("");
   

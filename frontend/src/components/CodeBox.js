@@ -46,7 +46,7 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
     alert(
       code + 
       "\ninput language: " + (currTab !== 0? languageMap[currTab-1].name : "detect this language") + 
-      "\noutput language: " + languageMap[outputLang].name + 
+      "\noutput language: " + languageMap[outputLang-1].name + 
       "\n^ This gets submitted to API");
   }
 
