@@ -7,6 +7,7 @@ import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
 import Rating from '@mui/material/Rating';
 import { styled } from '@mui/system';
+import ApiUrl from '../ApiUrl';
 
 // Styled component for stars wrapper
 const StarsWrapper = styled('div')({
@@ -45,10 +46,7 @@ function FeedbackForm(props) {
   };
 
   const storeFeedback = async(rating,review) =>{
-    const API_BASE_URL = process.env.NODE_ENV === 'production' ?
-     window.location.origin:
-     'http://localhost:3000';
-    await fetch(`${API_BASE_URL}/api/feedback`,{
+    await fetch(`${ApiUrl}/api/feedback`,{
         method: "POST",
         body: JSON.stringify({
             uid, //TODO make these first 4 fields actually mean something

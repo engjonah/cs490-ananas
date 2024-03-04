@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
+import ApiUrl from "../ApiUrl";
 
 export const useLogin = () =>{
     const [error, setError] = useState(null)
@@ -8,10 +9,8 @@ export const useLogin = () =>{
     const login = async(email, uid) =>{
         setIsLoading(true)
         setError(null)
-        const API_BASE_URL = process.env.NODE_ENV === 'production' ?
-        window.location.origin:
-        'http://localhost:3000';
-        const response = await fetch(`${API_BASE_URL}/api/login`,{
+
+        const response = await fetch(`${ApiUrl}/api/login`,{
             method: "POST",
             body: JSON.stringify({
                 email,
