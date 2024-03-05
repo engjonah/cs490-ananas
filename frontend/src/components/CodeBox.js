@@ -50,11 +50,11 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
       "\n^ This gets submitted to API");
   }
 
-  const downloadCodeFile = () => {
+  const downloadCodeFile = (code, extension) => {
     const element = document.createElement("a");
     const file = new Blob([code], {type: 'text/plain'});
     element.href = URL.createObjectURL(file);
-    element.download = "placeholder" + (currTab !== 0? languageMap[currTab-1].extension : ".detectlang");
+    element.download = "placeholder" + extension;
     document.body.appendChild(element);
     element.click();
   }
@@ -118,12 +118,12 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
             </Tooltip>
           }
           <Tooltip title={"Download"}>
-            <IconButton onClick={downloadCodeFile} aria-label="delete" size="large">
+            <IconButton onClick={(e) => downloadCodeFile(code, currTab !== 0? languageMap[currTab-1].extension : ".detectlang")} aria-label="delete" size="large" data-testid="download-button">
               <DownloadRoundedIcon/>
             </IconButton>
           </Tooltip>
           <Tooltip title={"Copy"}>
-            <IconButton onClick={() => {navigator.clipboard.writeText(code)}}>
+            <IconButton onClick={() => {navigator.clipboard.writeText(code)}} data-testid="copy-button">
               <ContentCopyIcon/>
             </IconButton>
           </Tooltip>
@@ -131,4 +131,3 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
     </>
   )
 }
-

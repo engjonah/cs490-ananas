@@ -54,4 +54,79 @@ describe("CodeBox Component Functionality", () => {
     const translateButton = screen.getByText('Translate');
     expect(translateButton).not.toBeDisabled();
   })
+  test('Copy button copies code to clipboard', async () => {
+    jest
+      .spyOn(React, 'useState')
+      .mockImplementationOnce(() => [true, jest.fn()]) // input exists
+      .mockImplementationOnce(() => ["const example = 'Hello!';", jest.fn()]) // code
+      .mockImplementationOnce(() => [1, jest.fn()]) // tab
+      .mockImplementationOnce(() => [99, jest.fn()]) // lines
+      .mockImplementation((x) => [x, jest.fn()]);
+
+    // Mock the clipboard API
+    const clipboardWriteTextMock = jest.fn();
+    global.navigator.clipboard = {
+      writeText: clipboardWriteTextMock,
+    };
+
+    render(<CodeBox />);
+
+    // Find and click the copy button
+    const copyButton = screen.getByTestId('copy-button');
+    fireEvent.click(copyButton);
+
+    // Mocked clipboard.writeText should be called with the code
+    expect(clipboardWriteTextMock).toHaveBeenCalledWith("const example = 'Hello!';");
+
+    // Clean up mocks
+    jest.restoreAllMocks();
+  })
+
+  test('Download button downloads code file', async () => {
+    jest
+      .spyOn(React, 'useState')
+      .mockImplementationOnce(() => [true, jest.fn()]) //input exists
+      .mockImplementationOnce(() => ["hello world", jest.fn()]) //code
+      .mockImplementationOnce(() => [1, jest.fn()]) //tab
+      .mockImplementationOnce(() => [99, jest.fn()]) //lines
+      .mockImplementation((x) => [x, jest.fn()]);
+    render(<CodeBox />);
+
+    global.URL.createObjectURL = jest.fn();
+    const mockDownloadCodeFile = (code, extension) => {
+      const element = document.createElement("a");
+      const file = new Blob([code], {type: 'text/plain'});
+      element.href = URL.createObjectURL(file);
+      element.download = "placeholder" + extension;
+      element.click();
+    }
+    const elementMock = {
+      click: jest.fn()
+    };
+    jest.spyOn(document, "createElement").mockImplementation(() => elementMock);
+    
+    const file = new Blob(["const example = 'Hello!';"], {type: 'text/plain'});
+    mockDownloadCodeFile("const example = 'Hello!';", ".py");
+
+    expect(elementMock.download).toEqual("placeholder.py");
+    expect(elementMock.href).toEqual(URL.createObjectURL(file));
+    expect(elementMock.click).toHaveBeenCalledTimes(1);
+
+    jest.restoreAllMocks();
+  })
+
+  test('Selected tab changes on click', async () => {
+    render(<CodeBox setInputLang={jest.fn()} setOutputLang={jest.fn()}/>);
+
+    const pythonTab = screen.getByText("Python").closest("button");
+    const javaTab = screen.getByText("Java").closest("button");
+
+    expect(pythonTab).toHaveAttribute("aria-selected", "true");
+    expect(javaTab).toHaveAttribute("aria-selected", "false");
+
+    fireEvent.click(javaTab);
+    
+    expect(pythonTab).toHaveAttribute("aria-selected", "false");
+    expect(javaTab).toHaveAttribute("aria-selected", "true");
+  });
 })
