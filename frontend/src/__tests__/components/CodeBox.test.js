@@ -115,7 +115,7 @@ describe("CodeBox Component Functionality", () => {
     jest.restoreAllMocks();
   })
 
-  test('Test tab changes', async () => {
+  test('Selected tab changes on click', async () => {
     const setInputLangMock = () => {};
     const setOutputLangMock = () => {};
 
