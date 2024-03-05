@@ -121,16 +121,6 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
               <ContentCopyIcon/>
             </IconButton>
           </Tooltip>
-          <Tooltip title={"Download"}>
-            <IconButton onClick={downloadCodeFile} aria-label="delete" size="large">
-              <DownloadRoundedIcon/>
-            </IconButton>
-          </Tooltip>
-          <Tooltip title={"Copy"}>
-            <IconButton onClick={() => {navigator.clipboard.writeText(code)}}>
-              <ContentCopyIcon/>
-            </IconButton>
-          </Tooltip>
       </Container>
     </>
   )
