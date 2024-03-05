@@ -15,20 +15,23 @@
     "firebaseui": "^6.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-dropzone": "^14.2.3",
     "react-github-login-button": "^1.0.1",
     "react-google-button": "^0.7.2",
+    "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.22.1",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.0"
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.0",
+    "jest-fetch-mock": "^3.0.3"
   },
   "scripts": {
     "start": "PORT=3001 react-scripts start",
     "start-windows": "set PORT=3001 && react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --watchAll=false",
+    "test": "react-scripts test --watchAll=false --verbose --silent",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

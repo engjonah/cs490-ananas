@@ -12,16 +12,25 @@ afterAll(done => {
   done()
 })
 
-describe('/api/test', () => {
-  test("GET /api/test", async () => {
+describe('/api/feedback', () => {
+  test("POST /api/feedback", async () => {
+    const feedbackData = {
+        uid: 'user_id',
+        inputLang: 'Python',
+        outputLang: 'Java',
+        translationid: 'translation_id',
+        rating: 5,
+        review: 'Great translation!',
+      };
     const token = generateMockToken();
     return await request(app)
-      .get("/api/test")
+      .post("/api/feedback")
+      .send(feedbackData)
       .set('Authorization', `Bearer ${token}`)
-      .expect(200)
+      .expect(201)
       .expect('Content-Type', /json/)
       .then(response => {
-        expect(response.body[0].test).toEqual("hello world")
+        expect(response.body).toEqual({ Message: 'Feedback saved!' })
       })
   })
 })

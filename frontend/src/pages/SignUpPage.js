@@ -1,50 +1,58 @@
 import React, {useState} from 'react';
 import { useNavigate } from "react-router-dom";
+import { useSignup } from '../hooks/useSignUp';
 import { registerWithEmailAndPassword,signInWithGoogle,signInWithGithub } from '../firebase';
 import {Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Divider} from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import GoogleButton from 'react-google-button';
 import GithubButton from 'react-github-login-button/dist/react-github-button'; 
-const SignUp = () => {
+import toast from 'react-hot-toast';
+const SignUpPage = () => {
  
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const navigate = useNavigate();
+    const {signup} = useSignup();
 
     const onSubmitEmailPass = async (event) => {     
         event.preventDefault();
         try {
-            await registerWithEmailAndPassword(name, email, password);
-            console.log("done!")
+            const uid = await registerWithEmailAndPassword(name, email, password);
+            await signup(name, email, uid)
+            toast.success("User registered!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {
             console.log(error.message);
-            alert(error.message);
+            toast.error(error.message);
         }
       
     }
     const onSubmitGoogle = async (event) => {
       event.preventDefault();
         try {
-            await signInWithGoogle();
-            console.log("done!")
+            const {name, email ,uid} = await signInWithGoogle();
+            await signup(name, email, uid)
+            toast.success("User registered!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {
             console.log(error.message);
+            toast.error(error.message)        
         }
     }
     const onSubmitGithub = async (event) => {
       event.preventDefault();
         try {
-            await signInWithGithub();
-            console.log("done!")
+            const {name, email ,uid} = await signInWithGithub();
+            await signup(name, email ,uid)
+            toast.success("User registered!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {
             console.log(error.message);
+            toast.error(error.message)        
         }
     }
  
@@ -74,7 +82,7 @@ const SignUp = () => {
                     fullWidth
                     name="Name"
                     type="text"
-                    label="name"
+                    label="Name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}  
                     required                                    
@@ -115,7 +123,7 @@ const SignUp = () => {
                 </Button>
               </Grid>           
               <Grid container justifyContent="center" alignContent="center" margin={1}>
-                  <Link href="#" variant="body2">
+                  <Link href="/SignIn" variant="body2">
                     Already have an account? Sign in
                   </Link>    
               </Grid>
@@ -128,16 +136,14 @@ const SignUp = () => {
                 type="dark"
                 onClick={onSubmitGoogle}
                 variant="contained"
-              >
-                Sign Up With Google
-            </GoogleButton>
+                label='Sign up With Google'
+            />                
             <GithubButton
                 type="dark"
                 onClick={onSubmitGithub}
                 variant="contained"
-              >
-                Sign Up With Github
-            </GithubButton>
+                label='Sign up With Github'
+            />
           </Box>
           
           
@@ -152,4 +158,4 @@ const SignUp = () => {
   )
 }
  
-export default SignUp
+export default SignUpPage

@@ -8,21 +8,28 @@ Repo Structure:
 │  ├─ public/
 │  ├─ src/
 │  │  ├─ __tests__/
-│  │  └─ components/
-│  ├─ package.json
+│  │  │  ├─ components/
+│  │  │  └─ pages/
+│  │  ├─ assets/
+│  │  ├─ components/
+│  │  ├─ hooks/
+│  │  └─ pages/
 │  ├─ package-lock.json
+│  ├─ package.json
 │  └─ .gitignore
 ├─ backend/
+│  ├─ __tests__/
 │  ├─ controllers/
 │  ├─ db/
-│  ├─ routers/
+│  ├─ middleware/
 │  ├─ models/
-│  ├─ __tests__/
+│  ├─ routes/
+│  ├─ .env
+│  ├─ app.js
 │  ├─ server.js
-│  ├─ package.json
-│  └─ package-lock.json
+│  ├─ package-lock.json
+│  └─ package.json
 ├─ README.md
 ├─ .gitignore
-├─ package.json
-└─ package-lock.json
+└─ package.json
 ```
