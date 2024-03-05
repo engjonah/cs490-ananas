@@ -50,28 +50,34 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
       "\n^ This gets submitted to API");
   }
 
-  const downloadCodeFile = () => {
+  const downloadCodeFile = (code, extension) => {
     const element = document.createElement("a");
     const file = new Blob([code], {type: 'text/plain'});
     element.href = URL.createObjectURL(file);
-    element.download = "placeholder" + languageMap[readOnly? currTab:currTab-1].extension;
+    element.download = "placeholder" + extension;
     document.body.appendChild(element);
     element.click();
   }
 
   const handleTabChange = (event, newTab) => {
     setCurrTab(newTab);
+    
+    if (readOnly) {
+      setOutputLang(newTab);
+    }
+    else
+    {
+      setInputLang(newTab);
+    }
   };
 
   const languageMap = [
-    { name: "Python", extension: ".py" },
-    { name: "Java", extension: ".java" },
-    { name: "C++", extension: ".cpp" },
-    { name: "Ruby", extension: ".rb" },
-    { name: "C#", extension: ".cs" },
-    { name: "Kotlin", extension: ".kt" },
-    { name: "Go", extension: ".go" },
-    { name: "Matlab", extension: ".m" },
+    { syntaxName: "python", name: "Python", extension: ".py" },
+    { syntaxName: "java", name: "Java", extension: ".java" },
+    { syntaxName: "cpp", name: "C++", extension: ".cpp" },
+    { syntaxName: "ruby", name: "Ruby", extension: ".rb" },
+    { syntaxName: "csharp", name: "C#", extension: ".cs" },
+    { syntaxName: "javascript", name: "JavaScript", extension: ".js" },
     // add more languages here
   ];
   
@@ -86,9 +92,9 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
                 variant="scrollable"
                 scrollButtons="auto"
               >
-                {!readOnly && <Tab label={"Detect Language"} key={0} />}
+                {!readOnly && <Tab label={"Detect Language"} value={0} key={0}/>}
                 {languageMap.map((language, index) => (
-                  <Tab label={language.name} key={index + 1} />
+                  <Tab label={language.name} value={index+1} key={index+1}/>
                 ))}
               </Tabs>
             </Box>
@@ -112,12 +118,12 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
             </Tooltip>
           }
           <Tooltip title={"Download"}>
-            <IconButton onClick={downloadCodeFile} aria-label="delete" size="large">
+            <IconButton onClick={(e) => downloadCodeFile(code, currTab !== 0? languageMap[currTab-1].extension : ".detectlang")} aria-label="delete" size="large" data-testid="download-button">
               <DownloadRoundedIcon/>
             </IconButton>
           </Tooltip>
           <Tooltip title={"Copy"}>
-            <IconButton onClick={() => {navigator.clipboard.writeText(code)}}>
+            <IconButton onClick={() => {navigator.clipboard.writeText(code)}} data-testid="copy-button">
               <ContentCopyIcon/>
             </IconButton>
           </Tooltip>
@@ -125,4 +131,3 @@ export default function CodeBox({defaultValue, readOnly, outputLang, setOutputLa
     </>
   )
 }
-
