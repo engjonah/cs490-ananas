@@ -116,27 +116,17 @@ describe("CodeBox Component Functionality", () => {
   })
 
   test('Selected tab changes on click', async () => {
-    const setInputLangMock = () => {};
-    const setOutputLangMock = () => {};
-
-    const onClick = jest.fn();
-    jest
-      .spyOn(React, 'useState')
-      .mockImplementationOnce(() => [true, jest.fn()]) //input exists
-      .mockImplementationOnce(() => ["hello world", jest.fn()]) //code
-      .mockImplementationOnce(() => [1, jest.fn()]) //tab
-      .mockImplementationOnce(() => [99, jest.fn()]) //lines
-      .mockImplementation((x) => [x, jest.fn()]);
-    render(<CodeBox setInputLang={setInputLangMock} setOutputLang={setOutputLangMock}/>);
+    render(<CodeBox setInputLang={jest.fn()} setOutputLang={jest.fn()}/>);
 
     const pythonTab = screen.getByText("Python").closest("button");
     const javaTab = screen.getByText("Java").closest("button");
+
     expect(pythonTab).toHaveAttribute("aria-selected", "true");
     expect(javaTab).toHaveAttribute("aria-selected", "false");
 
-    await fireEvent.click(javaTab);
-
-    expect(javaTab).toHaveAttribute("aria-selected", "false");
-    expect(pythonTab).toHaveAttribute("aria-selected", "true");
+    fireEvent.click(javaTab);
+    
+    expect(pythonTab).toHaveAttribute("aria-selected", "false");
+    expect(javaTab).toHaveAttribute("aria-selected", "true");
   });
 })
