@@ -18,6 +18,7 @@ const SignInPage = () => {
 
     const onSubmitEmailPass = async (event) => {     
         event.preventDefault();
+        console.log(remember)
         try {
             const uid = await logInWithEmailAndPassword(email, password);
             await login(email, uid,remember) 
@@ -99,6 +100,17 @@ const SignInPage = () => {
                     placeholder="Password"
                 />
               </Grid>
+              <FormGroup>
+                <FormControlLabel 
+                  margin={5} 
+                  control={<Checkbox/>} 
+                  checked={remember} 
+                  onChange={e=> {
+                      console.log("target checked? - ", e.target.checked);
+                      setRemember(e.target.checked)
+                    }} 
+                  label="Remember Me" />
+              </FormGroup>
               <Grid item xs={12}>
                 <FormGroup>
                   <FormControlLabel 
