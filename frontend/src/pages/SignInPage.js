@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { useNavigate } from "react-router-dom";
 import { logInWithEmailAndPassword, signInWithGoogle,signInWithGithub } from '../firebase';
-import {Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Divider} from '@mui/material';
+import {Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Divider, FormGroup, FormControlLabel, Checkbox} from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import GoogleButton from 'react-google-button';
 import GithubButton from 'react-github-login-button/dist/react-github-button'; 
@@ -12,14 +12,16 @@ const SignInPage = () => {
  
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [remember, setRemember] = useState(false);
     const {login} = useLogin();
     const navigate = useNavigate();
 
     const onSubmitEmailPass = async (event) => {     
         event.preventDefault();
+        console.log(remember)
         try {
             const uid = await logInWithEmailAndPassword(email, password);
-            await login(email, uid) 
+            await login(email, uid,remember) 
             toast.success("Logged in!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
@@ -33,7 +35,7 @@ const SignInPage = () => {
       event.preventDefault();
         try {
             const {email,uid} = await signInWithGoogle();
-            await login(email,uid)
+            await login(email,uid,remember)
             toast.success("Logged in")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
@@ -45,8 +47,8 @@ const SignInPage = () => {
     const onSubmitGithub = async (event) => {
       event.preventDefault();
         try {
-            const {uid} = await signInWithGithub();
-            await(login, uid)
+            const {email,uid} = await signInWithGithub();
+            await login(email,uid,remember)
             toast.success("Logged in!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
@@ -98,6 +100,17 @@ const SignInPage = () => {
                     placeholder="Password"
                 />
               </Grid>
+              <FormGroup>
+                <FormControlLabel 
+                  margin={5} 
+                  control={<Checkbox/>} 
+                  checked={remember} 
+                  onChange={e=> {
+                      console.log("target checked? - ", e.target.checked);
+                      setRemember(e.target.checked)
+                    }} 
+                  label="Remember Me" />
+              </FormGroup>
               <Grid item xs={12}>
                 <Button
                 type="submit"
