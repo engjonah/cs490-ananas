@@ -11,6 +11,7 @@ const SignUpPage = () => {
  
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [password2, setPassword2] = useState('');
     const [name, setName] = useState('');
     const navigate = useNavigate();
     const {signup} = useSignup();
@@ -18,7 +19,7 @@ const SignUpPage = () => {
     const onSubmitEmailPass = async (event) => {     
         event.preventDefault();
         try {
-            const uid = await registerWithEmailAndPassword(name, email, password);
+            const uid = await registerWithEmailAndPassword(name, email, password,password2);
             await signup(name, email, uid)
             toast.success("User registered!")
             navigate("/translate")
@@ -109,6 +110,17 @@ const SignUpPage = () => {
                     label="Create password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)} 
+                    placeholder="Password"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                    required
+                    fullWidth
+                    type="password"
+                    label="Confirm password"
+                    value={password2}
+                    onChange={(e) => setPassword2(e.target.value)} 
                     placeholder="Password"
                 />
               </Grid>
