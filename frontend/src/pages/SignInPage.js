@@ -18,7 +18,6 @@ const SignInPage = () => {
 
     const onSubmitEmailPass = async (event) => {     
         event.preventDefault();
-        console.log(remember)
         try {
             const uid = await logInWithEmailAndPassword(email, password);
             await login(email, uid,remember) 
@@ -107,7 +106,6 @@ const SignInPage = () => {
                     control={<Checkbox/>} 
                     checked={remember} 
                     onChange={e=> {
-                        console.log("target checked? - ", e.target.checked);
                         setRemember(e.target.checked)
                       }} 
                     label="Remember Me" 
