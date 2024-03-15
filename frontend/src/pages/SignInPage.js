@@ -100,17 +100,20 @@ const SignInPage = () => {
                     placeholder="Password"
                 />
               </Grid>
-              <FormGroup>
-                <FormControlLabel 
-                  margin={5} 
-                  control={<Checkbox/>} 
-                  checked={remember} 
-                  onChange={e=> {
-                      console.log("target checked? - ", e.target.checked);
-                      setRemember(e.target.checked)
-                    }} 
-                  label="Remember Me" />
-              </FormGroup>
+              <Grid item xs={12}>
+                <FormGroup>
+                  <FormControlLabel 
+                    margin={5} 
+                    control={<Checkbox/>} 
+                    checked={remember} 
+                    onChange={e=> {
+                        console.log("target checked? - ", e.target.checked);
+                        setRemember(e.target.checked)
+                      }} 
+                    label="Remember Me" 
+                  />
+                </FormGroup>
+              </Grid>
               <Grid item xs={12}>
                 <Button
                 type="submit"
