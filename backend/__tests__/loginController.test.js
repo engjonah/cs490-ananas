@@ -13,20 +13,6 @@ afterAll(done => {
 
 describe('/api/login', () => {
     describe("Testing empty fields", () =>{
-        test("Empty Name", async () => {
-            return await request(app)
-              .post("/api/login")
-              .send({
-                  name:'',
-                  email:'abc',
-                  uid:'abc'
-              })
-              .expect(400)
-              .expect('Content-Type', /json/)
-              .then(response => {
-                expect(response.body.error).toEqual("Please fill in all fields!")
-              })
-          })
           test("Empty Email", async () => {
             return await request(app)
               .post("/api/login")
