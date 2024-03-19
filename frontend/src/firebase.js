@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup , GoogleAuthProvider, GithubAuthProvider, AuthErrorCodes} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup , GoogleAuthProvider, GithubAuthProvider, AuthErrorCodes, updatePassword} from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -109,4 +109,48 @@ const logInWithEmailAndPassword = async(email, password) => {
     }
 }
 
-export { app , auth , registerWithEmailAndPassword, signInWithGoogle, signInWithGithub, logInWithEmailAndPassword};
+const changePassword = async(newPassword) => {
+    // Get the currently signed-in user
+    var user = app.auth().currentUser;
+
+    if (user) {
+    var newPassword = "new-password-here"; // Replace with the new password
+
+    // Update the user's password
+    user.updatePassword(newPassword).then(function() {
+        // Password updated successfully
+        console.log("Password updated successfully.");
+    }).catch(function(error) {
+        // An error occurred while updating password
+        console.error("Error updating password:", error);
+    });
+    } else {
+    // No user is signed in
+    console.log("No user signed in.");
+    }
+
+
+}
+
+// const changePassword = async(newPassword) => {
+//     // Get the currently signed-in user
+//     var user = app.auth().currentUser;
+
+//     if (user) { // Replace with the new email address
+
+//     // Update the user's email address
+//     user.updateEmail(newEmail).then(function() {
+//         // Email updated successfully
+//         console.log("Email updated successfully.");
+//     }).catch(function(error) {
+//         // An error occurred while updating email
+//         console.error("Error updating email:", error);
+//     });
+//     } else {
+//     // No user is signed in
+//     console.log("No user signed in.");
+//     }
+// }
+
+
+export { app , auth , registerWithEmailAndPassword, signInWithGoogle, signInWithGithub, logInWithEmailAndPassword, };

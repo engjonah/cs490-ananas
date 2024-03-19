@@ -25,6 +25,7 @@ export const AuthContextProvider = ({children}) => {
         }
     },[])
     console.log('AuthContext state: ',state)
+    console.log('user value in authcontext.js: ', JSON.parse(localStorage.getItem("user")))
 
     return (
         <AuthContext.Provider value = {{...state, dispatch}}>
