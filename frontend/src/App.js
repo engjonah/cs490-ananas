@@ -11,6 +11,7 @@ import {Toaster} from 'react-hot-toast';
 import { useAuthContext } from './hooks/useAuthContext';
 function App() {
   const {user} = useAuthContext();
+
   return (
     <Router>
       <div>
@@ -22,7 +23,9 @@ function App() {
           <Route path="/translate" element={user ? <TranslatePage /> : <Navigate to='/SignIn'/>} />
           <Route path="/SignIn" element={!user ? <SignInPage/> : <Navigate to='/translate'/>}/>
           <Route path="/SignUp" element={!user ? <SignUpPage/> : <Navigate to='/translate'/>}/>
-          <Route path="/account" element={!user ? <AccountPage/> : <Navigate to='/translate'/>}/>
+          <Route path="/account" element={<AccountPage/>} />
+
+          {/* <Route path="/account" element={!user ? <AccountPage /> : <Navigate to='/SignIn'/>} /> */}
         </Routes>
       </div>
     </Router>
