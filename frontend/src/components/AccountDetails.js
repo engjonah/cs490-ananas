@@ -34,7 +34,7 @@ const AccountDetails = () => {
       .catch(error => {
         setError(error.message);
       });
-  }, []); 
+  }, [userId]); 
   
   const handleUpdateName = () => {
 

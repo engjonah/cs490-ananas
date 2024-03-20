@@ -113,7 +113,7 @@ const logInWithEmailAndPassword = async(email, password) => {
 const firebaseOnlyUser = () => {
     try {
         var user = auth.currentUser;
-        if (user && user.providerData[0].providerId == 'password')
+        if (user && user.providerData[0].providerId === 'password')
         {
             return true;
         }
