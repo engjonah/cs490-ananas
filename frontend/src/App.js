@@ -24,6 +24,7 @@ function App() {
           <Route path="/SignIn" element={!user ? <SignInPage/> : <Navigate to='/translate'/>}/>
           <Route path="/SignUp" element={!user ? <SignUpPage/> : <Navigate to='/translate'/>}/>
           <Route path="/account" element={<AccountPage /> } />
+          {/* <Route path="/account" element={user ? <AccountPage /> : <Navigate to='/SignIn'/>} /> uncomment after router auth check is fixed*/}
         </Routes>
       </div>
     </Router>
