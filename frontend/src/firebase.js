@@ -116,9 +116,7 @@ const firebaseOnlyUser = () => {
         if (user && user.providerData[0].providerId == 'password')
         {
             return true;
-            console.log('user in firebaseonly: ' + user);
         }
-        console.log('user in firebaseonly: ' + user);
         return false;
     } catch (error) {
         console.error("Error updating password:", error);
@@ -126,28 +124,18 @@ const firebaseOnlyUser = () => {
 }
 
 const changePassword = async (newPassword) => {
-    let changed;
     try {
-        let changed = true;
         // Get the currently signed-in user
         var user = auth.currentUser;
         console.log(user)
         console.log(user.providerData[0].providerId)
         // Replace the user's password
-        const sample = await updatePassword(user, newPassword);
+        await updatePassword(user, newPassword);
         
-        // Password updated successfully
-        console.log('sample: ' + sample);
     
     } catch (error) {
         // An error occurred while updating password
         console.error("Error updating password:", error);
-        changed = false;
-
-    } finally {
-        // Log a message indicating whether a user is signed in or not
-        return changed;
-        // console.log("Password updated successfully.");
     }
 };
 
@@ -162,25 +150,7 @@ const deleteAccount = async () => {
 
 
 
-// const changePassword = async(newPassword) => {
-//     // Get the currently signed-in user
-//     var user = app.auth().currentUser;
 
-//     if (user) { // Replace with the new email address
-
-//     // Update the user's email address
-//     user.updateEmail(newEmail).then(function() {
-//         // Email updated successfully
-//         console.log("Email updated successfully.");
-//     }).catch(function(error) {
-//         // An error occurred while updating email
-//         console.error("Error updating email:", error);
-//     });
-//     } else {
-//     // No user is signed in
-//     console.log("No user signed in.");
-//     }
-// }
 
 
 export { app , auth , registerWithEmailAndPassword, signInWithGoogle, signInWithGithub, logInWithEmailAndPassword, changePassword, firebaseOnlyUser, deleteAccount};
