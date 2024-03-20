@@ -34,7 +34,22 @@ const updateName = async (req, res) => {
     }
 }
 
+const deleteUser = async (req, res) => {
+    const {uid} = req.params;
+    try {
+        const user = await User.findOneAndDelete({ uid });
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found! Please sign up!" });
+        }
+
+    } catch (error) {
+        return res.status(500).json({ error: "Internal server error" });
+    }
+    return res.status(200);
+}
 module.exports = {
     getUser,
-    updateName
+    updateName,
+    deleteUser
 }

@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import ApiUrl from '../ApiUrl';
-import { changePassword, firebaseOnlyUser } from '../firebase';
+import { changePassword, firebaseOnlyUser, deleteAccount } from '../firebase';
 import { Button, Grid } from '@mui/material';
 import toast from 'react-hot-toast';
+import { useNavigate } from "react-router-dom";
+
+
+
+
 
 
 const AccountDetails = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
+  const userId = JSON.parse(localStorage.getItem("user")).uid;
 
 
   useEffect(() => {
     // Replace 'userId' with the actual user ID you want to fetch
-    const userId = JSON.parse(localStorage.getItem("user")).uid;
+    //const userId = JSON.parse(localStorage.getItem("user")).uid;
 
     fetch(`${ApiUrl}/api/account/${userId}`)
       .then(response => {
@@ -81,23 +88,28 @@ const AccountDetails = () => {
   };
 
   const handleDeleteAccount = () => {
-    if (confirm("Are you sure you want to delete this account?"))
-    {
-      delet
-      const newPassword = prompt("Enter new password:");
-      if (newPassword.length > 5)
-      {
-        changePassword(newPassword);
-        toast.success("Password Updated");
-      }
-      else toast.error("Password too short!");
-    }
-    else
-    {
-      toast.error("Refer to third party provider to update password!")
-    }
     
-  
+    
+    
+    
+
+    fetch(`${ApiUrl}/api/account/${userId}`, { method: 'DELETE'})
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('User not found! Please sign up!');
+      }
+      return response.json();
+    })
+    .then(data => {
+      setUser(data);
+    })
+    .catch(error => {
+      setError(error.message);
+    });
+    deleteAccount();
+    toast.success("Account Deleted");
+    navigate("/")
+    
   };
   
   
@@ -114,6 +126,8 @@ const AccountDetails = () => {
           )}
           <Button variant="contained" onClick={handleUpdateName}>Update Name</Button>
           { <Button variant="contained" onClick={handleUpdatePassword}>Update Password</Button> } 
+          <Button variant="contained" onClick={handleDeleteAccount}>Delete Account</Button>
+
           {error && <p>{error}</p>}
         </Grid>
       </Grid>
