@@ -34,7 +34,7 @@ const SignInPage = () => {
       event.preventDefault();
         try {
             const {email,uid} = await signInWithGoogle();
-            await login(email,uid,remember)
+            await login(email,uid,true)
             toast.success("Logged in")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
@@ -47,7 +47,7 @@ const SignInPage = () => {
       event.preventDefault();
         try {
             const {email,uid} = await signInWithGithub();
-            await login(email,uid,remember)
+            await login(email,uid,true)
             toast.success("Logged in!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
