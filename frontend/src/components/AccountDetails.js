@@ -79,6 +79,26 @@ const AccountDetails = () => {
     
   
   };
+
+  const handleDeleteAccount = () => {
+    if (confirm("Are you sure you want to delete this account?"))
+    {
+      delet
+      const newPassword = prompt("Enter new password:");
+      if (newPassword.length > 5)
+      {
+        changePassword(newPassword);
+        toast.success("Password Updated");
+      }
+      else toast.error("Password too short!");
+    }
+    else
+    {
+      toast.error("Refer to third party provider to update password!")
+    }
+    
+  
+  };
   
   
   return (

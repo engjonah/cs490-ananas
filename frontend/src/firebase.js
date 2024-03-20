@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup , GoogleAuthProvider, GithubAuthProvider, AuthErrorCodes, updatePassword} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup , GoogleAuthProvider, GithubAuthProvider, AuthErrorCodes, updatePassword, deleteUser} from "firebase/auth";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -151,6 +151,15 @@ const changePassword = async (newPassword) => {
     }
 };
 
+const deleteAccount = async () => {
+    try {
+        var user = auth.currentUser;
+        await deleteUser(user);
+    } catch (error) {
+        console.error("Could not delete user: ", error);
+    }
+}
+
 
 
 // const changePassword = async(newPassword) => {
@@ -174,4 +183,4 @@ const changePassword = async (newPassword) => {
 // }
 
 
-export { app , auth , registerWithEmailAndPassword, signInWithGoogle, signInWithGithub, logInWithEmailAndPassword, changePassword, firebaseOnlyUser};
+export { app , auth , registerWithEmailAndPassword, signInWithGoogle, signInWithGithub, logInWithEmailAndPassword, changePassword, firebaseOnlyUser, deleteAccount};
