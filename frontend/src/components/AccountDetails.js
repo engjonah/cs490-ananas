@@ -4,6 +4,7 @@ import { changePassword, firebaseOnlyUser, deleteAccount } from '../firebase';
 import { Button, Grid } from '@mui/material';
 import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
+import { useLogout } from '../hooks/useLogOut';
 
 
 
@@ -12,14 +13,13 @@ import { useNavigate } from "react-router-dom";
 
 const AccountDetails = () => {
   const navigate = useNavigate();
+  const {logout} = useLogout()
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const userId = JSON.parse(localStorage.getItem("user")).uid;
 
 
   useEffect(() => {
-    // Replace 'userId' with the actual user ID you want to fetch
-    //const userId = JSON.parse(localStorage.getItem("user")).uid;
 
     fetch(`${ApiUrl}/api/account/${userId}`)
       .then(response => {
@@ -34,19 +34,15 @@ const AccountDetails = () => {
       .catch(error => {
         setError(error.message);
       });
-  }, []); // Empty dependency array to ensure this effect runs only once
+  }, []); 
   
   const handleUpdateName = () => {
-    // Here you can implement the logic to update the name
-    // For example, you can prompt the user to enter a new name and then send a request to update the name
-    // This is just a placeholder for demonstration purposes
+
     const newName = prompt("Enter new name:");
     const userId = JSON.parse(localStorage.getItem("user")).uid;
 
     if (newName) {
-      //setUser({ ...user, name: newName }); // Update the name in the state
-      // Now you can send a request to update the name on the server
-      // Example:
+
       fetch(`${ApiUrl}/api/account/${userId}`, {
         method: 'PUT',
         headers: {
@@ -57,10 +53,10 @@ const AccountDetails = () => {
       .then(response => response.json())
       .then(data => {
         setUser(data);
-        // Handle success
+        toast.success("Name Updated!")
       })
       .catch(error => {
-        // Handle error
+        console.log("error:" + error)
       });
     }
   };
@@ -68,7 +64,6 @@ const AccountDetails = () => {
 
   const handleUpdatePassword = () => {
     const firstParty = firebaseOnlyUser();
-    console.log('first party in handle submit: ' + firstParty);
     if (firstParty)
     {
       const newPassword = prompt("Enter new password:");
@@ -89,27 +84,27 @@ const AccountDetails = () => {
 
   const handleDeleteAccount = () => {
     
-    
-    
-    
 
-    fetch(`${ApiUrl}/api/account/${userId}`, { method: 'DELETE'})
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('User not found! Please sign up!');
-      }
-      return response.json();
-    })
-    .then(data => {
-      setUser(data);
-    })
-    .catch(error => {
-      setError(error.message);
-    });
-    deleteAccount();
-    toast.success("Account Deleted");
-    navigate("/")
-    
+    if (window.confirm("Delete this account?"))
+    {
+      fetch(`${ApiUrl}/api/account/${userId}`, { method: 'DELETE'})
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('User not found! Please sign up!');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setUser(data);
+      })
+      .catch(error => {
+        setError(error.message);
+      });
+      deleteAccount();
+      logout();
+      toast.success("Account Deleted");
+      navigate("/")
+  }
   };
   
   
@@ -125,7 +120,9 @@ const AccountDetails = () => {
             </>
           )}
           <Button variant="contained" onClick={handleUpdateName}>Update Name</Button>
-          { <Button variant="contained" onClick={handleUpdatePassword}>Update Password</Button> } 
+          <br></br><br></br>
+          <Button variant="contained" onClick={handleUpdatePassword}>Update Password</Button> 
+          <br></br><br></br>
           <Button variant="contained" onClick={handleDeleteAccount}>Delete Account</Button>
 
           {error && <p>{error}</p>}
