@@ -126,26 +126,28 @@ const firebaseOnlyUser = () => {
 }
 
 const changePassword = async (newPassword) => {
+    let changed;
     try {
+        let changed = true;
         // Get the currently signed-in user
         var user = auth.currentUser;
         console.log(user)
         console.log(user.providerData[0].providerId)
         // Replace the user's password
-        await updatePassword(user, newPassword);
+        const sample = await updatePassword(user, newPassword);
         
         // Password updated successfully
-        console.log("Password updated successfully.");
+        console.log('sample: ' + sample);
+    
     } catch (error) {
         // An error occurred while updating password
         console.error("Error updating password:", error);
+        changed = false;
+
     } finally {
         // Log a message indicating whether a user is signed in or not
-        if (auth.currentUser) {
-            console.log("User is signed in.");
-        } else {
-            console.log("No user signed in.");
-        }
+        return changed;
+        // console.log("Password updated successfully.");
     }
 };
 

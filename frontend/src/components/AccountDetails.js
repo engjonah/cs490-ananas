@@ -65,20 +65,18 @@ const AccountDetails = () => {
     if (firstParty)
     {
       const newPassword = prompt("Enter new password:");
-      toast.success("Password Updated");
-      changePassword(newPassword);
+      if (newPassword.length > 5)
+      {
+        changePassword(newPassword);
+        toast.success("Password Updated");
+      }
+      else toast.error("Password too short!");
     }
     else
     {
       toast.error("Refer to third party provider to update password!")
     }
     
-    // Here you can implement the logic to update the name
-    // For example, you can prompt the user to enter a new name and then send a request to update the name
-    // This is just a placeholder for demonstration purposes
-    
-    //const userId = JSON.parse(localStorage.getItem("user")).uid;
-
   
   };
   
