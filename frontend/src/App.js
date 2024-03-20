@@ -11,9 +11,7 @@ import Navbar from './components/Navbar';
 import {Toaster} from 'react-hot-toast';
 import { useAuthContext } from './hooks/useAuthContext';
 function App() {
-  
-   let user=  useAuthContext(); 
-  
+  const {user} = useAuthContext();
   return (
     <Router>
       <div>
@@ -23,16 +21,14 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/documentation" element={<DocumentationPage />} />
           <Route path="/translate" element={user ? <TranslatePage /> : <Navigate to='/SignIn'/>} />
-          <Route path="/account" element={<AccountPage />} />
-
           <Route path="/SignIn" element={!user ? <SignInPage/> : <Navigate to='/translate'/>}/>
           <Route path="/SignUp" element={!user ? <SignUpPage/> : <Navigate to='/translate'/>}/>
-
-          
+          <Route path="/account" element={<AccountPage /> } />
         </Routes>
       </div>
     </Router>
   );
 }
+
 
 export default App;

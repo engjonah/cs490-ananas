@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup , GoogleAuthProvider, GithubAuthProvider, AuthErrorCodes, updatePassword} from "firebase/auth";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -109,28 +110,46 @@ const logInWithEmailAndPassword = async(email, password) => {
     }
 }
 
-const changePassword = async(newPassword) => {
-    // Get the currently signed-in user
-    var user = app.auth().currentUser;
+const firebaseOnlyUser = () => {
+    try {
+        var user = auth.currentUser;
+        if (user && user.providerData[0].providerId == 'password')
+        {
+            return true;
+            console.log('user in firebaseonly: ' + user);
+        }
+        console.log('user in firebaseonly: ' + user);
+        return false;
+    } catch (error) {
+        console.error("Error updating password:", error);
+    }
+}
 
-    if (user) {
-    var newPassword = "new-password-here"; // Replace with the new password
-
-    // Update the user's password
-    user.updatePassword(newPassword).then(function() {
+const changePassword = async (newPassword) => {
+    try {
+        // Get the currently signed-in user
+        var user = auth.currentUser;
+        console.log(user)
+        console.log(user.providerData[0].providerId)
+        // Replace the user's password
+        await updatePassword(user, newPassword);
+        
         // Password updated successfully
         console.log("Password updated successfully.");
-    }).catch(function(error) {
+    } catch (error) {
         // An error occurred while updating password
         console.error("Error updating password:", error);
-    });
-    } else {
-    // No user is signed in
-    console.log("No user signed in.");
+    } finally {
+        // Log a message indicating whether a user is signed in or not
+        if (auth.currentUser) {
+            console.log("User is signed in.");
+        } else {
+            console.log("No user signed in.");
+        }
     }
+};
 
 
-}
 
 // const changePassword = async(newPassword) => {
 //     // Get the currently signed-in user
@@ -153,4 +172,4 @@ const changePassword = async(newPassword) => {
 // }
 
 
-export { app , auth , registerWithEmailAndPassword, signInWithGoogle, signInWithGithub, logInWithEmailAndPassword, changePassword};
+export { app , auth , registerWithEmailAndPassword, signInWithGoogle, signInWithGithub, logInWithEmailAndPassword, changePassword, firebaseOnlyUser};

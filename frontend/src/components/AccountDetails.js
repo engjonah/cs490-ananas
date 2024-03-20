@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ApiUrl from '../ApiUrl';
-import { changePassword } from '../firebase';
+import { changePassword, firebaseOnlyUser } from '../firebase';
 import { Button, Grid } from '@mui/material';
-
+import toast from 'react-hot-toast';
 
 
 const AccountDetails = () => {
@@ -58,19 +58,28 @@ const AccountDetails = () => {
     }
   };
   
+
   const handleUpdatePassword = () => {
+    const firstParty = firebaseOnlyUser();
+    console.log('first party in handle submit: ' + firstParty);
+    if (firstParty)
+    {
+      const newPassword = prompt("Enter new password:");
+      toast.success("Password Updated");
+      changePassword(newPassword);
+    }
+    else
+    {
+      toast.error("Refer to third party provider to update password!")
+    }
+    
     // Here you can implement the logic to update the name
     // For example, you can prompt the user to enter a new name and then send a request to update the name
     // This is just a placeholder for demonstration purposes
-    const newPassword = prompt("Enter new password:");
-    const userId = JSON.parse(localStorage.getItem("user")).uid;
+    
+    //const userId = JSON.parse(localStorage.getItem("user")).uid;
 
-    if (newPassword) {
-      //setUser({ ...user, name: newName }); // Update the name in the state
-      // Now you can send a request to update the name on the server
-      // Example:
-      changePassword(newPassword);
-    }
+  
   };
   
   
@@ -86,6 +95,7 @@ const AccountDetails = () => {
             </>
           )}
           <Button variant="contained" onClick={handleUpdateName}>Update Name</Button>
+          { <Button variant="contained" onClick={handleUpdatePassword}>Update Password</Button> } 
           {error && <p>{error}</p>}
         </Grid>
       </Grid>
