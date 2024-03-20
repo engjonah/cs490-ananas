@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ApiUrl from '../ApiUrl';
+import { changePassword } from '../firebase';
 import { Button, Grid } from '@mui/material';
 
 
@@ -54,6 +55,21 @@ const AccountDetails = () => {
       .catch(error => {
         // Handle error
       });
+    }
+  };
+  
+  const handleUpdatePassword = () => {
+    // Here you can implement the logic to update the name
+    // For example, you can prompt the user to enter a new name and then send a request to update the name
+    // This is just a placeholder for demonstration purposes
+    const newPassword = prompt("Enter new password:");
+    const userId = JSON.parse(localStorage.getItem("user")).uid;
+
+    if (newPassword) {
+      //setUser({ ...user, name: newName }); // Update the name in the state
+      // Now you can send a request to update the name on the server
+      // Example:
+      changePassword(newPassword);
     }
   };
   

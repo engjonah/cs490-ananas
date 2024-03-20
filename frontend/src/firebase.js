@@ -153,4 +153,4 @@ const changePassword = async(newPassword) => {
 // }
 
 
-export { app , auth , registerWithEmailAndPassword, signInWithGoogle, signInWithGithub, logInWithEmailAndPassword, };
+export { app , auth , registerWithEmailAndPassword, signInWithGoogle, signInWithGithub, logInWithEmailAndPassword, changePassword};
