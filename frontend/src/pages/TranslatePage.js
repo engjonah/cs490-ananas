@@ -49,7 +49,7 @@ function TranslatePage() {
                 <FileUpload setCodeUpload={setCodeUpload}/>
               </Container>
               <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "50vh", "paddingTop":"15px"}}>
-                <CodeBox defaultValue={"Enter your code here!\n(can edit)"} readOnly={false} outputLang={outputLang} codeUpload={codeUpload} inputLang={inputLang} setInputLang={setInputLang} />
+                <CodeBox defaultValue={"Enter your code here!\n(can edit)"} user={user} readOnly={false} outputLang={outputLang} codeUpload={codeUpload} inputLang={inputLang} setInputLang={setInputLang} />
               </Container>
             </Grid>
             <Grid xs={12} md={6}>
