@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AppBar, Button, Toolbar, Tooltip, Typography } from '@mui/material'
 import { Icon } from './Icon.js'
 import { ReactComponent as TranslateIcon } from '../assets/TranslateIcon.svg'
@@ -11,8 +11,13 @@ import { useAuthContext } from '../hooks/useAuthContext.js';
 function Navbar() {
   const {logout} = useLogout()
   const {user} = useAuthContext();
+  const navigate = useNavigate();
   const handleClick = () =>{
+    navigate('/');
     logout()
+  }
+  const handleSignIn = () =>{
+    navigate('/signin');
   }
   return (
     <AppBar position="static" sx={{ bgcolor: '#D9D9D9' }}>
@@ -29,11 +34,17 @@ function Navbar() {
         <Link to="/documentation">
           <Icon icon={DocumentationIcon} tooltip="Documentation" />
         </Link>
-        { !user && (
-          <Link to="/SignIn">
+        { user && (
+          <Link to="/Account">
           <Icon icon={AccountIcon} tooltip="Account" />
         </Link>
         )}
+        {/* { !user && (
+          <Link to="/SignIn">
+          Sign In
+        </Link>
+        )} */}
+        { !user && ( <Button onClick={handleSignIn}>Sign In</Button>)}
         { user && ( <Button onClick={handleClick}>Logout</Button>)}
        
       </Toolbar>
