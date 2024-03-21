@@ -6,7 +6,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import ApiUrl from '../ApiUrl';
 
-export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputLang, codeUpload, inputLang, setInputLang, user }) {
+export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputLang, codeUpload, inputLang, setInputLang, user, outputCode, setOutputCode }) {
   const editorRef = useRef(null);
 
   const [inputExists, setInputExists] = React.useState(false)
@@ -68,6 +68,7 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
         return "Translation failed"
       })
     console.log(output)
+    setOutputCode(output);
   }
 
   const downloadCodeFile = (code, extension) => {
@@ -124,6 +125,7 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
           loading="Loading your pudgy penguins..."
           defaultValue={defaultValue}
           defaultLanguage='python'
+          value={readOnly && outputCode}
           language={currTab !== 0 ? languageMap[currTab - 1].syntaxName : "detect this language"}
           options={{ "readOnly": readOnly }}
           onMount={handleEditorDidMount}

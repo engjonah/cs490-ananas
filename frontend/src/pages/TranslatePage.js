@@ -38,6 +38,7 @@ function TranslatePage() {
   const [outputLang, setOutputLang] = useState(1);
   const [inputLang, setInputLang] = useState(0);
   const [codeUpload, setCodeUpload] = useState("");
+  const [outputCode, setOutputCode] = useState("");
   
   return (
     <div className="App">
@@ -49,13 +50,13 @@ function TranslatePage() {
                 <FileUpload setCodeUpload={setCodeUpload}/>
               </Container>
               <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "50vh", "paddingTop":"15px"}}>
-                <CodeBox defaultValue={"Enter your code here!\n(can edit)"} user={user} readOnly={false} outputLang={outputLang} codeUpload={codeUpload} inputLang={inputLang} setInputLang={setInputLang} />
+                <CodeBox defaultValue={"Enter your code here!\n(can edit)"} user={user} readOnly={false} outputLang={outputLang} codeUpload={codeUpload} inputLang={inputLang} setInputLang={setInputLang} setOutputCode={setOutputCode} />
               </Container>
             </Grid>
             <Grid xs={12} md={6}>
               {!isSmallScreen && <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "10vh"}} />}
               <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "50vh", "paddingTop":"15px"}}>
-                <CodeBox defaultValue={"GPT API Output here...\n(read only)\n"} readOnly={true} setOutputLang={setOutputLang} />
+                <CodeBox defaultValue={"GPT API Output here...\n(read only)\n"} readOnly={true} setOutputLang={setOutputLang} outputCode={outputCode}/>
               </Container>
               <FeedbackForm uid='placeholder' outputLang={outputLang} inputLang={inputLang}/>
             </Grid>
