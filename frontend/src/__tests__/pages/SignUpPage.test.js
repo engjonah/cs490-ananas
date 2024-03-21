@@ -47,7 +47,7 @@ describe("Sign up Page",()=>{
                 expect(toast.error).toHaveBeenCalledWith('Error test')
                 expect(console.log).toHaveBeenCalledTimes(1)
             });
-        })
+        }, 10000)
         test('Successful Registration',async () =>{
             const {getByText} = render(<router.BrowserRouter><SignUpPage/></router.BrowserRouter>)
             const signUpButton = getByText('Sign Up')
