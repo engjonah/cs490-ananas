@@ -1,26 +1,21 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect'; // For additional matchers
-
 import DocumentationPage from '../../pages/DocumentationPage';
 
-test('renders documentation title', () => {
-  const { getByText } = render(<DocumentationPage />);
-  const titleElement = getByText('Documentation');
-  expect(titleElement).toBeInTheDocument();
-});
+describe('DocumentationPage component', () => {
+  it('renders all sections correctly', () => {
+    const { getByText } = render(<DocumentationPage />);
+    
+    // Check if the title is rendered
+    expect(getByText('Documentation')).toBeInTheDocument();
 
-test('renders both MERN sections', () => {
-  const { getAllByText } = render(<DocumentationPage />);
-  const mernSections = getAllByText('MERN');
-  expect(mernSections.length).toBe(2); // Ensure there are two sections titled "MERN"
-});
 
-test('renders background-gif div', () => {
-    const { container } = render(<DocumentationPage />);
-    const backgroundGifDiv = container.querySelector('.background-gif');
-    expect(backgroundGifDiv).toBeInTheDocument();
+    expect(getByText('Translation')).toBeInTheDocument();
+    expect(getByText('GPT 3.5 turbo model')).toBeInTheDocument();
+
+    // Check if Authentication section is rendered
+    expect(getByText('Authentication')).toBeInTheDocument();
+    expect(getByText('Firebase API')).toBeInTheDocument();
+
   });
-  
-
-// Add more tests as needed to cover different aspects of your component
+});
