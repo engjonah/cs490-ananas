@@ -6,7 +6,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import ApiUrl from '../ApiUrl';
 
-export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputLang, codeUpload, inputLang, setInputLang }) {
+export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputLang, codeUpload, inputLang, setInputLang, user }) {
   const editorRef = useRef(null);
 
   const [inputExists, setInputExists] = React.useState(false)
@@ -47,9 +47,11 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
     const output = await fetch(`${ApiUrl}/api/translate`, {
       method: "POST",
       body: JSON.stringify({
+        uid: user.uid,
         inputLang: currTab !== 0 ? languageMap[currTab - 1].name : "this unknown language",
         outputLang: languageMap[outputLang - 1].name,
-        code: code
+        inputCode: code,
+        translatedAt: new Date()
       }),
       headers: {
         "Content-type": "application/json"
