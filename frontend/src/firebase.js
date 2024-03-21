@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup , GoogleAuthProvider, GithubAuthProvider, AuthErrorCodes} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup , GoogleAuthProvider, GithubAuthProvider, AuthErrorCodes, updatePassword, deleteUser} from "firebase/auth";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -109,4 +110,47 @@ const logInWithEmailAndPassword = async(email, password) => {
     }
 }
 
-export { app , auth , registerWithEmailAndPassword, signInWithGoogle, signInWithGithub, logInWithEmailAndPassword};
+const firebaseOnlyUser = () => {
+    try {
+        var user = auth.currentUser;
+        if (user && user.providerData[0].providerId === 'password')
+        {
+            return true;
+        }
+        return false;
+    } catch (error) {
+        console.error("Error updating password:", error);
+    }
+}
+
+const changePassword = async (newPassword) => {
+    try {
+        // Get the currently signed-in user
+        var user = auth.currentUser;
+        console.log(user)
+        console.log(user.providerData[0].providerId)
+        // Replace the user's password
+        await updatePassword(user, newPassword);
+        
+    
+    } catch (error) {
+        // An error occurred while updating password
+        console.error("Error updating password:", error);
+    }
+};
+
+const deleteAccount = async () => {
+    try {
+        var user = auth.currentUser;
+        await deleteUser(user);
+    } catch (error) {
+        console.error("Could not delete user: ", error);
+    }
+}
+
+
+
+
+
+
+export { app , auth , registerWithEmailAndPassword, signInWithGoogle, signInWithGithub, logInWithEmailAndPassword, changePassword, firebaseOnlyUser, deleteAccount};

@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import TranslatePage from './pages/TranslatePage';
+import AccountPage from './pages/AccountPage';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
 import HomePage from './pages/HomePage';
@@ -21,10 +22,13 @@ function App() {
           <Route path="/translate" element={user ? <TranslatePage /> : <Navigate to='/SignIn'/>} />
           <Route path="/SignIn" element={!user ? <SignInPage/> : <Navigate to='/translate'/>}/>
           <Route path="/SignUp" element={!user ? <SignUpPage/> : <Navigate to='/translate'/>}/>
+          <Route path="/account" element={<AccountPage /> } />
+          {/* <Route path="/account" element={user ? <AccountPage /> : <Navigate to='/SignIn'/>} /> uncomment after router auth check is fixed*/}
         </Routes>
       </div>
     </Router>
   );
 }
+
 
 export default App;
