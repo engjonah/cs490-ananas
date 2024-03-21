@@ -34,10 +34,8 @@ function DocumentationPage() {
           Information we keep:
         </p>
         <ul>
-          <li><strong>User Details:</strong> A NoSQL database used for storing application data.</li>
-          <li><strong>Translation History.js:</strong> A web application framework for Node.js used for building server-side applications.</li>
-          <li><strong></strong> A JavaScript library for building user interfaces.</li>
-          <li><strong>Node.js:</strong> A JavaScript runtime environment that executes JavaScript code server-side.</li>
+          <li><strong>User Details:</strong> We keep emails and usernames. Passwords are handled through Firebase</li>
+          <li><strong>Translation History:</strong> We keep the translation history for to make improvements in the future</li>
         </ul>
       </div>
     </div>
