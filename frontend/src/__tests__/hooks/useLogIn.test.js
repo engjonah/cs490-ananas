@@ -1,11 +1,12 @@
-import { useSignup } from "../../hooks/useSignUp";
+import { useLogin } from "../../hooks/useLogIn";
 import {act, renderHook} from '@testing-library/react'
 import { AuthContext } from "../../AuthContext";
 
 
+
 const dispatch = jest.fn()
 const state = {}
-describe("Sign up hook",()=>{
+describe("Login Hook",()=>{
 
     beforeEach(() => {
         global.fetch = jest.fn();
@@ -21,13 +22,13 @@ describe("Sign up hook",()=>{
             { children }
             </AuthContext.Provider>
         )
-        const {result, waitforupdate} = renderHook(()=> useSignup(), {wrapper})
+        const {result, waitforupdate} = renderHook(()=> useLogin(), {wrapper})
         jest.spyOn(global,'fetch').mockResolvedValueOnce({
             ok: false,
             json: () => ({error:"error"})
           });
         expect(async ()=>{
-            await result.current.signup("test","test","test");
+            await result.current.login("test","test","test");
         }).rejects.toThrow(Error("error"))
         expect(localStorage.setItem).not.toHaveBeenCalled();
     })
@@ -38,13 +39,13 @@ describe("Sign up hook",()=>{
             { children }
             </AuthContext.Provider>
         )
-        const {result, waitforupdate} = renderHook(()=> useSignup(), {wrapper})
+        const {result, waitforupdate} = renderHook(()=> useLogin(), {wrapper})
         jest.spyOn(global,'fetch').mockResolvedValueOnce({
             ok: true,
             json: () => ({token:"test-token"})
           });
         await act( ()=>{
-          result.current.signup("test","test","test");
+          result.current.login("test","test","test");
         })
         expect(localStorage.setItem).toHaveBeenCalledWith('user',JSON.stringify({token:'test-token'}));
     })

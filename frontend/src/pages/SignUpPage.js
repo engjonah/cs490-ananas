@@ -149,12 +149,14 @@ const SignUpPage = () => {
                 onClick={onSubmitGoogle}
                 variant="contained"
                 label='Sign up With Google'
+                title='google-button'
             />                
             <GithubButton
                 type="dark"
                 onClick={onSubmitGithub}
                 variant="contained"
                 label='Sign up With Github'
+                title='github-button'
             />
           </Box>
           

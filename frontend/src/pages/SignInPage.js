@@ -35,7 +35,7 @@ const SignInPage = () => {
         try {
             const {email,uid} = await signInWithGoogle();
             await login(email,uid,true)
-            toast.success("Logged in")
+            toast.success("Logged in!")
             navigate("/translate")
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {
@@ -119,7 +119,7 @@ const SignInPage = () => {
                 xs={12}
                 fullWidth
                 >
-                  Sign In
+                  Log In
                 </Button>
               </Grid>           
               <Grid container marginTop={2} marginBottom={2} marginLeft={2}>
@@ -143,6 +143,7 @@ const SignInPage = () => {
                 type="dark"
                 onClick={onSubmitGoogle}
                 variant="contained"
+                title='google-button'
               >
                 Log In With Google
             </GoogleButton>
@@ -150,6 +151,7 @@ const SignInPage = () => {
                 type="dark"
                 onClick={onSubmitGithub}
                 variant="contained"
+                title='github-button'
               >
                 Log In With Github
             </GithubButton>
