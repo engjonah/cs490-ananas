@@ -124,9 +124,10 @@ const SignInPage = () => {
               </Grid>           
               <Grid container marginTop={2} marginBottom={2} marginLeft={2}>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link href="/resetPassword" variant="body2">
                     Forgot password?
                   </Link>
+                  {/* <Button variant="body2">Forgot Password?</Button> */}
                 </Grid>
                 <Grid item>
                   <Link href="/SignUp" variant="body2">

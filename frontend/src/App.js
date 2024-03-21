@@ -9,6 +9,7 @@ import DocumentationPage from './pages/DocumentationPage';
 import Navbar from './components/Navbar';
 import {Toaster} from 'react-hot-toast';
 import { useAuthContext } from './hooks/useAuthContext';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 function App() {
   const {user} = useAuthContext();
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/SignIn" element={!user ? <SignInPage/> : <Navigate to='/translate'/>}/>
           <Route path="/SignUp" element={!user ? <SignUpPage/> : <Navigate to='/translate'/>}/>
           <Route path="/account" element={<AccountPage /> } />
+          <Route path="/resetPassword" element={<ResetPasswordPage /> } />
           {/* <Route path="/account" element={user ? <AccountPage /> : <Navigate to='/SignIn'/>} /> uncomment after router auth check is fixed*/}
         </Routes>
       </div>
