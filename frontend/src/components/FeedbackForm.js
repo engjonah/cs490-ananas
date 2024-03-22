@@ -8,6 +8,7 @@ import TextField from '@mui/material/TextField';
 import Rating from '@mui/material/Rating';
 import { styled } from '@mui/system';
 import ApiUrl from '../ApiUrl';
+import { ErrorReport } from '../services/ErrorReport';
 
 // Styled component for stars wrapper
 const StarsWrapper = styled('div')({
@@ -65,6 +66,7 @@ function FeedbackForm(props) {
         console.log("Feedback submitted");
     })
     .catch((err) => {
+        ErrorReport("Feedback Form:" + err.message);
         console.log(err.message)
     })
 };

@@ -5,6 +5,7 @@ import { IconButton, Box, Tab, Tabs } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import ApiUrl from '../ApiUrl';
+import { ErrorReport } from '../services/ErrorReport';
 
 export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputLang, codeUpload, inputLang, setInputLang, user, outputCode, setOutputCode }) {
   const editorRef = useRef(null);
@@ -64,6 +65,7 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
         return data.translation
       })
       .catch((err) => {
+        ErrorReport("CodeBox:" + err.message);
         console.log(err.message)
         return "Translation failed"
       })
