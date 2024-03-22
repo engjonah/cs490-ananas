@@ -32,6 +32,12 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
     }
   }, [codeUpload])
 
+  useEffect(()=>{
+    if(inputLang){
+      setCurrTab(inputLang)
+    }
+  },[inputLang])
+
   function handleEditorDidMount(editor, monaco) {
     monaco.editor.defineTheme('gray', {
       base: 'vs',
@@ -116,6 +122,9 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
     { syntaxName: "ruby", name: "Ruby", extension: ".rb" },
     { syntaxName: "csharp", name: "C#", extension: ".cs" },
     { syntaxName: "javascript", name: "JavaScript", extension: ".js" },
+    { syntaxName: "kotlin", name: "Kotlin", extension: ".kt" },
+    { syntaxName: "objectivec", name: "Objective-C", extension: ".m" },
+    {}
     // add more languages here
   ];
 

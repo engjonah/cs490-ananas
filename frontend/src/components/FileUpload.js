@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import {useDropzone} from 'react-dropzone'
 import { Button, Container }  from '@mui/material';
 
-export default function FileUpload({setCodeUpload}) {
+export default function FileUpload({setCodeUpload, setInputLang}) {
   const onDrop = useCallback((acceptedFiles) => {
     acceptedFiles.forEach((file) => {
       const reader = new FileReader();
@@ -13,10 +13,29 @@ export default function FileUpload({setCodeUpload}) {
         const binaryStr = reader.result;
         setCodeUpload(binaryStr);
       };
+
       //reader.readAsArrayBuffer(file)
+      
       reader.readAsText(file)
+
+      const fileExtension = file.name.split('.').pop();
+
+      const extensionToLanguage = {
+        py: 1,  // Python
+        java: 2,  // Java
+        cpp: 3,  // Cpp
+        rb: 3,  // Ruby
+        cs: 4,  // Csharp
+        js: 5,  // javascript
+        kt: 6,  // Kotlin
+        m: 7,  // Objective-C
+      };
+
+      if (extensionToLanguage[fileExtension]) {
+        setInputLang(extensionToLanguage[fileExtension]);
+      }
     })
-  }, [setCodeUpload])
+  }, [setCodeUpload, setInputLang])
 
   const {
     getRootProps, 
