@@ -140,7 +140,7 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
         }
         {(readOnly && outputLoading) &&
         <div>
-          <img src={loadingPenguin} alt="loading..." style={{"width":"100%", "height":"40vh", "objectFit":"cover", "objectPosition":"center"}}/>
+          <img src={loadingPenguin} alt="loading..." style={{"width":"100%", "height":"40vh", "objectFit":"cover", "objectPosition":"50% 70%"}}/>
         </div>
         }
         {!readOnly &&
