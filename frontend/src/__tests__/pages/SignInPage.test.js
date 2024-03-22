@@ -4,6 +4,7 @@ import { toast } from 'react-hot-toast';
 import SignInPage from '../../pages/SignInPage';
 import * as firebase from '../../firebase'
 import { Sign } from 'crypto';
+import * as ErrorReport from "../../services/ErrorReport";
 const router = require('react-router-dom')
 
 jest.mock('../../firebase', () => ({
@@ -25,11 +26,13 @@ jest.mock('../../hooks/useLogIn', () => ({
 jest.mock
 
 describe("Log In Page",()=>{
+    let mockErrorReport;
     beforeEach(() => {
         jest.clearAllMocks();
         jest.spyOn(global.console, 'log').mockImplementationOnce(()=>{})
         jest.spyOn(toast, 'success');
         jest.spyOn(toast,'error')
+        mockErrorReport = jest.spyOn(ErrorReport, 'ErrorReport').mockImplementation(() => 'error');
       });
     afterAll(()=>{
         global.console.log.mockRestore()

@@ -1,16 +1,16 @@
 import { useLogin } from "../../hooks/useLogIn";
 import {act, renderHook} from '@testing-library/react'
 import { AuthContext } from "../../AuthContext";
-
-
+import * as ErrorReport from "../../services/ErrorReport";
 
 const dispatch = jest.fn()
 const state = {}
 describe("Login Hook",()=>{
-
+    let mockErrorReport;
     beforeEach(() => {
         global.fetch = jest.fn();
         Storage.prototype.setItem = jest.fn();
+        mockErrorReport = jest.spyOn(ErrorReport, 'ErrorReport').mockImplementation(() => 'error');
       });
     afterEach(() => {
       jest.clearAllMocks();

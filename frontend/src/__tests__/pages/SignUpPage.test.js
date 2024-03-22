@@ -3,6 +3,7 @@ import { render, fireEvent, waitFor, screen, getByLabelText } from '@testing-lib
 import { toast } from 'react-hot-toast';
 import SignUpPage from '../../pages/SignUpPage';
 import * as firebase from '../../firebase'
+import * as ErrorReport from "../../services/ErrorReport";
 const router = require('react-router-dom')
 
 jest.mock('../../firebase', () => ({
@@ -24,11 +25,13 @@ jest.mock('../../hooks/useSignUp', () => ({
 jest.mock
 
 describe("Sign up Page",()=>{
+    let mockErrorReport;
     beforeEach(() => {
         jest.clearAllMocks();
         jest.spyOn(global.console, 'log').mockImplementationOnce(()=>{})
         jest.spyOn(toast, 'success');
         jest.spyOn(toast,'error')
+        mockErrorReport = jest.spyOn(ErrorReport, 'ErrorReport').mockImplementation(() => 'error');
       });
     afterAll(()=>{
         global.console.log.mockRestore()
