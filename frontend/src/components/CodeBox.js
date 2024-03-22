@@ -7,6 +7,7 @@ import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import ApiUrl from '../ApiUrl';
 import { ErrorReport } from '../services/ErrorReport';
 import loadingPenguin from '../assets/loadingPenguin.gif'
+import toast from 'react-hot-toast';
 
 export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputLang, codeUpload, inputLang, setInputLang, user, outputCode, setOutputCode , outputLoading, setOutputLoading}) {
   const editorRef = useRef(null);
@@ -61,15 +62,27 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
       },
     })
       .then((response) => {
-        console.log("Translation successfully generated")
+        if (response.status === 429) {
+          toast.error("Rate Limit Exceeded")
+          return "Translation Failed"
+        }
+        if (response.status === 503) {
+          toast.error("API Connection Error")
+          return "Translation Failed"
+        }
+        if (response.status === 500) {
+          toast.error("Unknown Error Occurred")
+          return "Translation Failed"
+        }
         return response.json()
       }).then((data) => {
-        return data.translation
+        if (data.translation) return data.translation
+        return data
       })
       .catch((err) => {
         ErrorReport("CodeBox:" + err.message);
         console.log(err.message)
-        return "Translation failed"
+        return "Translation Failed"
       })
     console.log(output)
     setOutputCode(output);

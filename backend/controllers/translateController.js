@@ -28,6 +28,13 @@ const getTranslation = async (req, res) => {
         res.status(200).json({translation: outputCode})
 
     } catch (error) {
+        if (error.status === 429) {
+            res.status(429).json({error: 'Rate Limit Exceeded'})
+        } else if (error.status === 503) {
+            res.status(503).json({error: 'API Connection Error'})
+        } else {
+            res.status(500).json({error: 'Unknown Error'})
+        }
         console.log(`error occurred: ${error.message}`)
     }
 }
