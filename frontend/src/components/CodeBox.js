@@ -6,8 +6,9 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import ApiUrl from '../ApiUrl';
 import { ErrorReport } from '../services/ErrorReport';
+import loadingPenguin from '../assets/loadingPenguin.gif'
 
-export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputLang, codeUpload, inputLang, setInputLang, user, outputCode, setOutputCode }) {
+export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputLang, codeUpload, inputLang, setInputLang, user, outputCode, setOutputCode , outputLoading, setOutputLoading}) {
   const editorRef = useRef(null);
 
   const [inputExists, setInputExists] = React.useState(false)
@@ -45,6 +46,7 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
   }
 
   async function getTranslation() {
+    setOutputLoading(true);
     const output = await fetch(`${ApiUrl}/api/translate`, {
       method: "POST",
       body: JSON.stringify({
@@ -71,6 +73,7 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
       })
     console.log(output)
     setOutputCode(output);
+    setOutputLoading(false);
   }
 
   const downloadCodeFile = (code, extension) => {
@@ -121,6 +124,7 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
             </Tabs>
           </Box>
         </Box>
+        {(!readOnly || (readOnly && !outputLoading)) && 
         <Editor
           height="40vh"
           theme="light"
@@ -133,10 +137,16 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
           onMount={handleEditorDidMount}
           onChange={updateCurrentInput}
         />
+        }
+        {(readOnly && outputLoading) &&
+        <div>
+          <img src={loadingPenguin} alt="loading..." style={{"width":"100%", "height":"40vh", "objectFit":"cover", "objectPosition":"50% 70%"}}/>
+        </div>
+        }
         {!readOnly &&
-          <Tooltip title={!inputExists ? "Add some code first!" : (lineCount > 100 ? "Input exceeded max limit" : "Submit your code here")}>
+          <Tooltip title={outputLoading ? "Translating...": !inputExists ? "Add some code first!" : (lineCount > 100 ? "Input exceeded max limit" : "Submit your code here")}>
             <span>
-              <Button variant="outlined" disabled={!inputExists || lineCount > 100} onClick={getTranslation}>Translate</Button>
+              <Button variant="outlined" disabled={!inputExists || lineCount > 100 || outputLoading} onClick={getTranslation}>Translate</Button>
             </span>
           </Tooltip>
         }
