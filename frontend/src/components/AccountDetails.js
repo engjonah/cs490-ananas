@@ -5,11 +5,7 @@ import { Button, Grid } from '@mui/material';
 import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import { useLogout } from '../hooks/useLogOut';
-
-
-
-
-
+import { ErrorReport } from '../services/ErrorReport';
 
 const AccountDetails = () => {
   const navigate = useNavigate();
@@ -32,6 +28,7 @@ const AccountDetails = () => {
         setUser(data);
       })
       .catch(error => {
+        ErrorReport("Account Details:" + error.message);
         setError(error.message);
       });
   }, [userId]); 

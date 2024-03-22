@@ -7,6 +7,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import GoogleButton from 'react-google-button';
 import GithubButton from 'react-github-login-button/dist/react-github-button'; 
 import toast from 'react-hot-toast';
+import { ErrorReport } from '../services/ErrorReport';
+
 const SignUpPage = () => {
  
     const [email, setEmail] = useState('');
@@ -27,6 +29,7 @@ const SignUpPage = () => {
         } catch (error) {
             console.log(error.message);
             toast.error(error.message);
+            ErrorReport("Signup page:" + error.message);
         }
       
     }
@@ -40,7 +43,8 @@ const SignUpPage = () => {
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {
             console.log(error.message);
-            toast.error(error.message)        
+            toast.error(error.message);
+            ErrorReport("Signup page:" + error.message);    
         }
     }
     const onSubmitGithub = async (event) => {
@@ -53,7 +57,8 @@ const SignUpPage = () => {
         // Handle successful signup (e.g., redirect to protected content)
         } catch (error) {
             console.log(error.message);
-            toast.error(error.message)        
+            toast.error(error.message);
+            ErrorReport("Signup page:" + error.message);
         }
     }
  

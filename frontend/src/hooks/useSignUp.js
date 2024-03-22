@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 import ApiUrl from "../ApiUrl";
+import { ErrorReport } from '../services/ErrorReport';
 
 export const useSignup = () =>{
     const [error, setError] = useState(null)
@@ -23,7 +24,8 @@ export const useSignup = () =>{
         const json = await response.json()
 
         if (!response.ok){
-            throw Error(json.error)
+            ErrorReport("useSignUp:" + json.error);
+            throw Error(json.error);
         }else{
             console.log(json.token);
             localStorage.setItem("user", JSON.stringify(json));

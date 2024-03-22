@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import toast from 'react-hot-toast';
+import { ErrorReport } from '../services/ErrorReport';
 
 const ResetPasswordPage = () => {
   const [email, setEmail] = useState('');
@@ -28,6 +29,7 @@ const ResetPasswordPage = () => {
     } catch (error) {
       console.log(error.message);
       toast.error(error.message);
+      ErrorReport("Signin page:" + error.message);
     }
   };
 

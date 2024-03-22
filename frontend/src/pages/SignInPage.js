@@ -7,6 +7,7 @@ import GoogleButton from 'react-google-button';
 import GithubButton from 'react-github-login-button/dist/react-github-button'; 
 import toast from 'react-hot-toast';
 import { useLogin } from '../hooks/useLogIn';
+import { ErrorReport } from '../services/ErrorReport';
 
 const SignInPage = () => {
  
@@ -27,6 +28,7 @@ const SignInPage = () => {
         } catch (error) {
             console.log(error.message);
             toast.error(error.message);
+            ErrorReport("Signin page:" + error.message);;
         }
       
     }
@@ -41,6 +43,7 @@ const SignInPage = () => {
         } catch (error) {
           console.log(error.message);
           toast.error(error.message);
+          ErrorReport("Signin page:" + error.message);
         }
     }
     const onSubmitGithub = async (event) => {
@@ -54,6 +57,7 @@ const SignInPage = () => {
         } catch (error) {
           console.log(error.message);
           toast.error(error.message);
+          ErrorReport("Signin page:" + error.message);
         }
     }
  

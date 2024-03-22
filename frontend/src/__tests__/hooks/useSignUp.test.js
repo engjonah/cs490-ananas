@@ -1,15 +1,16 @@
 import { useSignup } from "../../hooks/useSignUp";
 import {act, renderHook} from '@testing-library/react'
 import { AuthContext } from "../../AuthContext";
-
+import * as ErrorReport from "../../services/ErrorReport";
 
 const dispatch = jest.fn()
 const state = {}
 describe("Sign up hook",()=>{
-
+    let mockErrorReport;
     beforeEach(() => {
         global.fetch = jest.fn();
         Storage.prototype.setItem = jest.fn();
+        mockErrorReport = jest.spyOn(ErrorReport, 'ErrorReport').mockImplementation(() => 'error');
       });
     afterEach(() => {
       jest.clearAllMocks();

@@ -9,6 +9,7 @@ import FeedbackForm from '../components/FeedbackForm';
 import FileUpload from '../components/FileUpload';
 import { useAuthContext } from '../hooks/useAuthContext';
 import ApiUrl from '../ApiUrl';
+import { ErrorReport } from '../services/ErrorReport';
 
 function TranslatePage() {
   let [test, setTest] = useState(null);
@@ -20,12 +21,26 @@ function TranslatePage() {
           'Authorization':`Bearer ${user.token}`
         }
       })
-        .then(res=>res.json())
-        .then(res=>{
-          console.log(res)
-          setTest(res)
+        .then(res => {
+          if (res.status === 401) {
+            ErrorReport("Translate Page: Unauthorized access");
+            throw new Error("Unauthorized access");
+          }
+          if (!res.ok) {
+            ErrorReport("Translate Page: Something went wrong");
+            throw new Error("something went wrong");
+          }
+          return res;
         })
-    }else{
+        .then(res => res.json())
+        .then(res => {
+          setTest(res);
+        })
+        .catch((err) => {
+          console.log('error here');
+          ErrorReport("Translate Page: " + err);
+        })
+    } else {
       setTest([{test:'User must be logged in!'}])
     }
     
