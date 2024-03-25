@@ -23,6 +23,10 @@ const TranslationSchema = new Schema({
         type: String,
         required: true,
     },
+    status:{
+        type: Number,
+        required: true,
+    },
     translatedAt:{
         type: Date,
         required: true,
