@@ -1,5 +1,5 @@
 import Editor from '@monaco-editor/react';
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { Button, Container, Tooltip } from '@mui/material';
 import { IconButton, Box, Tab, Tabs } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -8,6 +8,7 @@ import ApiUrl from '../ApiUrl';
 import { ErrorReport } from '../services/ErrorReport';
 import loadingPenguin from '../assets/loadingPenguin.gif'
 import toast from 'react-hot-toast';
+import detectLang from 'lang-detector';
 
 export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputLang, codeUpload, inputLang, setInputLang, user, outputCode, setOutputCode , outputLoading, setOutputLoading}) {
   const editorRef = useRef(null);
@@ -37,6 +38,33 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
       setCurrTab(inputLang)
     }
   },[inputLang])
+
+  
+
+  useEffect(() => {
+    const detectLanguageOnChange = () => {
+      var code = editorRef.current.getValue();
+      var detectedLang = detectLang(code) || "Unknown";
+      console.log(detectedLang);
+      const nameToLanguage = {
+        "Unknown": 0,
+        "Python": 1,  // Python
+        "Java": 2,  // Java
+        "C++": 3,  // Cpp
+        "Ruby": 4,  // Ruby
+        "C#": 5,  // Csharp
+        "JavaScript": 6,  // javascript
+        "Kotlin": 7,  // Kotlin
+        "Objective-C": 8,  // Objective-C
+      };
+      var langNum = nameToLanguage[detectedLang] || 0;
+      setInputLang(langNum);      
+    }
+    if (editorRef.current) {
+      editorRef.current.onDidChangeModelContent(detectLanguageOnChange);
+    } 
+  }, [editorRef, setInputLang]);
+  
 
   function handleEditorDidMount(editor, monaco) {
     monaco.editor.defineTheme('gray', {
