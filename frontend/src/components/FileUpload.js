@@ -15,7 +15,7 @@ export default function FileUpload({setCodeUpload, setInputLang}) {
       };
 
       //reader.readAsArrayBuffer(file)
-      
+
       reader.readAsText(file)
 
       const fileExtension = file.name.split('.').pop();
@@ -24,11 +24,11 @@ export default function FileUpload({setCodeUpload, setInputLang}) {
         py: 1,  // Python
         java: 2,  // Java
         cpp: 3,  // Cpp
-        rb: 3,  // Ruby
-        cs: 4,  // Csharp
-        js: 5,  // javascript
-        kt: 6,  // Kotlin
-        m: 7,  // Objective-C
+        rb: 4,  // Ruby
+        cs: 5,  // Csharp
+        js: 6,  // javascript
+        kt: 7,  // Kotlin
+        m: 8,  // Objective-C
       };
 
       if (extensionToLanguage[fileExtension]) {
