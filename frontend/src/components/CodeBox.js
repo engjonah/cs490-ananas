@@ -39,31 +39,31 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
     }
   },[inputLang])
 
-  
+  const detectLanguageOnChange = useCallback(() => {
+    var code = editorRef.current.getValue();
+    var detectedLang = detectLang(code) || "Unknown";
+    console.log(detectedLang);
+    const nameToLanguage = {
+      "Unknown": 0,
+      "Python": 1,  // Python
+      "Java": 2,  // Java
+      "C++": 3,  // Cpp
+      "Ruby": 4,  // Ruby
+      "C#": 5,  // Csharp
+      "JavaScript": 6,  // javascript
+      "Kotlin": 7,  // Kotlin
+      "Objective-C": 8,  // Objective-C
+    };
+    var langNum = nameToLanguage[detectedLang] || 0;
+    setInputLang(langNum);      
+  }, [editorRef, setInputLang]);
 
   useEffect(() => {
-    const detectLanguageOnChange = () => {
-      var code = editorRef.current.getValue();
-      var detectedLang = detectLang(code) || "Unknown";
-      console.log(detectedLang);
-      const nameToLanguage = {
-        "Unknown": 0,
-        "Python": 1,  // Python
-        "Java": 2,  // Java
-        "C++": 3,  // Cpp
-        "Ruby": 4,  // Ruby
-        "C#": 5,  // Csharp
-        "JavaScript": 6,  // javascript
-        "Kotlin": 7,  // Kotlin
-        "Objective-C": 8,  // Objective-C
-      };
-      var langNum = nameToLanguage[detectedLang] || 0;
-      setInputLang(langNum);      
-    }
     if (editorRef.current) {
       editorRef.current.onDidChangeModelContent(detectLanguageOnChange);
-    } 
-  }, [editorRef, setInputLang]);
+    }
+  }, [editorRef, detectLanguageOnChange]);
+
   
 
   function handleEditorDidMount(editor, monaco) {
