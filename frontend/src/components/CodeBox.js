@@ -108,6 +108,9 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
           toast.error("Unknown Error Occurred")
           return "Translation Failed"
         }
+        if (response.status === 200) {
+          toast.success("Translation Completed!");
+        }
         return response.json()
       }).then((data) => {
         if (data.translation) return data.translation
