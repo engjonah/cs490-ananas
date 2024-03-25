@@ -8,10 +8,10 @@ const getTranslation = async (req, res) => {
     try {
         const { uid, inputLang, outputLang, inputCode, translatedAt } = req.body
         const message = `Translate the following code exactly 1:1 without adding anything (such as additional functions, main functions, examples, new comments, or wrappers) from ${inputLang} to ${outputLang}: ${inputCode}`
-        const completion = await openai.chat.completions.create({
+        const requestData = {
             model: "gpt-3.5-turbo",
             messages: [{ "role": "user", "content": message }],  
-        })
+        }
         const outputCode = completion.choices[0].message.content;
         console.log(outputCode)
 
