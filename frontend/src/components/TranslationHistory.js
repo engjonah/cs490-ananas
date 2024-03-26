@@ -17,7 +17,7 @@ const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onE
       inherit: true,
       rules: [],
       colors: {
-        'editor.background': '#f5f5f5',
+        'editor.background': '#ffffff',
       },
     });
     monaco.editor.setTheme('gray')
@@ -49,25 +49,29 @@ const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onE
           <Typography variant="body2">
             <strong>Input Code: </strong>
             <br/>
-            <Editor 
-              height="15vh" 
-              defaultLanguage={inputLang} 
-              defaultValue={inputCode} 
-              options={{ "readOnly": true }}
-              onMount={handleEditorDidMount}
-            />
+            <Container style={{ "borderRadius": '15px', "padding": "6px", "backgroundColor": "#ffffff" }}>
+              <Editor 
+                height="15vh" 
+                defaultLanguage={inputLang} 
+                defaultValue={inputCode} 
+                options={{ "readOnly": true }}
+                onMount={handleEditorDidMount}
+              />
+            </Container>
           </Typography>
           <br/>
           <Typography variant="body2">
             <strong>Output Code: </strong>
             <br/>
-            <Editor 
-              height="15vh" 
-              defaultLanguage={inputLang} 
-              defaultValue={outputCode} 
-              options={{ "readOnly": true }}
-              onMount={handleEditorDidMount}
-            />
+            <Container style={{ "borderRadius": '15px', "padding": "6px", "backgroundColor": "#ffffff" }}>
+              <Editor 
+                height="15vh" 
+                defaultLanguage={inputLang} 
+                defaultValue={outputCode} 
+                options={{ "readOnly": true }}
+                onMount={handleEditorDidMount}
+              />
+            </Container>
           </Typography>
           <Typography variant="body2"><strong>Status: </strong> {status}</Typography>
         </div>
