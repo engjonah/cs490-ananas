@@ -118,15 +118,15 @@ describe("CodeBox Component Functionality", () => {
   test('Selected tab changes on click', async () => {
     render(<CodeBox setInputLang={jest.fn()} setOutputLang={jest.fn()}/>);
 
-    const pythonTab = screen.getByText("Python").closest("button");
+    const detectLangTab = screen.getByText("Detect Language").closest("button");
     const javaTab = screen.getByText("Java").closest("button");
 
-    expect(pythonTab).toHaveAttribute("aria-selected", "true");
+    expect(detectLangTab).toHaveAttribute("aria-selected", "true");
     expect(javaTab).toHaveAttribute("aria-selected", "false");
 
     fireEvent.click(javaTab);
     
-    expect(pythonTab).toHaveAttribute("aria-selected", "false");
+    expect(detectLangTab).toHaveAttribute("aria-selected", "false");
     expect(javaTab).toHaveAttribute("aria-selected", "true");
   });
 })
