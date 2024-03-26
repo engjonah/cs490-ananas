@@ -44,7 +44,7 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
     if(readOnly && outputLang){
       setCurrTab(outputLang)
     }
-  },[outputLang])
+  },[outputLang, readOnly])
 
   const detectLanguageOnChange = () => {
     if (inputLang !== 0) {

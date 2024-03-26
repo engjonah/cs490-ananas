@@ -115,7 +115,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
           console.error('Error fetching translations:', error);
         });
     }
-  }, [outputLoading]);
+  }, [outputLoading, userId]);
 
 
   const handleDelete = async(index) => {
