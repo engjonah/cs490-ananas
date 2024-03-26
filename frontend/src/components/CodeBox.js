@@ -15,12 +15,13 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
 
   const [inputExists, setInputExists] = React.useState(false)
   const [code, setCode] = React.useState(defaultValue);
-  const [currTab, setCurrTab] = React.useState(1);
+  const [currTab, setCurrTab] = React.useState(readOnly ? 1 : 0);
   const [lineCount, setLineCount] = React.useState(0);
 
   function updateCurrentInput() {
     setCode(editorRef.current.getValue());
     setLineCount(editorRef.current.getModel().getLineCount());
+    detectLanguageOnChange();
   }
 
   useEffect(() => {
@@ -39,10 +40,11 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
     }
   },[inputLang])
 
-  const detectLanguageOnChange = useCallback(() => {
-    var code = editorRef.current.getValue();
-    var detectedLang = detectLang(code) || "Unknown";
-    console.log(detectedLang);
+  const detectLanguageOnChange = () => {
+    if (inputLang != 0) {
+      return;
+    }
+    const detectedLang = detectLang(code) || "Unknown";
     const nameToLanguage = {
       "Unknown": 0,
       "Python": 1,  // Python
@@ -54,17 +56,9 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
       "Kotlin": 7,  // Kotlin
       "Objective-C": 8,  // Objective-C
     };
-    var langNum = nameToLanguage[detectedLang] || 0;
-    setInputLang(langNum);      
-  }, [editorRef, setInputLang]);
-
-  useEffect(() => {
-    if (editorRef.current) {
-      editorRef.current.onDidChangeModelContent(detectLanguageOnChange);
-    }
-  }, [editorRef, detectLanguageOnChange]);
-
-  
+    const langNum = nameToLanguage[detectedLang] || 0;
+    setInputLang(langNum);
+  };
 
   function handleEditorDidMount(editor, monaco) {
     monaco.editor.defineTheme('gray', {
@@ -77,7 +71,8 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
     });
     monaco.editor.setTheme('gray')
     editorRef.current = editor;
-    updateCurrentInput();
+    setCode(editorRef.current.getValue());
+    setLineCount(editorRef.current.getModel().getLineCount());
   }
 
   async function getTranslation() {
@@ -155,7 +150,6 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
     { syntaxName: "javascript", name: "JavaScript", extension: ".js" },
     { syntaxName: "kotlin", name: "Kotlin", extension: ".kt" },
     { syntaxName: "objectivec", name: "Objective-C", extension: ".m" },
-    {}
     // add more languages here
   ];
 
