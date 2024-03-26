@@ -6,6 +6,7 @@ const getTranslation = async (req, res) => {
         const requestData = {
             model: "gpt-3.5-turbo",
             messages: [{ "role": "user", "content": message }],  
+        }
         const headers = {
             'Authorization': `Bearer ${process.env.OPENAI_KEY}`,
             'Content-Type': 'application/json',
