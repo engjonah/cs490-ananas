@@ -18,6 +18,26 @@ afterAll(done => {
     done()
 })
 
+describe('OpenAI Token Authentication', () => {
+    const originalEnv = process.env;
+    beforeAll(() => {
+        jest.resetModules();
+        process.env = {
+          ...originalEnv,
+          OPENAI_KEY: 'MOCKED_VALUE',
+        };
+    });
+    afterAll(() => {
+        process.env = originalEnv;
+    });
+    it('should return 500 status code for invalid token', async() => {
+        return await request(app)
+        .post("/api/translate")
+        .send({ inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")" })
+        .expect(500)
+    })
+})
+
 describe('/api/translate real API requests', () => {
     it("should return 200 status code and translation for successful translation and save translation", async () =>{
         Translation.prototype.save = jest.fn()
