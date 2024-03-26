@@ -129,4 +129,113 @@ describe("CodeBox Component Functionality", () => {
     expect(detectLangTab).toHaveAttribute("aria-selected", "false");
     expect(javaTab).toHaveAttribute("aria-selected", "true");
   });
+
+  test('loading gif loads', async () => {
+    render(<CodeBox outputLoading={true} readOnly={true}/>);
+
+    const gif = screen.queryAllByAltText("loading...");
+
+    expect(gif).toBeInTheDocument;
+  });
+
+  test('loading gif doesn\'t appear when not loaindg', async () => {
+    render(<CodeBox outputLoading={false} readOnly={true}/>);
+
+    const gif = screen.queryAllByAltText("loading...");
+
+    expect(gif).not.toBeInTheDocument;
+  });
+
+  test('toast success notif', async () => {
+    jest
+      .spyOn(React, 'useState')
+      .mockImplementationOnce(() => [true, jest.fn()]) //input exists
+      .mockImplementationOnce(() => ["hello world", jest.fn()]) //code
+      .mockImplementationOnce(() => [1, jest.fn()]) //tab
+      .mockImplementationOnce(() => [99, jest.fn()]) //lines
+      .mockImplementation((x) => [x, jest.fn()]);
+
+    jest.spyOn(toast, 'success');
+
+    render(<CodeBox setOutputLoading={jest.fn()} setOutputCode={jest.fn()} user={{"uid":"mockuid"}} outputLang={1}/>);
+
+    const translateButton = screen.getByText('Translate');
+    fireEvent.click(translateButton);
+
+    await waitFor(()=>{
+      expect(toast.success).toHaveBeenCalledWith('Translation Completed!');
+    });
+  });
+  test('toast 429 error notif', async () => {
+    jest
+      .spyOn(React, 'useState')
+      .mockImplementationOnce(() => [true, jest.fn()]) //input exists
+      .mockImplementationOnce(() => ["hello world", jest.fn()]) //code
+      .mockImplementationOnce(() => [1, jest.fn()]) //tab
+      .mockImplementationOnce(() => [99, jest.fn()]) //lines
+      .mockImplementation((x) => [x, jest.fn()]);
+
+    jest.spyOn(toast, 'error');
+
+    global.fetch = jest.fn(() => Promise.resolve(
+      new Response(JSON.stringify({}), {status: 429})
+    ));
+
+    render(<CodeBox setOutputLoading={jest.fn()} setOutputCode={jest.fn()} user={{"uid":"mockuid"}} outputLang={1}/>);
+
+    const translateButton = screen.getByText('Translate');
+    fireEvent.click(translateButton);
+
+    await waitFor(()=>{
+      expect(toast.error).toHaveBeenCalledWith('Rate Limit Exceeded');
+    });
+  });
+  test('toast 503 error notif', async () => {
+    jest
+      .spyOn(React, 'useState')
+      .mockImplementationOnce(() => [true, jest.fn()]) //input exists
+      .mockImplementationOnce(() => ["hello world", jest.fn()]) //code
+      .mockImplementationOnce(() => [1, jest.fn()]) //tab
+      .mockImplementationOnce(() => [99, jest.fn()]) //lines
+      .mockImplementation((x) => [x, jest.fn()]);
+
+    jest.spyOn(toast, 'error');
+
+    global.fetch = jest.fn(() => Promise.resolve(
+      new Response(JSON.stringify({}), {status: 503})
+    ));
+
+    render(<CodeBox setOutputLoading={jest.fn()} setOutputCode={jest.fn()} user={{"uid":"mockuid"}} outputLang={1}/>);
+
+    const translateButton = screen.getByText('Translate');
+    fireEvent.click(translateButton);
+
+    await waitFor(()=>{
+      expect(toast.error).toHaveBeenCalledWith('API Connection Error');
+    });
+  });
+  test('toast 500 error notif', async () => {
+    jest
+      .spyOn(React, 'useState')
+      .mockImplementationOnce(() => [true, jest.fn()]) //input exists
+      .mockImplementationOnce(() => ["hello world", jest.fn()]) //code
+      .mockImplementationOnce(() => [1, jest.fn()]) //tab
+      .mockImplementationOnce(() => [99, jest.fn()]) //lines
+      .mockImplementation((x) => [x, jest.fn()]);
+
+    jest.spyOn(toast, 'error');
+
+    global.fetch = jest.fn(() => Promise.resolve(
+      new Response(JSON.stringify({}), {status: 500})
+    ));
+
+    render(<CodeBox setOutputLoading={jest.fn()} setOutputCode={jest.fn()} user={{"uid":"mockuid"}} outputLang={1}/>);
+
+    const translateButton = screen.getByText('Translate');
+    fireEvent.click(translateButton);
+
+    await waitFor(()=>{
+      expect(toast.error).toHaveBeenCalledWith('Unknown Error Occurred');
+    });
+  });
 })

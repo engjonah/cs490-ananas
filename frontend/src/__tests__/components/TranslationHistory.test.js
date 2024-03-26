@@ -58,6 +58,7 @@ describe('TranslationHistory Component', () => {
     />);
     
     await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(2));
+
     fireEvent.click(getByLabelText('delete'));
     expect(fetchMock).toHaveBeenCalledWith(`${ApiUrl}/api/translateHistory/1`, { method: 'DELETE'});
     expect(getByText('You have no translations!')).toBeInTheDocument();

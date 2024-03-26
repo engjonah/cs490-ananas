@@ -80,7 +80,9 @@ const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onE
   );
 };
 
+
 const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, setCodeUpload, setOutputCode, setInputLang, setOutputLang}) => {
+
   const [translations, setTranslations] = useState(testTranslations? testTranslations : []);
   const [page, setPage] = useState(1);
   const itemsPerPage = 5; // Number of items per page
