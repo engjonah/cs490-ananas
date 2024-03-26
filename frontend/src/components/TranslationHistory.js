@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Paper, Typography, IconButton, Grid, Divider, Collapse, Pagination, Container } from '@mui/material';
 import ApiUrl from '../ApiUrl';
 import DeleteIcon from '@mui/icons-material/Delete';
