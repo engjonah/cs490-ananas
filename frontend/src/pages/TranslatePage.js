@@ -10,6 +10,7 @@ import FileUpload from '../components/FileUpload';
 import { useAuthContext } from '../hooks/useAuthContext';
 import ApiUrl from '../ApiUrl';
 import { ErrorReport } from '../services/ErrorReport';
+import TranslationHistory from '../components/TranslationHistory';
 
 function TranslatePage() {
   let [test, setTest] = useState(null);
@@ -45,8 +46,6 @@ function TranslatePage() {
     }
     
   },[user]);
-  
-
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -56,7 +55,9 @@ function TranslatePage() {
   const [codeUpload, setCodeUpload] = useState("");
   const [outputCode, setOutputCode] = useState("");
   const [outputLoading, setOutputLoading] = useState(false);
-  
+  const [editCalled, setEditCalled] = useState(false);
+
+  useEffect(() => {}, [editCalled]);
 
   return (
     <div className="App">
@@ -88,11 +89,15 @@ function TranslatePage() {
                 <CodeBox 
                   defaultValue={"GPT API Output here...\n(read only)\n"} 
                   readOnly={true} 
+                  outputLang={outputLang}
                   setOutputLang={setOutputLang}
                   outputLoading={outputLoading}
                   outputCode={outputCode}/>
               </Container>
               <FeedbackForm uid='placeholder' outputLang={outputLang} inputLang={inputLang}/>
+            </Grid>
+            <Grid xs={12} md={12}>
+              <TranslationHistory outputLoading={outputLoading} setEditCalled={setEditCalled} setCodeUpload={setCodeUpload} setOutputCode={setOutputCode} setInputLang={setInputLang} setOutputLang={setOutputLang}/>
             </Grid>
           </Grid>
         </Container>
