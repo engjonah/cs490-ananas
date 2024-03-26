@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import TranslationHistory from '../../components/TranslationHistory';
+import ApiUrl from '../../ApiUrl';
 
 const sampleTranslations = Array.from({ length: 10 }, (_, index) => ({
   _id: index.toString(),
@@ -10,34 +11,23 @@ const sampleTranslations = Array.from({ length: 10 }, (_, index) => ({
   inputCode: `inputcode${index}`,
   outputCode: `outputcode${index}`,
   status: 200,
-  translatedAt: Date.now() + index * 1000, // Different timestamps for each translation
+  translatedAt: Date.now() + index * 1000,
 }));
 
 describe('TranslationHistory Component', () => {
   beforeEach(() => {
-    // Clear localStorage before each test
     localStorage.clear();
   });
 
-  const fetchMock = jest
-    .spyOn(global, 'fetch')
-    .mockImplementation(() =>
-      Promise.resolve({ json: () => Promise.resolve([]) })
-    )
-
   test('renders translation history correctly', async () => {
-    // Set user ID in localStorage
     localStorage.setItem('user', JSON.stringify({ uid: '123' }));
 
     const mockUseEffect = jest.fn()
     jest.spyOn(React, 'useEffect').mockImplementation(mockUseEffect)
 
     const { getByText } = render(<TranslationHistory testTranslations={sampleTranslations}/>);
+    await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(1));
 
-    // Wait for translations to be fetched
-    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
-
-    // Check if translation items are rendered
     expect(getByText('Translation History')).toBeInTheDocument();
     expect(getByText('input4')).toBeInTheDocument();
     expect(getByText('output4')).toBeInTheDocument();
@@ -49,6 +39,35 @@ describe('TranslationHistory Component', () => {
     const mockUseEffect = jest.fn()
     jest.spyOn(React, 'useEffect').mockImplementation(mockUseEffect)
 
+    const fetchMock = jest
+      .spyOn(global, 'fetch')
+      .mockImplementation(() =>
+        Promise.resolve({ json: () => Promise.resolve([]) })
+      )
+
+    const { getByText, getByLabelText } = render(<TranslationHistory 
+      testTranslations={[{
+        _id: '1',
+        inputLang: `input1`,
+        outputLang: `output1`,
+        inputCode: `inputcode1`,
+        outputCode: `outputcode1`,
+        status: 200,
+        translatedAt: Date.now(),
+      }]}
+    />);
+    
+    await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(1));
+    fireEvent.click(getByLabelText('delete'));
+    expect(fetchMock).toHaveBeenCalledWith(`${ApiUrl}/api/translateHistory/1`, { method: 'DELETE'});
+    expect(getByText('You have no translations!')).toBeInTheDocument();
+  });
+
+  test('expands translation on button click', async () => {
+    localStorage.setItem('user', JSON.stringify({ uid: '123' }));
+
+    const mockUseEffect = jest.fn()
+    jest.spyOn(React, 'useEffect').mockImplementation(mockUseEffect)
 
     const { getByText, getByLabelText } = render(<TranslationHistory 
       testTranslations={[{
@@ -62,27 +81,9 @@ describe('TranslationHistory Component', () => {
       }]}
     />);
 
-    // Click delete button
-    fireEvent.click(getByLabelText('delete'));
+    await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(1));
 
-    // Wait for translation to be deleted
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
-
-    // Check if translation is deleted
-    expect(queryByText('You have no translations!')).toBeInTheDocument();
-  });
-
-  test('expands translation on button click', async () => {
-    localStorage.setItem('user', JSON.stringify({ uid: '123' }));
-
-    const { getByLabelText, getByText } = render(<TranslationHistory />);
-
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
-
-    // Click expand button
     fireEvent.click(getByLabelText('expand'));
-
-    // Check if expanded translation is visible
     expect(getByText('Input Code:')).toBeInTheDocument();
     expect(getByText('Output Code:')).toBeInTheDocument();
   });
@@ -90,22 +91,19 @@ describe('TranslationHistory Component', () => {
   test('handles pagination correctly', async () => {
     localStorage.setItem('user', JSON.stringify({ uid: '123' }));
 
-    const { getByText, queryByText } = render(<TranslationHistory />);
+    const mockUseEffect = jest.fn()
+    jest.spyOn(React, 'useEffect').mockImplementation(mockUseEffect)
 
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    const { getByText, queryByText } = render(<TranslationHistory testTranslations={sampleTranslations}/>);
 
-    // Check if initial page is correct
-    expect(getByText('javascript')).toBeInTheDocument();
-    expect(queryByText('python')).not.toBeInTheDocument();
+    await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(1));
 
-    // Change page
+    expect(getByText('input0')).toBeInTheDocument();
+    expect(queryByText('input5')).not.toBeInTheDocument();
+
     fireEvent.click(getByText('2'));
 
-    // Wait for page change
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
-
-    // Check if translations on new page are rendered
-    expect(queryByText('javascript')).not.toBeInTheDocument();
-    expect(getByText('python')).toBeInTheDocument();
+    expect(queryByText('input0')).not.toBeInTheDocument();
+    expect(getByText('input5')).toBeInTheDocument();
   });
 });

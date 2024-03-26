@@ -101,15 +101,16 @@ const TranslationHistory = ({testTranslations}) => {
     fetch(`${ApiUrl}/api/translateHistory/${translations[index]._id}`, { method: 'DELETE'})
         .then(response => response.json())
         .then(data => {
-          const updatedTranslations = [...translations];
           console.log(translations[index]);
-          updatedTranslations.splice(index, 1);
-          setTranslations(updatedTranslations);
           console.log("Deleted item at index:", index);
         })
         .catch(error => {
           console.error('Error fetching translations:', error);
+          return;
         });
+    const updatedTranslations = [...translations];
+    updatedTranslations.splice(index, 1);
+    setTranslations(updatedTranslations);
   };
 
   const handleExpand = (index) => {

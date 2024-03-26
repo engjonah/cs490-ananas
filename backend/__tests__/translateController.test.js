@@ -7,8 +7,14 @@ const nock = require('nock')
 const baseURL = 'https://api.openai.com'
 const endpoint = '/v1/chat/completions'
 
+beforeEach(() => {
+  jest.clearAllMocks();
+  jest.spyOn(global.console, 'log').mockImplementationOnce(()=>{})
+});
+
 afterAll(done => {
     mongoose.connection.close()
+    global.console.log.mockRestore()
     done()
 })
 
@@ -24,6 +30,33 @@ describe('/api/translate real API requests', () => {
             expect(response.body.translation).not.toBe("")
         })
     })
+    it("should have a queue if multiple requests are submitted at once", async () => {
+      jest.mock("axios", () => ({
+        post: jest.fn((_url, _body) => { 
+          return new Promise(r => setTimeout(r, 1000))
+        })
+      }))
+      request(app)
+          .post("/api/translate")
+          .send({inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")"})
+          .then(response => {
+            expect(response.body.translation).not.toBe("")
+          });
+      request(app)
+          .post("/api/translate")
+          .send({inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")"})
+          .then(response => {
+            expect(response.body.translation).not.toBe("")
+          });
+      await request(app)
+          .post("/api/translate")
+          .send({inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")"})
+          .then(response => {
+            expect(response.body.translation).not.toBe("")
+          });
+      expect(console.log).toHaveBeenCalledWith("queue length", 1);
+      expect(console.log).toHaveBeenCalledWith("queue length", 2);
+  });
 })
 
 describe('/api/translate mocked API requests', () => {
