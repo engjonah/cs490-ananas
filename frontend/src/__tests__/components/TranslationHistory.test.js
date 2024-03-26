@@ -19,6 +19,12 @@ describe('TranslationHistory Component', () => {
     localStorage.clear();
   });
 
+  const fetchMock = jest
+    .spyOn(global, 'fetch')
+    .mockImplementation(() =>
+      Promise.resolve({ json: () => Promise.resolve([]) })
+    )
+
   test('renders translation history correctly', async () => {
     // Set user ID in localStorage
     localStorage.setItem('user', JSON.stringify({ uid: '123' }));
@@ -29,7 +35,7 @@ describe('TranslationHistory Component', () => {
     const { getByText } = render(<TranslationHistory testTranslations={sampleTranslations}/>);
 
     // Wait for translations to be fetched
-    await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
 
     // Check if translation items are rendered
     expect(getByText('Translation History')).toBeInTheDocument();
@@ -43,8 +49,19 @@ describe('TranslationHistory Component', () => {
     const mockUseEffect = jest.fn()
     jest.spyOn(React, 'useEffect').mockImplementation(mockUseEffect)
 
-    const { getByText } = render(<TranslationHistory testTranslations={sampleTranslations}/>);
-    
+
+    const { getByText, getByLabelText } = render(<TranslationHistory 
+      testTranslations={[{
+        _id: '1',
+        inputLang: `input1`,
+        outputLang: `output1`,
+        inputCode: `inputcode1`,
+        outputCode: `outputcode1`,
+        status: 200,
+        translatedAt: Date.now(),
+      }]}
+    />);
+
     // Click delete button
     fireEvent.click(getByLabelText('delete'));
 
@@ -52,8 +69,7 @@ describe('TranslationHistory Component', () => {
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
 
     // Check if translation is deleted
-    expect(queryByText('javascript')).not.toBeInTheDocument();
-    expect(queryByText('python')).not.toBeInTheDocument();
+    expect(queryByText('You have no translations!')).toBeInTheDocument();
   });
 
   test('expands translation on button click', async () => {
