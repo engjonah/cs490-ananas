@@ -4,6 +4,7 @@ import ApiUrl from '../ApiUrl';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import Editor from '@monaco-editor/react';
 
 const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded }) => {
   const { inputLang, outputLang, inputCode, outputCode, status, translatedAt } = translation;
@@ -12,8 +13,20 @@ const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded }) =
     onExpand();
   };
 
+  function handleEditorDidMount(editor, monaco) {
+    monaco.editor.defineTheme('gray', {
+      base: 'vs',
+      inherit: true,
+      rules: [],
+      colors: {
+        'editor.background': '#f5f5f5',
+      },
+    });
+    monaco.editor.setTheme('gray')
+  }
+
   return (
-    <Paper elevation={3} style={{ padding: '15px', marginBottom: '10px', overflow: 'hidden' }}>
+    <Paper elevation={3} style={{ padding: '15px', marginBottom: '10px', overflow: 'hidden', backgroundColor: "#f5f5f5"}}>
       <Grid container justifyContent="space-between" alignItems="center">
         <Grid item xs={8}>
           <Typography variant="subtitle1"><strong>{`${inputLang} `}</strong>
@@ -32,8 +45,29 @@ const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded }) =
       </Grid>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <div style={{ padding: '10px' }}>
-          <Typography variant="body2"><strong>Input Code: </strong> {inputCode}</Typography>
-          <Typography variant="body2"><strong>Output Code: </strong> {outputCode}</Typography>
+          <Typography variant="body2">
+            <strong>Input Code: </strong>
+            <br/>
+            <Editor 
+              height="10vh" 
+              defaultLanguage={inputLang} 
+              defaultValue={inputCode} 
+              options={{ "readOnly": true }}
+              onMount={handleEditorDidMount}
+            />
+          </Typography>
+          <br/>
+          <Typography variant="body2">
+            <strong>Output Code: </strong>
+            <br/>
+            <Editor 
+              height="10vh" 
+              defaultLanguage={inputLang} 
+              defaultValue={outputCode} 
+              options={{ "readOnly": true }}
+              onMount={handleEditorDidMount}
+            />
+          </Typography>
           <Typography variant="body2"><strong>Status: </strong> {status}</Typography>
         </div>
       </Collapse>
@@ -46,7 +80,7 @@ const TranslationHistory = () => {
   const [page, setPage] = useState(1);
   const itemsPerPage = 5; // Number of items per page
   const [expandedIndex, setExpandedIndex] = useState(null);
-  const userId = JSON.parse(localStorage.getItem("user"))?.uid; // Handle user null case
+  const userId = JSON.parse(localStorage.getItem("user"))?.uid;
 
   useEffect(() => {
     if (userId) {
@@ -94,7 +128,7 @@ const TranslationHistory = () => {
   const endIndex = Math.min(startIndex + itemsPerPage, translations.length); // Adjust endIndex
 
   return (
-    <Container style={{ borderRadius: '5px', padding: "20px", backgroundColor: "#f5f5f5" }}>
+    <Container style={{ borderRadius: '5px', padding: "20px" }}>
       <Typography variant="h4" gutterBottom>Translation History</Typography>
       {translations.length === 0 ? (
         <Typography variant="subtitle1">You have no translations!</Typography>

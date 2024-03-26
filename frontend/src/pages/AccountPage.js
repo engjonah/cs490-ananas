@@ -6,9 +6,13 @@ import { Grid } from '@mui/material';
 
 const AccountPage = () => {
   return (
-    <Grid container spacing={1} padding="50px" >
-      <AccountDetails/>
-      <TranslationHistory/>
+    <Grid container direction="row" spacing={1} padding="50px" >
+      <Grid item xs={5}>
+        <AccountDetails/>
+      </Grid>
+      <Grid item xs={5}>
+        <TranslationHistory/>
+      </Grid>
     </Grid>
   );
 }
