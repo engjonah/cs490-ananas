@@ -1,5 +1,5 @@
 import Editor from '@monaco-editor/react';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Button, Container, Tooltip } from '@mui/material';
 import { IconButton, Box, Tab, Tabs } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
