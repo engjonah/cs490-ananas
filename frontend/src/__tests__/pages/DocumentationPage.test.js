@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import DocumentationPage from '../../pages/DocumentationPage';
 
 describe('DocumentationPage component', () => {
@@ -22,5 +22,10 @@ describe('DocumentationPage component', () => {
 
     expect(getByText('User Guide')).toBeInTheDocument();
 
+    const link = getByText('Download User Guide');
+    fireEvent.click(link);
+
   });
+
+
 });
