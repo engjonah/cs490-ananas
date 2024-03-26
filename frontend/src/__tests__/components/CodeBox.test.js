@@ -1,8 +1,16 @@
-import { render, screen, cleanup, fireEvent } from '@testing-library/react';
+import { render, screen, cleanup, fireEvent, waitFor } from '@testing-library/react';
 import CodeBox from "../../components/CodeBox";
+import { toast } from 'react-hot-toast';
 import React from 'react';
 
+beforeEach(() => {
+  global.fetch = jest.fn(() => Promise.resolve(
+   new Response(JSON.stringify({}), {status: 200})
+  ));
+})
+
 afterEach(() => {
+  global.fetch.mockRestore();
   cleanup(); 
 })
 
