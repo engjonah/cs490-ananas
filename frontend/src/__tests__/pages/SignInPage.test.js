@@ -50,6 +50,7 @@ describe("Log In Page",()=>{
             await waitFor(()=>{
                 expect(toast.error).toHaveBeenCalledWith('Error test')
                 expect(console.log).toHaveBeenCalledTimes(1)
+                expect(mockErrorReport).toHaveBeenCalledTimes(1);
             });
         }, 10000)
         test('Successful Registration',async () =>{
@@ -72,6 +73,7 @@ describe("Log In Page",()=>{
             await waitFor(()=>{
                 expect(toast.error).toHaveBeenCalledWith('Error test')
                 expect(console.log).toHaveBeenCalledTimes(1)
+                expect(mockErrorReport).toHaveBeenCalledTimes(1);
             });
         })
         test('Successful Registration',async () =>{
@@ -96,6 +98,7 @@ describe("Log In Page",()=>{
             await waitFor(()=>{
                 expect(toast.error).toHaveBeenCalledWith('Error test')
                 expect(console.log).toHaveBeenCalledTimes(1)
+                expect(mockErrorReport).toHaveBeenCalledTimes(1);
             });
         })
         test('Successful Registration',async () =>{
