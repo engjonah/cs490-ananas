@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Paper, Typography, IconButton, Grid, Divider, Collapse, Pagination, Container } from '@mui/material';
 import ApiUrl from '../ApiUrl';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -75,14 +75,14 @@ const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded }) =
   );
 };
 
-const TranslationHistory = () => {
-  const [translations, setTranslations] = useState([]);
+const TranslationHistory = ({testTranslations}) => {
+  const [translations, setTranslations] = useState(testTranslations? testTranslations : []);
   const [page, setPage] = useState(1);
   const itemsPerPage = 5; // Number of items per page
   const [expandedIndex, setExpandedIndex] = useState(null);
   const userId = JSON.parse(localStorage.getItem("user"))?.uid;
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (userId) {
       fetch(`${ApiUrl}/api/translateHistory/${userId}`)
         .then(response => response.json())
@@ -101,15 +101,16 @@ const TranslationHistory = () => {
     fetch(`${ApiUrl}/api/translateHistory/${translations[index]._id}`, { method: 'DELETE'})
         .then(response => response.json())
         .then(data => {
-          const updatedTranslations = [...translations];
           console.log(translations[index]);
-          updatedTranslations.splice(index, 1);
-          setTranslations(updatedTranslations);
           console.log("Deleted item at index:", index);
         })
         .catch(error => {
           console.error('Error fetching translations:', error);
+          return;
         });
+    const updatedTranslations = [...translations];
+    updatedTranslations.splice(index, 1);
+    setTranslations(updatedTranslations);
   };
 
   const handleExpand = (index) => {
@@ -142,7 +143,7 @@ const TranslationHistory = () => {
                 onExpand={() => handleExpand(startIndex + index)}
                 expanded={startIndex + index === expandedIndex}
               />
-              {index !== itemsPerPage - 1 && index !== translations.length - 1 && <Divider />} {/* Adjust Divider */}
+              {index !== itemsPerPage - 1 && index !== translations.length - 1 && <Divider />}
             </React.Fragment>
           ))}
           <Pagination
