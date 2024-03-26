@@ -1,5 +1,7 @@
 import React from 'react';
 import './DocumentationPage.css'; // Import CSS for styling
+import userguide from "../assets/AnanasUserGuide.pdf";
+import FAQ from "../components/FAQ";
 
 function DocumentationPage() {
   return (
@@ -44,12 +46,12 @@ function DocumentationPage() {
       <div className="help-container">
         <h2>Help</h2>
         <div className="faq">
-          {/* FAQ content goes here */}
+          <FAQ/>
         </div>
         <div className="user-guide">
         <h3>User Guide</h3>
-  <p>Download our user guide for instructions on how to use this site!</p>
-  <a href="../assets/AnanasUserGuide.pdf" target="_blank" rel="noopener noreferrer">Download User Guide</a>
+          <p>Download our user guide for instructions on how to use this site!</p>
+          <a href={userguide} target="_blank" rel="noopener noreferrer">Download User Guide </a>
         </div>
       </div>
     </div>
