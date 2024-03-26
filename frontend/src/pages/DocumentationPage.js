@@ -1,6 +1,5 @@
 import React from 'react';
 import './DocumentationPage.css'; // Import CSS for styling
-import AnanasUserGuidePDF from '../assets/AnanasUserGuide.pdf';
 
 function DocumentationPage() {
   return (
@@ -50,7 +49,8 @@ function DocumentationPage() {
         <div className="user-guide">
         <h3>User Guide</h3>
           <p>Download our user guide for instructions on how to use this site!</p>
-          <a href={AnanasUserGuidePDF} target="_blank" rel="noopener noreferrer">Download User Guide</a>
+          <p>Download our user guide for instructions on how to use this site!</p>
+  <a href="../assets/AnanasUserGuide.pdf" target="_blank" rel="noopener noreferrer">Download User Guide</a>
         </div>
       </div>
     </div>
