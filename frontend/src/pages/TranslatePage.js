@@ -45,6 +45,7 @@ function TranslatePage() {
     }
     
   },[user]);
+  
 
 
   const theme = useTheme();
@@ -56,6 +57,7 @@ function TranslatePage() {
   const [outputCode, setOutputCode] = useState("");
   const [outputLoading, setOutputLoading] = useState(false);
   
+
   return (
     <div className="App">
       <div className="div">
@@ -63,7 +65,7 @@ function TranslatePage() {
           <Grid container spacing={4}>
             <Grid xs={12} md={6}>
               <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "10vh"}}>
-                <FileUpload setCodeUpload={setCodeUpload}/>
+                <FileUpload setCodeUpload={setCodeUpload} setInputLang={setInputLang}/>
               </Container>
               <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "50vh", "paddingTop":"15px"}}>
                 <CodeBox 
