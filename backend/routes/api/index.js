@@ -5,6 +5,7 @@ router.use("/register", require("./register"));
 router.use("/feedback", require("./feedback"));
 router.use("/login", require("./login"));
 router.use("/translate", require("./translate"));
+router.use("/translateHistory", require("./translateHistory"));
 router.use("/error", require("./error"));
 router.use('/account', require('./account'));
 

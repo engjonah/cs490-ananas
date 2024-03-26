@@ -17,12 +17,11 @@ describe('/api/translate real API requests', () => {
         Translation.prototype.save = jest.fn()
         return await request(app)
         .post("/api/translate")
-        .send({uid: "Mock UID", inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")", translatedAt: new Date()})
+        .send({ inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")" })
         .expect(200)
         .expect('Content-Type', /json/)
         .then(response => {
             expect(response.body.translation).not.toBe("")
-            expect(Translation.prototype.save).toHaveBeenCalled()
         })
     })
 })
@@ -37,7 +36,7 @@ describe('/api/translate mocked API requests', () => {
         .reply(429)
         return await request(app)
         .post("/api/translate")
-        .send({uid: "Mock UID", inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")", translatedAt: new Date()})
+        .send({ inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")" })
         .expect(429)
         .expect('Content-Type', /json/)
         .then(response => {
@@ -50,7 +49,7 @@ describe('/api/translate mocked API requests', () => {
         .reply(503)
         return await request(app)
         .post("/api/translate")
-        .send({uid: "Mock UID", inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")", translatedAt: new Date()})
+        .send({ inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")" })
         .expect(503)
         .expect('Content-Type', /json/)
         .then(response => {
@@ -63,7 +62,7 @@ describe('/api/translate mocked API requests', () => {
         .reply(500)
         return await request(app)
         .post("/api/translate")
-        .send({uid: "Mock UID", inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")", translatedAt: new Date()})
+        .send({inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")"})
         .expect(500)
         .expect('Content-Type', /json/)
         .then(response => {
