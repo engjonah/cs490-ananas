@@ -75,14 +75,14 @@ const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded }) =
   );
 };
 
-const TranslationHistory = () => {
-  const [translations, setTranslations] = useState([]);
+const TranslationHistory = ({testTranslations}) => {
+  const [translations, setTranslations] = useState(testTranslations? testTranslations : []);
   const [page, setPage] = useState(1);
   const itemsPerPage = 5; // Number of items per page
   const [expandedIndex, setExpandedIndex] = useState(null);
   const userId = JSON.parse(localStorage.getItem("user"))?.uid;
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (userId) {
       fetch(`${ApiUrl}/api/translateHistory/${userId}`)
         .then(response => response.json())
@@ -142,7 +142,7 @@ const TranslationHistory = () => {
                 onExpand={() => handleExpand(startIndex + index)}
                 expanded={startIndex + index === expandedIndex}
               />
-              {index !== itemsPerPage - 1 && index !== translations.length - 1 && <Divider />} {/* Adjust Divider */}
+              {index !== itemsPerPage - 1 && index !== translations.length - 1 && <Divider />}
             </React.Fragment>
           ))}
           <Pagination
