@@ -40,6 +40,12 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
     }
   },[inputLang])
 
+  useEffect(()=>{
+    if(readOnly && outputLang){
+      setCurrTab(outputLang)
+    }
+  },[outputLang, readOnly])
+
   const detectLanguageOnChange = () => {
     if (inputLang !== 0) {
       return;
@@ -80,7 +86,7 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
         method: "POST",
         body: JSON.stringify({
           uid: user.uid,
-          inputLang: inputLang,
+          inputLang: inputLang === "this unknown language"? "Detect Language" : inputLang,
           outputLang: outputLang,
           inputCode: inputCode,
           outputCode: outputCode,
