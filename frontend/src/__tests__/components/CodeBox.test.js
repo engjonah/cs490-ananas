@@ -129,4 +129,20 @@ describe("CodeBox Component Functionality", () => {
     expect(detectLangTab).toHaveAttribute("aria-selected", "false");
     expect(javaTab).toHaveAttribute("aria-selected", "true");
   });
+
+  test('loading gif loads', async () => {
+    render(<CodeBox outputLoading={true} readOnly={true}/>);
+
+    const gif = screen.queryAllByAltText("loading...");
+
+    expect(gif).toBeInTheDocument;
+  });
+
+  test('loading gif doesn\'t appear when not loaindg', async () => {
+    render(<CodeBox outputLoading={false} readOnly={true}/>);
+
+    const gif = screen.queryAllByAltText("loading...");
+
+    expect(gif).not.toBeInTheDocument;
+  });
 })
