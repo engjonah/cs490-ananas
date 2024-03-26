@@ -1,10 +1,7 @@
 import React from 'react';
 import './DocumentationPage.css'; // Import CSS for styling
-<<<<<<< HEAD
 import userguide from "../assets/AnanasUserGuide.pdf";
 import FAQ from "../components/FAQ";
-=======
->>>>>>> b86c01016c2d4342f1f7f995620714ac870f3c8f
 
 function DocumentationPage() {
   return (
@@ -54,12 +51,7 @@ function DocumentationPage() {
         <div className="user-guide">
         <h3>User Guide</h3>
           <p>Download our user guide for instructions on how to use this site!</p>
-<<<<<<< HEAD
           <a href={userguide} target="_blank" rel="noopener noreferrer">Download User Guide </a>
-=======
-          <p>Download our user guide for instructions on how to use this site!</p>
-  <a href="../assets/AnanasUserGuide.pdf" target="_blank" rel="noopener noreferrer">Download User Guide</a>
->>>>>>> b86c01016c2d4342f1f7f995620714ac870f3c8f
         </div>
       </div>
     </div>
