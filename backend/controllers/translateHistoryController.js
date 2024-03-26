@@ -14,7 +14,7 @@ const createTranslation = async (req, res) => {
             translatedAt,
         })
         await newTranslation.save();
-        res.status(200).json({Message: "Translation saved"})
+        res.status(200).json({Message: "Translation saved!"})
     } catch (error) {
         console.log(`error occurred: ${error.message}`)
         res.status(500).json({ error: error.message });
@@ -29,7 +29,7 @@ const readTranslationsByUid = async (req, res) => {
 
         // check translations exist
         if (!translations || translations.length === 0) {
-            return res.status(404).json({ Message: `No translations found for uid ${uid}` });
+            return res.status(404).json({ error: `No translations found for uid ${uid}` });
         }
 
         res.status(200).json({ Translations: translations });
@@ -55,7 +55,7 @@ const updateTranslationById = async (req, res) => {
 
         // check translation exists
         if (!updatedTranslation) {
-            return res.status(404).json({ Message: "Translation not found" });
+            return res.status(404).json({ error: "Translation not found." });
         }
 
         res.status(200).json({ UpdatedTranslation: updatedTranslation });

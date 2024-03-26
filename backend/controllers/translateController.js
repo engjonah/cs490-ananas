@@ -1,7 +1,7 @@
 const axios = require('axios')
 
 const getTranslation = async (req, res) => {
-        const { uid, inputLang, outputLang, inputCode, translatedAt } = req.body
+        const { inputLang, outputLang, inputCode } = req.body
         const message = `Translate the following code exactly 1:1 without adding anything (such as additional functions, main functions, imports, examples, new comments, or wrappers) from ${inputLang} to ${outputLang}: ${inputCode}`
         const requestData = {
             model: "gpt-3.5-turbo",
