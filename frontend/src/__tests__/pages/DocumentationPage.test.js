@@ -17,5 +17,10 @@ describe('DocumentationPage component', () => {
     expect(getByText('Authentication')).toBeInTheDocument();
     expect(getByText('Firebase API')).toBeInTheDocument();
 
+
+    expect(getByText('Help')).toBeInTheDocument();
+
+    expect(getByText('User Guide')).toBeInTheDocument();
+
   });
 });
