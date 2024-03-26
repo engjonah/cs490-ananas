@@ -1,5 +1,4 @@
 const axios = require('axios')
-let Translation = require('../models/Translation.model');
 
 const getTranslation = async (req, res) => {
         const { uid, inputLang, outputLang, inputCode, translatedAt } = req.body
@@ -16,15 +15,6 @@ const getTranslation = async (req, res) => {
         .then(async (response) => {
             const outputCode = response.data.choices[0].message.content
             console.log(outputCode)
-            const newTranslation = new Translation({
-                uid,
-                inputLang,
-                outputLang,
-                inputCode,
-                outputCode,
-                translatedAt,
-            })
-            await newTranslation.save();
             res.status(200).json({translation: outputCode})
         }).catch(error => {
             const status = error.response.status

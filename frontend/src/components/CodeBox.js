@@ -75,8 +75,34 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
     setLineCount(editorRef.current.getModel().getLineCount());
   }
 
+  async function storeTranslation(inputLang, outputLang, inputCode, outputCode, status) {
+    await fetch(`${ApiUrl}/api/translateHistory`,{
+        method: "POST",
+        body: JSON.stringify({
+          uid: user.uid,
+          inputLang: inputLang,
+          outputLang: outputLang,
+          inputCode: inputCode,
+          outputCode: outputCode,
+          status: status,
+          translatedAt: new Date(),
+        }),
+        headers:{
+            "Content-type": "application/json"
+        },
+    })
+    .then(() => {
+        console.log("Translation saved");
+    })
+    .catch((err) => {
+        ErrorReport("Translation history:" + err.message);
+        console.log(err.message)
+    })
+  };
+
   async function getTranslation() {
     setOutputLoading(true);
+    let status = 200;
     const output = await fetch(`${ApiUrl}/api/translate`, {
       method: "POST",
       body: JSON.stringify({
@@ -91,6 +117,7 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
       },
     })
       .then((response) => {
+        status = response.status;
         if (response.status === 429) {
           toast.error("Rate Limit Exceeded")
           return "Translation Failed"
@@ -117,6 +144,7 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
         return "Translation Failed"
       })
     console.log(output)
+    await storeTranslation(currTab !== 0 ? languageMap[currTab - 1].name : "this unknown language", languageMap[outputLang - 1].name, code, output, status)
     setOutputCode(output);
     setOutputLoading(false);
   }
@@ -125,7 +153,7 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
     const element = document.createElement("a");
     const file = new Blob([code], { type: 'text/plain' });
     element.href = URL.createObjectURL(file);
-    element.download = "placeholder" + extension;
+    element.download = "output" + extension;
     document.body.appendChild(element);
     element.click();
   }
