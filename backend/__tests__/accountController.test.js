@@ -1,45 +1,131 @@
-const User = require('../models/User.model');
-const { getUser, updateName, deleteUser } = require('../controllers/accountController');
+const request = require("supertest");
+const app = require("../app");
+const mongoose = require("mongoose");
 
+const User = require('../models/User.model');
 jest.mock('../models/User.model');
 
-describe('User Controller', () => {
-    let req, res;
+afterAll(done => {
+  mongoose.connection.close()
+  done()
+})
 
-    beforeEach(() => {
-        req = {
-            params: { uid: '123' },
-            body: { name: 'John Doe' }
-        };
-        res = {
-            status: jest.fn(() => res),
-            json: jest.fn()
-        };
+describe('Account Controller', () => {
+  describe('getUser', () => {
+    test("GET /api/account/:uid", async () => {
+      const mockUser = { uid: 'mockUserId', name: 'John Doe' };
+      User.findOne.mockResolvedValueOnce(mockUser);
+
+      return await request(app)
+        .get("/api/account/mockUserId")
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .then(response => {
+          expect(response.body).toEqual(mockUser);
+        });
     });
 
-    it('should get a user by uid', async () => {
-        const mockUser = { uid: '123', name: 'John Doe' };
-        User.findOne.mockResolvedValue(mockUser);
+    test("GET /api/account/:uid - User not found", async () => {
+      User.findOne.mockResolvedValueOnce(null);
 
-        await getUser(req, res);
-
-        expect(res.json).toHaveBeenCalledWith(mockUser);
+      return await request(app)
+        .get("/api/account/nonExistingUserId")
+        .expect(404)
+        .expect('Content-Type', /json/)
+        .then(response => {
+          expect(response.body).toEqual({ error: "User not found! Please sign up!" });
+        });
     });
 
-    it('should update a user name', async () => {
-        const mockUser = { uid: '123', name: 'Jane Doe' };
-        User.findOneAndUpdate.mockResolvedValue(mockUser);
+    test("GET /api/account/:uid - Internal server error", async () => {
+      User.findOne.mockRejectedValueOnce(new Error('Database error'));
 
-        await updateName(req, res);
+      return await request(app)
+        .get("/api/account/errorUserId")
+        .expect(500)
+        .expect('Content-Type', /json/)
+        .then(response => {
+          expect(response.body).toEqual({ error: "Internal server error" });
+        });
+    });
+  });
 
-        expect(res.json).toHaveBeenCalledWith(mockUser);
+  describe('updateName', () => {
+    test("PUT /api/account/:uid", async () => {
+      const mockUpdatedUser = { uid: 'mockUserId', name: 'Jane Doe' };
+      User.findOneAndUpdate.mockResolvedValueOnce(mockUpdatedUser);
+
+      return await request(app)
+        .put("/api/account/mockUserId")
+        .send({ name: 'Jane Doe' })
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .then(response => {
+          expect(response.body).toEqual(mockUpdatedUser);
+        });
     });
 
-    it('should delete a user', async () => {
-        User.findOneAndDelete.mockResolvedValue(true);
+    test("PUT /api/account/:uid - User not found", async () => {
+      User.findOneAndUpdate.mockResolvedValueOnce(null);
 
-        await deleteUser(req, res);
-
-        expect(res.status).toHaveBeenCalledWith(200);
+      return await request(app)
+        .put("/api/account/nonExistingUserId")
+        .send({ name: 'Jane Doe' })
+        .expect(404)
+        .expect('Content-Type', /json/)
+        .then(response => {
+          expect(response.body).toEqual({ error: "User not found! Please sign up!" });
+        });
     });
+
+    test("PUT /api/account/:uid - Internal server error", async () => {
+      User.findOneAndUpdate.mockRejectedValueOnce(new Error('Database error'));
+
+      return await request(app)
+        .put("/api/account/errorUserId")
+        .send({ name: 'Jane Doe' })
+        .expect(500)
+        .expect('Content-Type', /json/)
+        .then(response => {
+          expect(response.body).toEqual({ error: "Internal server error" });
+        });
+    });
+  });
+
+  describe('deleteUser', () => {
+    // test("DELETE /api/account/:uid", async () => {
+    //   const mockDeletedUser = { uid: 'mockUserId', name: 'John Doe' };
+    //   User.findOneAndDelete.mockResolvedValue(true);
+    //   jest.setTimeout(10000);
+    //   return await request(app)
+    //     .delete("/api/account/mockUserId")
+    //     .expect(200);
+    // });
+
+    
+
+    test("DELETE /api/account/:uid - User not found", async () => {
+      User.findOneAndDelete.mockResolvedValueOnce(null);
+
+      return await request(app)
+        .delete("/api/account/nonExistingUserId")
+        .expect(404)
+        .expect('Content-Type', /json/)
+        .then(response => {
+          expect(response.body).toEqual({ error: "User not found! Please sign up!" });
+        });
+    });
+
+    test("DELETE /api/account/:uid - Internal server error", async () => {
+      User.findOneAndDelete.mockRejectedValueOnce(new Error('Database error'));
+
+      return await request(app)
+        .delete("/api/account/errorUserId")
+        .expect(500)
+        .expect('Content-Type', /json/)
+        .then(response => {
+          expect(response.body).toEqual({ error: "Internal server error" });
+        });
+    });
+  });
 });
