@@ -45,9 +45,7 @@ function DocumentationPage() {
       {/* Help Section */}
       <div className="help-container">
         <h2>Help</h2>
-        <div className="faq">
-          <FAQ/>
-        </div>
+        <FAQ/>
         <div className="user-guide">
         <h3>User Guide</h3>
           <p>Download our user guide for instructions on how to use this site!</p>
