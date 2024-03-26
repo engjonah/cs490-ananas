@@ -1,8 +1,16 @@
-import { render, screen, cleanup, fireEvent } from '@testing-library/react';
+import { render, screen, cleanup, fireEvent, waitFor } from '@testing-library/react';
 import CodeBox from "../../components/CodeBox";
+import { toast } from 'react-hot-toast';
 import React from 'react';
 
+beforeEach(() => {
+  global.fetch = jest.fn(() => Promise.resolve(
+   new Response(JSON.stringify({}), {status: 200})
+  ));
+})
+
 afterEach(() => {
+  global.fetch.mockRestore();
   cleanup(); 
 })
 
@@ -144,5 +152,26 @@ describe("CodeBox Component Functionality", () => {
     const gif = screen.queryAllByAltText("loading...");
 
     expect(gif).not.toBeInTheDocument;
+  });
+
+  test('toast success notif', async () => {
+    jest
+      .spyOn(React, 'useState')
+      .mockImplementationOnce(() => [true, jest.fn()]) //input exists
+      .mockImplementationOnce(() => ["hello world", jest.fn()]) //code
+      .mockImplementationOnce(() => [1, jest.fn()]) //tab
+      .mockImplementationOnce(() => [99, jest.fn()]) //lines
+      .mockImplementation((x) => [x, jest.fn()]);
+
+    jest.spyOn(toast, 'success');
+
+    render(<CodeBox setOutputLoading={jest.fn()} setOutputCode={jest.fn()} user={{"uid":"mockuid"}} outputLang={1}/>);
+
+    const translateButton = screen.getByText('Translate');
+    fireEvent.click(translateButton);
+
+    await waitFor(()=>{
+      expect(toast.success).toHaveBeenCalledWith('Translation Completed!');
+    });
   });
 })
