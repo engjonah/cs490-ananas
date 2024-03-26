@@ -41,7 +41,7 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
   },[inputLang])
 
   const detectLanguageOnChange = () => {
-    if (inputLang != 0) {
+    if (inputLang !== 0) {
       return;
     }
     const detectedLang = detectLang(code) || "Unknown";
