@@ -11,9 +11,9 @@ body {
 }
 
 .help-container {
-    width: 100%; /* Set width to 100% of the viewport */
-    max-width: none; /* Remove max-width constraint */
-    margin: 0; /* Remove default margin */
+    max-width: 50vw; /* Adjusted to match the width of .content */
+    width: auto; /* Set width to auto to fit content */
+    margin: 0 auto; /* Center horizontally */
     padding: 40px 20px; /* Add padding for spacing */
 }
 
