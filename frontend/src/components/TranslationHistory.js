@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Paper, Typography, IconButton, Grid, Divider, Collapse, Pagination, Container } from '@mui/material';
+import { Paper, Typography, IconButton, Grid, Divider, Collapse, Pagination, Container, Tooltip } from '@mui/material';
 import ApiUrl from '../ApiUrl';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -33,15 +33,21 @@ const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onE
           <Typography variant="body2"><strong>Date: </strong>{new Date(translatedAt).toLocaleString()}</Typography>
         </Grid>
         <Grid item xs={4} container justifyContent="flex-end" alignItems="center">
-          <IconButton aria-label="expand" onClick={onExpand}>
-            {expanded? <ExpandLessIcon /> : <ExpandMoreIcon />}
-          </IconButton>
-          <IconButton aria-label="edit" onClick={onEdit}>
-            <VisibilityIcon />
-          </IconButton>
-          <IconButton aria-label="delete" onClick={onDelete}>
-            <DeleteIcon />
-          </IconButton>
+          <Tooltip title={expanded ? "Collapse" : "Expand"}>
+            <IconButton aria-label="expand" onClick={onExpand}>
+              {expanded? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={"Edit"}>
+            <IconButton aria-label="edit" onClick={onEdit}>
+              <VisibilityIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={"Delete"}>
+            <IconButton aria-label="delete" onClick={onDelete}>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
         </Grid>
       </Grid>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
