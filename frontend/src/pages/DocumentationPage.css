@@ -10,6 +10,55 @@ body {
     margin: 0; /* Remove default margin */
 }
 
+.help-container {
+    max-width: 50vw; /* Adjusted to match the width of .content */
+    border-radius: 0 0 10px 10px; /* Rounded corners only at the bottom */
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1); /* Drop shadow for depth */
+    padding: 20px;
+    margin: 0 auto; /* Center horizontally */
+}
+
+.faq {
+    background-color: #f9f9f9; /* Match background color of content */
+    border-radius: 0px; /* Match rounded corners */
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1); /* Match drop shadow */
+    padding: 20px; /* Match padding */
+    margin-bottom: 20px; /* Add margin for spacing */
+}
+
+.faq h3 {
+    color: #333; /* Match text color */
+    margin-top: 0; /* Remove default margin for heading */
+}
+
+.faq p {
+    color: #666; /* Match text color */
+    line-height: 1.6;
+}
+
+.user-guide {
+    background-color: #f9f9f9; /* Match background color of content */
+    border-radius: 10px; /* Match rounded corners */
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1); /* Match drop shadow */
+    padding: 20px; /* Match padding */
+}
+
+.user-guide h3 {
+    color: #333; /* Match text color */
+    margin-top: 0; /* Remove default margin for heading */
+}
+
+.user-guide a {
+    color: #007bff; /* Match link color */
+    text-decoration: none;
+}
+
+.user-guide a:hover {
+    text-decoration: underline; /* Add underline on hover */
+}
+
+
+
 .background-gif {
     width: 100%; /* Set width to 100% of the viewport */
     height: 325px; /* Adjust height as needed */
