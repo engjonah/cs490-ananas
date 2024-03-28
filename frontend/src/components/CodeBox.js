@@ -197,6 +197,9 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
               onChange={handleTabChange}
               variant="scrollable"
               scrollButtons="auto"
+              sx={{
+                "& button:hover": { background: "#ecf0f3" },
+              }}
             >
               {!readOnly && <Tab label={"Detect Language"} value={0} key={0} />}
               {languageMap.map((language, index) => (
