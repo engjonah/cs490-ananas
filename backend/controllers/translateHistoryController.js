@@ -13,8 +13,8 @@ const createTranslation = async (req, res) => {
             status,
             translatedAt,
         })
-        await newTranslation.save();
-        res.status(200).json({Message: "Translation saved!"})
+        const obj = await newTranslation.save();
+        res.status(200).json({Message: "Translation saved!", translationId:obj.id})
     } catch (error) {
         console.log(`error occurred: ${error.message}`)
         res.status(500).json({ error: error.message });
