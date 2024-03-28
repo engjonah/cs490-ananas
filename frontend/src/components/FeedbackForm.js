@@ -26,7 +26,7 @@ function FeedbackForm(props) {
   const [rating, setRating] = useState(5);
   const outputLang = props.outputLang;
   const inputLang = props.inputLang;
-  const uid = props.uid;
+  const uid = JSON.parse(localStorage.getItem("user"))?.uid;
   const translationId = props.translationId;
 
   const handleOpen = () => {
