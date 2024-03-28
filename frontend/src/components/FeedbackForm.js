@@ -5,6 +5,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
+import Tooltip from '@mui/material/Tooltip';
 import Rating from '@mui/material/Rating';
 import { styled } from '@mui/system';
 import ApiUrl from '../ApiUrl';
@@ -78,9 +79,13 @@ function FeedbackForm(props) {
 
   return (
     <div>
-      <Button variant="contained" style={{ backgroundColor: '#CACACA', color: 'black'}} onClick={handleOpen}>
-        Feedback
-      </Button>
+      <Tooltip title={translationId ? "Submit Feedback" : "Translate something first!"}>
+        <span>
+          <Button disabled={!translationId} variant="contained" style={{ backgroundColor: '#CACACA', color: 'black'}} onClick={handleOpen}>
+          Feedback
+        </Button>
+        </span>
+      </Tooltip>
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth={true}>
         <DialogTitle
           style={{
