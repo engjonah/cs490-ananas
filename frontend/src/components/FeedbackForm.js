@@ -27,6 +27,7 @@ function FeedbackForm(props) {
   const outputLang = props.outputLang;
   const inputLang = props.inputLang;
   const uid = props.uid;
+  const translationId = props.translationId;
 
   const handleOpen = () => {
     setReview('');
@@ -46,17 +47,16 @@ function FeedbackForm(props) {
     setRating(newValue);
   };
 
-  const storeFeedback = async(rating,review) =>{
+  const storeFeedback = async() =>{
     await fetch(`${ApiUrl}/api/feedback`,{
         method: "POST",
         body: JSON.stringify({
-            uid, //TODO make these first 4 fields actually mean something
+            uid,
             inputLang,
             outputLang,
-            translationid:'1',
+            translationId,
             rating,
             review,
-
         }),
         headers:{
             "Content-type": "application/json"
@@ -72,15 +72,7 @@ function FeedbackForm(props) {
 };
 
   const handleSubmit = () => {
-    storeFeedback(rating, review);
-
-    
-      
-  
-
-    // Handle form submission here
-    console.log('review:', review);
-    console.log('Rating:', rating);
+    storeFeedback();
     handleClose();
   };
 

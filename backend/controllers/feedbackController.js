@@ -2,12 +2,12 @@ let Feedback = require('../models/Feedback.model');
 
 const insertFeedback = async(req,res) =>{
     try {
-        const {uid,inputLang,outputLang,translationid, rating, review} = req.body;
+        const { uid, inputLang, outputLang, translationId, rating, review } = req.body;
         const newFeedback = new Feedback({
             uid,
             inputLang,
             outputLang,
-            translationid,
+            translationId,
             rating,
             review,
         })
