@@ -7,15 +7,31 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, si
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCRAAMyL5qQ5wK2gS4NHMjk1GVmmSVD2Is",
-  authDomain: "cs490-ananas.firebaseapp.com",
-  projectId: "cs490-ananas",
-  storageBucket: "cs490-ananas.appspot.com",
-  messagingSenderId: "355817163789",
-  appId: "1:355817163789:web:99a8f8da64ed92f0c61944",
-  measurementId: "G-HRBMXWQBN4"
-};
+
+var firebaseConfig;
+//prod
+if(process.env.REACT_APP_RELEASE_STAGE === 'prod'){
+  firebaseConfig = {
+    apiKey: "AIzaSyDnDpX4ZMVDmFmKn0_WGIcjvLGlxreS5-A",
+    authDomain: "cs490-ananas-prod.firebaseapp.com",
+    projectId: "cs490-ananas-prod",
+    storageBucket: "cs490-ananas-prod.appspot.com",
+    messagingSenderId: "81408202038",
+    appId: "1:81408202038:web:4ff2d02cb7ebe2f6ab4f97"
+  };
+} 
+//beta, localhost, reviewapps
+else {
+  firebaseConfig = {
+    apiKey: "AIzaSyCRAAMyL5qQ5wK2gS4NHMjk1GVmmSVD2Is",
+    authDomain: "cs490-ananas.firebaseapp.com",
+    projectId: "cs490-ananas",
+    storageBucket: "cs490-ananas.appspot.com",
+    messagingSenderId: "355817163789",
+    appId: "1:355817163789:web:99a8f8da64ed92f0c61944",
+    measurementId: "G-HRBMXWQBN4"
+  };
+}
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
