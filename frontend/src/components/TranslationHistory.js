@@ -124,6 +124,9 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
     const updatedTranslations = [...translations];
     updatedTranslations.splice(index, 1);
     setTranslations(updatedTranslations);
+    if (index === expandedIndex) {
+      setExpandedIndex(null);
+    }
   };
 
   const handleExpand = (index) => {
