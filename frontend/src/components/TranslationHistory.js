@@ -134,7 +134,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
     if (page !== 1 && page > Math.ceil(translations.length / itemsPerPage)) {
       setPage(page-1);
     }
-  }, [translations])
+  }, [page, translations])
 
   const handleExpand = (index) => {
     if (index === expandedIndex) {
