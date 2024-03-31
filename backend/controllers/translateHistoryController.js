@@ -27,9 +27,8 @@ const readTranslationsByUid = async (req, res) => {
         const { uid } = req.params;
         const translations = await Translation.find({ uid });
 
-        // check translations exist
-        if (!translations || translations.length === 0) {
-            return res.status(404).json({ error: `No translations found for uid ${uid}` });
+        if (!translations) {
+            return res.status(404).json({ error: `Translations could not be fetched for uid ${uid}` });
         }
 
         res.status(200).json({ Translations: translations });
