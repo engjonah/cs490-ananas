@@ -25,6 +25,11 @@ describe('/api/translateHistory', () => {
     translatedAt: new Date('December 17, 1995 03:24:00')
   };
 
+  beforeEach(async () => {
+      const newTranslation = await Translation.create(translationData);
+      translationId = newTranslation._id;
+    });
+
   test("POST /api/translateHistory", async () => {
     const token = generateMockToken();
     return await request(app)
@@ -34,13 +39,8 @@ describe('/api/translateHistory', () => {
       .expect(200)
       .expect('Content-Type', /json/)
       .then(response => {
-        expect(response.body).toEqual({ Message: 'Translation saved!' });
+        expect(response.body.Message).toEqual('Translation saved!');
       });
-  });
-
-  beforeEach(async () => {
-    const newTranslation = await Translation.create(translationData);
-    translationId = newTranslation._id;
   });
 
   test("GET /api/translateHistory/:uid", async () => {
