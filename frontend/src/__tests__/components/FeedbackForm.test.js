@@ -6,7 +6,7 @@ describe('FeedbackForm component', () => {
 
   test('renders Feedback button', () => {
     const { getByText } = render(<FeedbackForm />);
-    const feedbackButton = getByText('Feedbaqck');
+    const feedbackButton = getByText('Feedback');
     expect(feedbackButton).toBeInTheDocument();
   });
 
