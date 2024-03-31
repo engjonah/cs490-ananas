@@ -102,22 +102,6 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
         .then(data => {
           const sortedTranslations = data.Translations.sort((a, b) => new Date(b.translatedAt) - new Date(a.translatedAt));
           setTranslations(sortedTranslations);
-          console.log("Translations:", sortedTranslations);
-        })
-        .catch(error => {
-          console.error('Error fetching translations:', error);
-        });
-    }
-  }, [userId]);
-
-  React.useEffect(() => {
-    if (userId) {
-      fetch(`${ApiUrl}/api/translateHistory/${userId}`)
-        .then(response => response.json())
-        .then(data => {
-          const sortedTranslations = data.Translations.sort((a, b) => new Date(b.translatedAt) - new Date(a.translatedAt));
-          setTranslations(sortedTranslations);
-          console.log("Translations:", sortedTranslations);
         })
         .catch(error => {
           console.error('Error fetching translations:', error);
