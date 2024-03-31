@@ -41,7 +41,7 @@ function Navbar() {
           console.log('error here', err);
         })
       }
-  },[user, navigate, logout]);
+  },[user, test, navigate, logout]);
 
   const handleClick = () =>{
     navigate('/');
