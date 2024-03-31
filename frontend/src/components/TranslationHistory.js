@@ -131,7 +131,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
 
   //move back a page if deleted element on last page
   React.useEffect(() => {
-    if (page > Math.ceil(translations.length / itemsPerPage)) {
+    if (page !== 1 && page > Math.ceil(translations.length / itemsPerPage)) {
       setPage(page-1);
     }
   }, [translations])
