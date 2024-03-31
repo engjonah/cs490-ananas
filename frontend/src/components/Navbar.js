@@ -33,14 +33,12 @@ function Navbar() {
             ErrorReport("Auth Check: Something went wrong");
             throw new Error("something went wrong");
           }
+          setTest(test);
+          setTest(res);
           return res;
         })
-        .then(res => res.json())
-        .then(res => {
-          setTest(res);
-        })
         .catch((err) => {
-          console.log('error here');
+          console.log('error here', err);
         })
       }
   },[user, navigate, logout]);
