@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AppBar, Button, Toolbar, Tooltip, Typography } from '@mui/material'
 import { Icon } from './Icon.js'
@@ -7,11 +7,44 @@ import { ReactComponent as DocumentationIcon } from '../assets/DocumentationIcon
 import { ReactComponent as AccountIcon } from '../assets/AccountIcon.svg'
 import {useLogout} from '../hooks/useLogOut.js'
 import { useAuthContext } from '../hooks/useAuthContext.js';
+import ApiUrl from '../ApiUrl';
+import { ErrorReport } from '../services/ErrorReport';
 
 function Navbar() {
   const {logout} = useLogout()
   const {user} = useAuthContext();
   const navigate = useNavigate();
+
+  let [test, setTest] = useState(null);
+
+  useEffect(()=>{
+    if (user){
+      fetch(`${ApiUrl}/api/test`, {
+        headers: {
+          'Authorization':`Bearer ${user.token}`
+        }
+      })
+        .then(res => {
+          if (res.status === 401) {
+            logout();
+            navigate('/signin');
+          }
+          else if (!res.ok) {
+            ErrorReport("Auth Check: Something went wrong");
+            throw new Error("something went wrong");
+          }
+          return res;
+        })
+        .then(res => res.json())
+        .then(res => {
+          setTest(res);
+        })
+        .catch((err) => {
+          console.log('error here');
+        })
+      }
+  },[user, navigate, logout]);
+
   const handleClick = () =>{
     navigate('/');
     logout()
