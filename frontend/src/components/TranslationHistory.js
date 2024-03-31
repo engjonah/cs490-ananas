@@ -7,6 +7,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Editor from '@monaco-editor/react';
+import toast from 'react-hot-toast';
 
 const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onEdit }) => {
   const { inputLang, outputLang, inputCode, outputCode, status, translatedAt } = translation;
@@ -114,8 +115,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
     fetch(`${ApiUrl}/api/translateHistory/${translations[index]._id}`, { method: 'DELETE'})
         .then(response => response.json())
         .then(data => {
-          console.log(translations[index]);
-          console.log("Deleted item at index:", index);
+          toast.success("Deleted translation!");
         })
         .catch(error => {
           console.error('Error fetching translations:', error);
