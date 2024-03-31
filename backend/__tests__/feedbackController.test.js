@@ -18,7 +18,7 @@ describe('/api/feedback', () => {
         uid: 'user_id',
         inputLang: 'Python',
         outputLang: 'Java',
-        translationid: 'translation_id',
+        translationId: 'translation_id',
         rating: 5,
         review: 'Great translation!',
       };
