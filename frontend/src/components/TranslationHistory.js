@@ -7,6 +7,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Editor from '@monaco-editor/react';
+import toast from 'react-hot-toast';
 
 const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onEdit }) => {
   const { inputLang, outputLang, inputCode, outputCode, status, translatedAt } = translation;
@@ -54,31 +55,31 @@ const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onE
         <div style={{ padding: '10px' }}>
           <Typography variant="body2">
             <strong>Input Code: </strong>
-            <br/>
-            <Container style={{ "borderRadius": '15px', "padding": "6px", "backgroundColor": "#ffffff" }}>
-              <Editor 
-                height="15vh" 
-                defaultLanguage={inputLang} 
-                defaultValue={inputCode} 
-                options={{ "readOnly": true }}
-                onMount={handleEditorDidMount}
-              />
-            </Container>
           </Typography>
+          <br/>
+          <Container style={{ "borderRadius": '15px', "padding": "6px", "backgroundColor": "#ffffff" }}>
+            <Editor 
+              height="15vh" 
+              defaultLanguage={inputLang} 
+              defaultValue={inputCode} 
+              options={{ "readOnly": true }}
+              onMount={handleEditorDidMount}
+            />
+          </Container>
           <br/>
           <Typography variant="body2">
             <strong>Output Code: </strong>
-            <br/>
-            <Container style={{ "borderRadius": '15px', "padding": "6px", "backgroundColor": "#ffffff" }}>
-              <Editor 
-                height="15vh" 
-                defaultLanguage={inputLang} 
-                defaultValue={outputCode} 
-                options={{ "readOnly": true }}
-                onMount={handleEditorDidMount}
-              />
-            </Container>
           </Typography>
+          <br/>
+          <Container style={{ "borderRadius": '15px', "padding": "6px", "backgroundColor": "#ffffff" }}>
+            <Editor 
+              height="15vh" 
+              defaultLanguage={inputLang} 
+              defaultValue={outputCode} 
+              options={{ "readOnly": true }}
+              onMount={handleEditorDidMount}
+            />
+          </Container>
           <Typography variant="body2"><strong>Status: </strong> {status}</Typography>
         </div>
       </Collapse>
@@ -102,22 +103,6 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
         .then(data => {
           const sortedTranslations = data.Translations.sort((a, b) => new Date(b.translatedAt) - new Date(a.translatedAt));
           setTranslations(sortedTranslations);
-          console.log("Translations:", sortedTranslations);
-        })
-        .catch(error => {
-          console.error('Error fetching translations:', error);
-        });
-    }
-  }, [userId]);
-
-  React.useEffect(() => {
-    if (userId) {
-      fetch(`${ApiUrl}/api/translateHistory/${userId}`)
-        .then(response => response.json())
-        .then(data => {
-          const sortedTranslations = data.Translations.sort((a, b) => new Date(b.translatedAt) - new Date(a.translatedAt));
-          setTranslations(sortedTranslations);
-          console.log("Translations:", sortedTranslations);
         })
         .catch(error => {
           console.error('Error fetching translations:', error);
@@ -130,8 +115,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
     fetch(`${ApiUrl}/api/translateHistory/${translations[index]._id}`, { method: 'DELETE'})
         .then(response => response.json())
         .then(data => {
-          console.log(translations[index]);
-          console.log("Deleted item at index:", index);
+          toast.success("Deleted translation!");
         })
         .catch(error => {
           console.error('Error fetching translations:', error);
@@ -140,7 +124,17 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
     const updatedTranslations = [...translations];
     updatedTranslations.splice(index, 1);
     setTranslations(updatedTranslations);
+    if (index === expandedIndex) {
+      setExpandedIndex(null);
+    }
   };
+
+  //move back a page if deleted element on last page
+  React.useEffect(() => {
+    if (page !== 1 && page > Math.ceil(translations.length / itemsPerPage)) {
+      setPage(page-1);
+    }
+  }, [page, translations])
 
   const handleExpand = (index) => {
     if (index === expandedIndex) {

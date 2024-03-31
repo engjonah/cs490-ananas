@@ -140,7 +140,7 @@ const SignInPage = () => {
                 </Grid>
               </Grid>
             </Grid>
-            <Divider color = "black" marginBottom = {2}/>
+            <Divider color = "black" />
           </Box>
           <Box marginTop={2}>
             <Grid container spacing={2}></Grid>

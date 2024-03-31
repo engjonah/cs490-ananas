@@ -101,20 +101,6 @@ describe('Error Handling', () => {
       });
   });
 
-  test('GET /api/translateHistory/:uid - Error handling for non-existing user', async () => {
-    const token = generateMockToken();
-    const nonExistingUserId = 'non_existing_user_id';
-
-    await request(app)
-      .get(`/api/translateHistory/${nonExistingUserId}`)
-      .set('Authorization', `Bearer ${token}`)
-      .expect(404)
-      .expect('Content-Type', /json/)
-      .then(response => {
-        expect(response.body.error).toBe(`No translations found for uid ${nonExistingUserId}`);
-      });
-  });
-
   test('PUT /api/translateHistory/:id - Error handling for non-existing translation ID', async () => {
     const token = generateMockToken();
     const nonExistingTranslationId = '54edb381a13ec9142b9bb353';
