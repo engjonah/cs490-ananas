@@ -26,7 +26,7 @@ describe('TranslationHistory Component', () => {
     jest.spyOn(React, 'useEffect').mockImplementation(mockUseEffect)
 
     const { getByText } = render(<TranslationHistory testTranslations={sampleTranslations}/>);
-    await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(2));
 
     expect(getByText('Translation History')).toBeInTheDocument();
     expect(getByText('input4')).toBeInTheDocument();
@@ -57,7 +57,7 @@ describe('TranslationHistory Component', () => {
       }]}
     />);
     
-    await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(2));
 
     fireEvent.click(getByLabelText('delete'));
     expect(fetchMock).toHaveBeenCalledWith(`${ApiUrl}/api/translateHistory/1`, { method: 'DELETE'});
@@ -82,7 +82,7 @@ describe('TranslationHistory Component', () => {
       }]}
     />);
 
-    await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(2));
 
     fireEvent.click(getByLabelText('expand'));
     expect(getByText('Input Code:')).toBeInTheDocument();
@@ -97,7 +97,7 @@ describe('TranslationHistory Component', () => {
 
     const { getByText, queryByText } = render(<TranslationHistory testTranslations={sampleTranslations}/>);
 
-    await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(2));
 
     expect(getByText('input0')).toBeInTheDocument();
     expect(queryByText('input5')).not.toBeInTheDocument();
