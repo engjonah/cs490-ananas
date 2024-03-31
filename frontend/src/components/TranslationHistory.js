@@ -54,31 +54,31 @@ const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onE
         <div style={{ padding: '10px' }}>
           <Typography variant="body2">
             <strong>Input Code: </strong>
-            <br/>
-            <Container style={{ "borderRadius": '15px', "padding": "6px", "backgroundColor": "#ffffff" }}>
-              <Editor 
-                height="15vh" 
-                defaultLanguage={inputLang} 
-                defaultValue={inputCode} 
-                options={{ "readOnly": true }}
-                onMount={handleEditorDidMount}
-              />
-            </Container>
           </Typography>
+          <br/>
+          <Container style={{ "borderRadius": '15px', "padding": "6px", "backgroundColor": "#ffffff" }}>
+            <Editor 
+              height="15vh" 
+              defaultLanguage={inputLang} 
+              defaultValue={inputCode} 
+              options={{ "readOnly": true }}
+              onMount={handleEditorDidMount}
+            />
+          </Container>
           <br/>
           <Typography variant="body2">
             <strong>Output Code: </strong>
-            <br/>
-            <Container style={{ "borderRadius": '15px', "padding": "6px", "backgroundColor": "#ffffff" }}>
-              <Editor 
-                height="15vh" 
-                defaultLanguage={inputLang} 
-                defaultValue={outputCode} 
-                options={{ "readOnly": true }}
-                onMount={handleEditorDidMount}
-              />
-            </Container>
           </Typography>
+          <br/>
+          <Container style={{ "borderRadius": '15px', "padding": "6px", "backgroundColor": "#ffffff" }}>
+            <Editor 
+              height="15vh" 
+              defaultLanguage={inputLang} 
+              defaultValue={outputCode} 
+              options={{ "readOnly": true }}
+              onMount={handleEditorDidMount}
+            />
+          </Container>
           <Typography variant="body2"><strong>Status: </strong> {status}</Typography>
         </div>
       </Collapse>
