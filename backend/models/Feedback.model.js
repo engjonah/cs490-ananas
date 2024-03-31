@@ -16,10 +16,10 @@ const FeedbackSchema = new Schema({
         type: String,
         required: true,
     },
-    translationid:{
-        type: String,
-        required: true,
-    },
+    translationId:{
+      type: String,
+      required: true,
+  },
     rating:{
         type: String,
         required: true,

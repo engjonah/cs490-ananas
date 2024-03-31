@@ -56,6 +56,7 @@ function TranslatePage() {
   const [outputCode, setOutputCode] = useState("");
   const [outputLoading, setOutputLoading] = useState(false);
   const [editCalled, setEditCalled] = useState(false);
+  const [translationId, setTranslationId] = useState("");
 
   useEffect(() => {}, [editCalled]);
 
@@ -80,6 +81,7 @@ function TranslatePage() {
                   setOutputCode={setOutputCode}
                   outputLoading={outputLoading}
                   setOutputLoading={setOutputLoading}
+                  setTranslationId={setTranslationId}
                 />
               </Container>
             </Grid>
@@ -94,7 +96,7 @@ function TranslatePage() {
                   outputLoading={outputLoading}
                   outputCode={outputCode}/>
               </Container>
-              <FeedbackForm uid='placeholder' outputLang={outputLang} inputLang={inputLang}/>
+              <FeedbackForm outputLang={outputLang} inputLang={inputLang} translationId={translationId}/>
             </Grid>
             <Grid xs={12} md={12}>
               <TranslationHistory outputLoading={outputLoading} setEditCalled={setEditCalled} setCodeUpload={setCodeUpload} setOutputCode={setOutputCode} setInputLang={setInputLang} setOutputLang={setOutputLang}/>

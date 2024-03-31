@@ -5,6 +5,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
+import Tooltip from '@mui/material/Tooltip';
 import Rating from '@mui/material/Rating';
 import { styled } from '@mui/system';
 import ApiUrl from '../ApiUrl';
@@ -26,7 +27,8 @@ function FeedbackForm(props) {
   const [rating, setRating] = useState(5);
   const outputLang = props.outputLang;
   const inputLang = props.inputLang;
-  const uid = props.uid;
+  const uid = JSON.parse(localStorage.getItem("user"))?.uid;
+  const translationId = props.translationId;
 
   const handleOpen = () => {
     setReview('');
@@ -46,17 +48,16 @@ function FeedbackForm(props) {
     setRating(newValue);
   };
 
-  const storeFeedback = async(rating,review) =>{
+  const storeFeedback = async() =>{
     await fetch(`${ApiUrl}/api/feedback`,{
         method: "POST",
         body: JSON.stringify({
-            uid, //TODO make these first 4 fields actually mean something
+            uid,
             inputLang,
             outputLang,
-            translationid:'1',
+            translationId,
             rating,
             review,
-
         }),
         headers:{
             "Content-type": "application/json"
@@ -72,23 +73,19 @@ function FeedbackForm(props) {
 };
 
   const handleSubmit = () => {
-    storeFeedback(rating, review);
-
-    
-      
-  
-
-    // Handle form submission here
-    console.log('review:', review);
-    console.log('Rating:', rating);
+    storeFeedback();
     handleClose();
   };
 
   return (
     <div>
-      <Button variant="contained" style={{ backgroundColor: '#CACACA', color: 'black'}} onClick={handleOpen}>
-        Feedback
-      </Button>
+      <Tooltip title={translationId ? "Submit Feedback" : "Translate something first!"}>
+        <span>
+          <Button disabled={!translationId} variant="contained" style={{ backgroundColor: '#CACACA', color: 'black'}} onClick={handleOpen}>
+          Feedback
+        </Button>
+        </span>
+      </Tooltip>
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth={true}>
         <DialogTitle
           style={{

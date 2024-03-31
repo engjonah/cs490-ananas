@@ -10,7 +10,7 @@ import loadingPenguin from '../assets/loadingPenguin.gif'
 import toast from 'react-hot-toast';
 import detectLang from 'lang-detector';
 
-export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputLang, codeUpload, inputLang, setInputLang, user, outputCode, setOutputCode , outputLoading, setOutputLoading}) {
+export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputLang, codeUpload, inputLang, setInputLang, user, outputCode, setOutputCode , outputLoading, setOutputLoading, setTranslationId}) {
   const editorRef = useRef(null);
 
   const [inputExists, setInputExists] = React.useState(false)
@@ -97,7 +97,9 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
             "Content-type": "application/json"
         },
     })
-    .then(() => {
+    .then(res => res.json())
+    .then((res) => {
+        setTranslationId(res.translationId);
         console.log("Translation saved");
     })
     .catch((err) => {
