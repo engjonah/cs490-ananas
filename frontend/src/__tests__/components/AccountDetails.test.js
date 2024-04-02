@@ -84,7 +84,7 @@ describe('AccountDetails component', () => {
         email: 'test@example.com',
         name: 'Test User',
         };
-
+    firebaseOnlyUser.mockReturnValue(true);
     localStorage.setItem('user', JSON.stringify({ uid: 'testUserId' }));
     jest.spyOn(window, 'prompt').mockReturnValueOnce('newPassword');
     jest.spyOn(window, 'fetch').mockResolvedValueOnce({

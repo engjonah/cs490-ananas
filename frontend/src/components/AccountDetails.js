@@ -13,6 +13,7 @@ const AccountDetails = () => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const userId = JSON.parse(localStorage.getItem("user")).uid;
+  const firstParty = firebaseOnlyUser();
 
 
   useEffect(() => {
@@ -64,12 +65,15 @@ const AccountDetails = () => {
     if (firstParty)
     {
       const newPassword = prompt("Enter new password:");
-      if (newPassword.length > 5)
+      if (newPassword != null)
+      {
+        if (newPassword.length > 5)
       {
         changePassword(newPassword);
         toast.success("Password Updated");
       }
       else toast.error("Password too short!");
+      }
     }
     else
     {
@@ -116,10 +120,17 @@ const AccountDetails = () => {
               <h3>Name: {user.name}</h3>
             </>
           )}
+
           <Button variant="contained" onClick={handleUpdateName}>Update Name</Button>
           <br></br><br></br>
+          {firstParty && 
+          (
+            <>
           <Button variant="contained" onClick={handleUpdatePassword}>Update Password</Button> 
           <br></br><br></br>
+            </>
+          )}
+          
           <Button variant="contained" onClick={handleDeleteAccount}>Delete Account</Button>
 
           {error && <p>{error}</p>}
