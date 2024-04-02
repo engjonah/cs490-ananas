@@ -3,10 +3,15 @@ const app = require("../app");
 const Translation = require('../models/Translation.model');
 const mongoose = require("mongoose");
 const nock = require('nock')
+const jwt = require("jsonwebtoken");
 
 const baseURL = 'https://api.openai.com'
 const endpoint = '/v1/chat/completions'
 
+function generateMockToken() {
+    return jwt.sign({ uid: 'mockUserId' }, process.env.JWT_TOKEN_KEY, { expiresIn: '1h' });;
+}
+  
 beforeEach(() => {
   jest.clearAllMocks();
   jest.spyOn(global.console, 'log').mockImplementationOnce(()=>{})
@@ -30,20 +35,24 @@ describe('OpenAI Token Authentication', () => {
     afterAll(() => {
         process.env = originalEnv;
     });
+    const token = generateMockToken();
     it('should return 500 status code for invalid token', async() => {
         return await request(app)
         .post("/api/translate")
         .send({ inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")" })
+        .set('Authorization', `Bearer ${token}`)
         .expect(500)
     })
 })
 
 describe('/api/translate real API requests', () => {
+    const token = generateMockToken();
     it("should return 200 status code and translation for successful translation and save translation", async () =>{
         Translation.prototype.save = jest.fn()
         return await request(app)
         .post("/api/translate")
         .send({ inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")" })
+        .set('Authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .then(response => {
@@ -56,21 +65,25 @@ describe('/api/translate real API requests', () => {
           return new Promise(r => setTimeout(r, 1000))
         })
       }))
+      const token = generateMockToken();
       request(app)
           .post("/api/translate")
           .send({inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")"})
+          .set('Authorization', `Bearer ${token}`)
           .then(response => {
             expect(response.body.translation).not.toBe("")
           });
       request(app)
           .post("/api/translate")
           .send({inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")"})
+          .set('Authorization', `Bearer ${token}`)
           .then(response => {
             expect(response.body.translation).not.toBe("")
           });
       await request(app)
           .post("/api/translate")
           .send({inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")"})
+          .set('Authorization', `Bearer ${token}`)
           .then(response => {
             expect(response.body.translation).not.toBe("")
           });
@@ -83,6 +96,7 @@ describe('/api/translate mocked API requests', () => {
     afterEach(() => {
         nock.cleanAll()
     })
+    const token = generateMockToken();
     it("should return 429 status code with error for rate limit exceeded", async () => {
         nock(baseURL)
         .post(endpoint)
@@ -90,6 +104,7 @@ describe('/api/translate mocked API requests', () => {
         return await request(app)
         .post("/api/translate")
         .send({ inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")" })
+        .set('Authorization', `Bearer ${token}`)
         .expect(429)
         .expect('Content-Type', /json/)
         .then(response => {
@@ -103,6 +118,7 @@ describe('/api/translate mocked API requests', () => {
         return await request(app)
         .post("/api/translate")
         .send({ inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")" })
+        .set('Authorization', `Bearer ${token}`)
         .expect(503)
         .expect('Content-Type', /json/)
         .then(response => {
@@ -116,6 +132,7 @@ describe('/api/translate mocked API requests', () => {
         return await request(app)
         .post("/api/translate")
         .send({inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")"})
+        .set('Authorization', `Bearer ${token}`)
         .expect(500)
         .expect('Content-Type', /json/)
         .then(response => {
