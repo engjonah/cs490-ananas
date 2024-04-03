@@ -9,6 +9,7 @@ import { ErrorReport } from '../services/ErrorReport';
 import loadingPenguin from '../assets/loadingPenguin.gif'
 import toast from 'react-hot-toast';
 import detectLang from 'lang-detector';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputLang, codeUpload, inputLang, setInputLang, user, outputCode, setOutputCode , outputLoading, setOutputLoading, setTranslationId}) {
   const editorRef = useRef(null);
@@ -94,7 +95,8 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
           translatedAt: new Date(),
         }),
         headers:{
-            "Content-type": "application/json"
+          "Content-type": "application/json",
+          'Authorization':`Bearer ${user.token}`,
         },
     })
     .then(res => res.json())
