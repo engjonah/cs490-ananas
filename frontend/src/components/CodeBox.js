@@ -9,7 +9,6 @@ import { ErrorReport } from '../services/ErrorReport';
 import loadingPenguin from '../assets/loadingPenguin.gif'
 import toast from 'react-hot-toast';
 import detectLang from 'lang-detector';
-import { useAuthContext } from '../hooks/useAuthContext';
 
 export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputLang, codeUpload, inputLang, setInputLang, user, outputCode, setOutputCode , outputLoading, setOutputLoading, setTranslationId}) {
   const editorRef = useRef(null);
