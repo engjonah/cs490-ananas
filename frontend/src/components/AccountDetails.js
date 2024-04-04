@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ApiUrl from '../ApiUrl';
 import { changePassword, firebaseOnlyUser, deleteAccount } from '../firebase';
-import { Button, Grid } from '@mui/material';
+import { Button, Grid, CssBaseline, Container } from '@mui/material';
 import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import { useLogout } from '../hooks/useLogOut';
@@ -111,6 +111,7 @@ const AccountDetails = () => {
   
   return (
     <div className="AccountPage">
+      <CssBaseline/>
       <Grid container spacing={2} justifyContent="center" alignItems="center" className="AccountPage-content">
         <Grid item xs={12} sm={6}>
           <h1>Account Information</h1>
