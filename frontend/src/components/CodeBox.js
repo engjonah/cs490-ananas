@@ -122,7 +122,8 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
         translatedAt: new Date()
       }),
       headers: {
-        "Content-type": "application/json"
+        "Content-type": "application/json",
+        'Authorization':`Bearer ${user.token}`,
       },
     })
       .then((response) => {
