@@ -6,19 +6,24 @@ import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import { useLogout } from '../hooks/useLogOut';
 import { ErrorReport } from '../services/ErrorReport';
+import { useAuthContext } from '../hooks/useAuthContext'
 
 const AccountDetails = () => {
   const navigate = useNavigate();
   const {logout} = useLogout()
-  const [user, setUser] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
   const [error, setError] = useState(null);
   const userId = JSON.parse(localStorage.getItem("user")).uid;
   const firstParty = firebaseOnlyUser();
-
+  const {user} = useAuthContext();
 
   useEffect(() => {
 
-    fetch(`${ApiUrl}/api/account/${userId}`)
+    fetch(`${ApiUrl}/api/account/${userId}`, {
+      headers: {
+        'Authorization':`Bearer ${user.token}`
+      }
+    })
       .then(response => {
         if (!response.ok) {
           throw new Error('User not found! Please sign up!');
@@ -26,13 +31,13 @@ const AccountDetails = () => {
         return response.json();
       })
       .then(data => {
-        setUser(data);
+        setUserInfo(data);
       })
       .catch(error => {
         ErrorReport("Account Details:" + error.message);
         setError(error.message);
       });
-  }, [userId]); 
+  }, [userId, user.token]); 
   
   const handleUpdateName = () => {
 
@@ -44,13 +49,14 @@ const AccountDetails = () => {
       fetch(`${ApiUrl}/api/account/${userId}`, {
         method: 'PUT',
         headers: {
+          'Authorization':`Bearer ${user.token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ name: newName }),
       })
       .then(response => response.json())
       .then(data => {
-        setUser(data);
+        setUserInfo(data);
         toast.success("Name Updated!")
       })
       .catch(error => {
@@ -88,7 +94,12 @@ const AccountDetails = () => {
 
     if (window.confirm("Delete this account?"))
     {
-      fetch(`${ApiUrl}/api/account/${userId}`, { method: 'DELETE'})
+      fetch(`${ApiUrl}/api/account/${userId}`, { 
+        method: 'DELETE',
+        headers: {
+          'Authorization':`Bearer ${user.token}`,
+          'Content-Type': 'application/json',
+        },})
       .then(response => {
         if (!response.ok) {
           throw new Error('User not found! Please sign up!');
@@ -96,7 +107,7 @@ const AccountDetails = () => {
         return response.json();
       })
       .then(data => {
-        setUser(data);
+        setUserInfo(data);
       })
       .catch(error => {
         setError(error.message);
@@ -115,10 +126,10 @@ const AccountDetails = () => {
       <Grid container spacing={2} justifyContent="center" alignItems="center" className="AccountPage-content">
         <Grid item xs={12} sm={6}>
           <h1>Account Information</h1>
-          {user && (
+          {userInfo && (
             <>
-              <h3>Email: {user.email}</h3>
-              <h3>Name: {user.name}</h3>
+              <h3>Email: {userInfo.email}</h3>
+              <h3>Name: {userInfo.name}</h3>
             </>
           )}
 

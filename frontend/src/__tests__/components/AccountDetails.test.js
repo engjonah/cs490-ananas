@@ -3,6 +3,7 @@ import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import AccountDetails from '../../components/AccountDetails';
 import { changePassword, firebaseOnlyUser, deleteAccount } from '../../firebase.js';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { useAuthContext } from '../../hooks/useAuthContext.js';
 
 jest.mock('../../firebase', () => ({
   changePassword: jest.fn(),
@@ -15,12 +16,22 @@ jest.mock('../../hooks/useLogOut', () => ({
         logout: () => jest.fn()
     }),
 }));
+
+jest.mock('../../hooks/useAuthContext', () => ({
+  useAuthContext: jest.fn(),
+}));
+
 jest.mock
 
 describe('AccountDetails component', () => {
+
     let mockErrorReport;
 
+
   it('renders account information', async () => {
+    useAuthContext.mockReturnValue({
+      user: { token : 123}
+    });
     const mockUser = {
       email: 'test@example.com',
       name: 'Test User',
@@ -45,6 +56,9 @@ describe('AccountDetails component', () => {
   });
 
   it('updates name on button click', async () => {
+    useAuthContext.mockReturnValue({
+      user: { token : 123}
+    });
     const mockUser = {
       email: 'test@example.com',
       name: 'Test User',
@@ -80,6 +94,9 @@ describe('AccountDetails component', () => {
   });
 
   it('updates password on button click', async () => {
+    useAuthContext.mockReturnValue({
+      user: { token : 123}
+    });
     const mockUser = {
         email: 'test@example.com',
         name: 'Test User',
@@ -113,6 +130,9 @@ describe('AccountDetails component', () => {
   });
 
   it('deletes account on button click', async () => {
+    useAuthContext.mockReturnValue({
+      user: { token : 123}
+    });
     localStorage.setItem('user', JSON.stringify({ uid: 'testUserId' }));
     window.confirm = jest.fn(() => true);
 

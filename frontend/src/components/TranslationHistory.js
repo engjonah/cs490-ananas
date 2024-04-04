@@ -8,6 +8,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Editor from '@monaco-editor/react';
 import toast from 'react-hot-toast';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onEdit }) => {
   const { inputLang, outputLang, inputCode, outputCode, status, translatedAt } = translation;
@@ -95,10 +96,17 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
   const itemsPerPage = 5; // Number of items per page
   const [expandedIndex, setExpandedIndex] = useState(null);
   const userId = JSON.parse(localStorage.getItem("user"))?.uid;
+  const {user} = useAuthContext()
 
   React.useEffect(() => {
     if (userId) {
-      fetch(`${ApiUrl}/api/translateHistory/${userId}`)
+      fetch(`${ApiUrl}/api/translateHistory/${userId}`, { 
+        method: 'GET',
+        headers: {
+          "Content-type": "application/json",
+          'Authorization':`Bearer ${user.token}`
+        },
+      })
         .then(response => response.json())
         .then(data => {
           const sortedTranslations = data.Translations.sort((a, b) => new Date(b.translatedAt) - new Date(a.translatedAt));
@@ -108,11 +116,17 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
           console.error('Error fetching translations:', error);
         });
     }
-  }, [outputLoading, userId]);
+  }, [outputLoading, userId, user.token]);
 
 
   const handleDelete = async(index) => {
-    fetch(`${ApiUrl}/api/translateHistory/${translations[index]._id}`, { method: 'DELETE'})
+    fetch(`${ApiUrl}/api/translateHistory/${translations[index]._id}`, { 
+      method: 'DELETE',
+      headers: {
+        "Content-type": "application/json",
+        'Authorization':`Bearer ${user.token}`
+      },
+    })
         .then(response => response.json())
         .then(data => {
           toast.success("Deleted translation!");
