@@ -3,6 +3,11 @@ import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import TranslationHistory from '../../components/TranslationHistory';
 import ApiUrl from '../../ApiUrl';
+import { useAuthContext } from '../../hooks/useAuthContext.js';
+
+jest.mock('../../hooks/useAuthContext', () => ({
+  useAuthContext: jest.fn(),
+}));
 
 const sampleTranslations = Array.from({ length: 10 }, (_, index) => ({
   _id: index.toString(),
@@ -20,6 +25,7 @@ describe('TranslationHistory Component', () => {
   });
 
   test('renders translation history correctly', async () => {
+    useAuthContext.mockReturnValue({user : {token : 123}});
     localStorage.setItem('user', JSON.stringify({ uid: '123' }));
 
     const mockUseEffect = jest.fn()
@@ -34,6 +40,7 @@ describe('TranslationHistory Component', () => {
   });
 
   test('deletes translation on button click', async () => {
+    useAuthContext.mockReturnValue({user : {token : 123}});
     localStorage.setItem('user', JSON.stringify({ uid: '123' }));
 
     const mockUseEffect = jest.fn()
@@ -60,11 +67,17 @@ describe('TranslationHistory Component', () => {
     await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(2));
 
     fireEvent.click(getByLabelText('delete'));
-    expect(fetchMock).toHaveBeenCalledWith(`${ApiUrl}/api/translateHistory/1`, { method: 'DELETE'});
+    expect(fetchMock).toHaveBeenCalledWith(`${ApiUrl}/api/translateHistory/1`, { 
+      method: 'DELETE',
+      headers: {
+        "Content-type": "application/json",
+        'Authorization':`Bearer 123`
+      }});
     expect(getByText('You have no translations!')).toBeInTheDocument();
   });
 
   test('expands translation on button click', async () => {
+    useAuthContext.mockReturnValue({user : {token : 123}});
     localStorage.setItem('user', JSON.stringify({ uid: '123' }));
 
     const mockUseEffect = jest.fn()
@@ -90,6 +103,7 @@ describe('TranslationHistory Component', () => {
   });
 
   test('handles pagination correctly', async () => {
+    useAuthContext.mockReturnValue({user : {token : 123}});
     localStorage.setItem('user', JSON.stringify({ uid: '123' }));
 
     const mockUseEffect = jest.fn()
