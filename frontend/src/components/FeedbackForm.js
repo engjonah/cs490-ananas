@@ -10,6 +10,8 @@ import Rating from '@mui/material/Rating';
 import { styled } from '@mui/system';
 import ApiUrl from '../ApiUrl';
 import { ErrorReport } from '../services/ErrorReport';
+import { useAuthContext } from '../hooks/useAuthContext';
+
 
 // Styled component for stars wrapper
 const StarsWrapper = styled('div')({
@@ -29,6 +31,7 @@ function FeedbackForm(props) {
   const inputLang = props.inputLang;
   const uid = JSON.parse(localStorage.getItem("user"))?.uid;
   const translationId = props.translationId;
+  const {user} = useAuthContext()
 
   const handleOpen = () => {
     setReview('');
@@ -60,7 +63,8 @@ function FeedbackForm(props) {
             review,
         }),
         headers:{
-            "Content-type": "application/json"
+            "Content-type": "application/json",
+            'Authorization':`Bearer ${user.token}`,
         },
     })
     .then(() => {

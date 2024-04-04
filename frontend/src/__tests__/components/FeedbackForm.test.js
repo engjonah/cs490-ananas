@@ -1,16 +1,26 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import FeedbackForm, { storeFeedback } from '../../components/FeedbackForm';
+import { useAuthContext } from '../../hooks/useAuthContext.js';
+
+jest.mock('../../hooks/useAuthContext', () => ({
+  useAuthContext: jest.fn(),
+}));
+
 
 describe('FeedbackForm component', () => {
 
   test('renders Feedback button', () => {
+    useAuthContext.mockReturnValue({user : {token : 123}});
+
     const { getByText } = render(<FeedbackForm />);
     const feedbackButton = getByText('Feedback');
     expect(feedbackButton).toBeInTheDocument();
   });
 
   test('opens dialog when Feedback button is clicked', () => {
+    useAuthContext.mockReturnValue({user : {token : 123}});
+
     const { getByText, getByLabelText } = render(<FeedbackForm translationId="mockTranslationId" />);
     const feedbackButton = getByText('Feedback');
     fireEvent.click(feedbackButton);
@@ -21,6 +31,8 @@ describe('FeedbackForm component', () => {
   });
 
   test('submits form when Submit button is clicked and rating/review fields are cleared', () => {
+    useAuthContext.mockReturnValue({user : {token : 123}});
+
     const { getByText, getByLabelText } = render(<FeedbackForm translationId="mockTranslationId" />);
     const feedbackButton = getByText('Feedback');
     fireEvent.click(feedbackButton);
@@ -34,6 +46,8 @@ describe('FeedbackForm component', () => {
   });
 
   test('form cleared on reopening', () => {
+    useAuthContext.mockReturnValue({user : {token : 123}});
+
     const { getByText, getByLabelText } = render(<FeedbackForm translationId="mockTranslationId" />);
     const feedbackButton = getByText('Feedback');
     fireEvent.click(feedbackButton);
