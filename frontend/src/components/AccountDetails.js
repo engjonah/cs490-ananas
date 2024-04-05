@@ -16,7 +16,9 @@ const AccountDetails = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [error, setError] = useState(null);
   const [passwordUpdateFormOpen, setPasswordUpdateFormOpen] = useState(false);
+  const [nameUpdateFormOpen, setNameUpdateFormOpen] = useState(false);
   const [newPassword, setNewPassword] = useState('');
+  const [newName, setNewName] = useState('');
   const [verifyNewPassword, setVerifyNewPassword] = useState('');
   const userId = JSON.parse(localStorage.getItem("user")).uid;
   const firstParty = firebaseOnlyUser();
@@ -61,8 +63,25 @@ const AccountDetails = () => {
     }
   };
 
+  const handleNameUpdateOpen = () => {
+    setNameUpdateFormOpen(true);
+  };
+
+  const handleNameUpdateClose = () => {
+    setNameUpdateFormOpen(false);
+  };
+
+  const handleNameUpdateSubmit = () => {
+    if (newName) {
+      setNewName(newName);
+      handleUpdateName();
+      handleNameUpdateClose(); 
+    } else {
+      toast.error('Name cannot be blank');
+    }
+  };
+
   const handleUpdateName = () => {
-    const newName = prompt("Enter new name:");
     const userId = JSON.parse(localStorage.getItem("user")).uid;
 
     if (newName) {
@@ -158,7 +177,7 @@ const AccountDetails = () => {
             </>
         )}
         </div>
-        <Dialog open={passwordUpdateFormOpen} onClose={handlePasswordUpdateClose}>
+        <Dialog open={passwordUpdateFormOpen} onClose={handlePasswordUpdateClose} fullWidth={true}>
           <DialogTitle>Change Password</DialogTitle>
           <DialogContent>
             <TextField
@@ -188,6 +207,29 @@ const AccountDetails = () => {
             </Button>
           </DialogActions>
         </Dialog>
+
+        <Dialog open={nameUpdateFormOpen} onClose={handleNameUpdateClose} fullWidth={true}>
+          <DialogTitle>Change Name</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="New Name"
+              type="plaintext"
+              fullWidth
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleNameUpdateClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleNameUpdateSubmit} color="primary">
+              Submit
+            </Button>
+          </DialogActions>
+        </Dialog>
         <form style={{ width: '100%', marginTop: '16px' }} noValidate>
           
           <Button
@@ -196,7 +238,7 @@ const AccountDetails = () => {
             variant="contained"
             color="primary"
             style={{ marginTop: '16px' }}
-            onClick={handleUpdateName}
+            onClick={handleNameUpdateOpen}
           >
             Update Name
           </Button>

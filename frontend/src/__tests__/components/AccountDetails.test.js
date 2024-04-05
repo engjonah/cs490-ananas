@@ -89,7 +89,7 @@ describe('AccountDetails component', () => {
     });
 
     await waitFor(() => {
-      expect(window.fetch).toHaveBeenCalled();
+      expect(screen.getByText('Change Name')).toBeInTheDocument();
     });
   });
 
