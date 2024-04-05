@@ -2,7 +2,10 @@ const axios = require('axios')
 
 const getTranslation = async (req, res) => {
         const { inputLang, outputLang, inputCode } = req.body
-        const message = `Translate the following code exactly 1:1 without adding anything (such as additional functions, main functions, imports, examples, new comments, or wrappers) from ${inputLang} to ${outputLang}: ${inputCode}`
+        const message = `Translate the following code without adding additional functions, imports, examples, or wrappers from ${inputLang} to ${outputLang}. For packages/libraries, find the equivalent libraries in the output languages.
+        If equivalent packages/libraries do not exist in the output langauge, then make sure to write a comment stating they do not exist. For methods/functions used in the input code, find the equivalent methods for the output code. If none exist, make sure to write a comment
+        indicating so. Here is the code: ${inputCode}`
+
         const requestData = {
             model: "gpt-3.5-turbo",
             messages: [{ "role": "user", "content": message }],  
