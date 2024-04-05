@@ -182,7 +182,7 @@ const AccountDetails = () => {
             </>
         )}
         </div>
-        <Dialog open={passwordUpdateFormOpen} onClose={handlePasswordUpdateClose}>
+        <Dialog open={passwordUpdateFormOpen} onClose={handlePasswordUpdateClose} fullWidth={true}>
           <DialogTitle>Change Password</DialogTitle>
           <DialogContent>
             <TextField
@@ -213,27 +213,27 @@ const AccountDetails = () => {
           </DialogActions>
         </Dialog>
 
-        <Dialog open={nameUpdateFormOpen} onClose={handleNameUpdateClose}>
-        <DialogTitle>Change Name</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="New Name"
-            type="plaintext"
-            fullWidth
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleNameUpdateClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleNameUpdateSubmit} color="primary">
-            Submit
-          </Button>
-        </DialogActions>
+        <Dialog open={nameUpdateFormOpen} onClose={handleNameUpdateClose} fullWidth={true}>
+          <DialogTitle>Change Name</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="New Name"
+              type="plaintext"
+              fullWidth
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleNameUpdateClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleNameUpdateSubmit} color="primary">
+              Submit
+            </Button>
+          </DialogActions>
         </Dialog>
         <form style={{ width: '100%', marginTop: '16px' }} noValidate>
           
