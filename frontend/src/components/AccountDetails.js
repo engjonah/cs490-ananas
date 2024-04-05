@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ApiUrl from '../ApiUrl';
 import { changePassword, firebaseOnlyUser, deleteAccount } from '../firebase';
-import { Button, Typography, Container, Avatar, CssBaseline} from '@mui/material';
+import { Button, Typography, Container, Avatar, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from '@mui/material';
 import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import { useLogout } from '../hooks/useLogOut';
@@ -15,6 +15,9 @@ const AccountDetails = () => {
   const {logout} = useLogout()
   const [userInfo, setUserInfo] = useState(null);
   const [error, setError] = useState(null);
+  const [passwordUpdateFormOpen, setPasswordUpdateFormOpen] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [verifyNewPassword, setVerifyNewPassword] = useState('');
   const userId = JSON.parse(localStorage.getItem("user")).uid;
   const firstParty = firebaseOnlyUser();
   const {user} = useAuthContext();
@@ -42,6 +45,30 @@ const AccountDetails = () => {
       });
   }, [userId, user.token]); 
   
+
+  const handlePasswordUpdateOpen = () => {
+    setPasswordUpdateFormOpen(true);
+  };
+
+  const handlePasswordUpdateClose = () => {
+    setPasswordUpdateFormOpen(false);
+  };
+
+  const handlePasswordUpdateSubmit = () => {
+    // Handle form submission logic (e.g., password validation, API call)
+    if (newPassword === verifyNewPassword) {
+      // Passwords match, proceed with password change
+      //console.log('Password changed successfully!');
+      setNewPassword(newPassword);
+      handleUpdatePassword();
+      handlePasswordUpdateClose(); // Close the dialog after successful submission
+    } else {
+      // Passwords do not match, handle error or validation message
+      toast.error('Passwords do not match!');
+      
+    }
+  };
+
   const handleUpdateName = () => {
 
     const newName = prompt("Enter new name:");
@@ -73,7 +100,7 @@ const AccountDetails = () => {
     const firstParty = firebaseOnlyUser();
     if (firstParty)
     {
-      const newPassword = prompt("Enter new password:");
+      // const newPassword = prompt("Enter new password:");
       if (newPassword != null)
       {
         if (newPassword.length > 5)
@@ -144,6 +171,36 @@ const AccountDetails = () => {
             </>
         )}
         </div>
+        <Dialog open={passwordUpdateFormOpen} onCLose={handlePasswordUpdateClose}>
+        <DialogTitle>Change Password</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="New Password"
+            type="password"
+            fullWidth
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+          <TextField
+            margin="dense"
+            label="Verify New Password"
+            type="password"
+            fullWidth
+            value={verifyNewPassword}
+            onChange={(e) => setVerifyNewPassword(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handlePasswordUpdateClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handlePasswordUpdateSubmit} color="primary">
+            Submit
+          </Button>
+        </DialogActions>
+        </Dialog>
         <form style={{ width: '100%', marginTop: '16px' }} noValidate>
           
           <Button
@@ -163,7 +220,7 @@ const AccountDetails = () => {
               variant="contained"
               color="primary"
               style={{ marginTop: '16px' }}
-              onClick={handleUpdatePassword}
+              onClick={handlePasswordUpdateOpen}
             >
               Update Password
             </Button>
