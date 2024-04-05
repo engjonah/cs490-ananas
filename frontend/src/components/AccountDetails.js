@@ -158,7 +158,7 @@ const AccountDetails = () => {
             </>
         )}
         </div>
-        <Dialog open={passwordUpdateFormOpen} onCLose={handlePasswordUpdateClose}>
+        <Dialog open={passwordUpdateFormOpen} onClose={handlePasswordUpdateClose}>
           <DialogTitle>Change Password</DialogTitle>
           <DialogContent>
             <TextField
