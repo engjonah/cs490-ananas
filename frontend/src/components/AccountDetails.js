@@ -213,7 +213,7 @@ const AccountDetails = () => {
           </DialogActions>
         </Dialog>
 
-        <Dialog open={nameUpdateFormOpen} onCLose={handleNameUpdateClose}>
+        <Dialog open={nameUpdateFormOpen} onClose={handleNameUpdateClose}>
         <DialogTitle>Change Name</DialogTitle>
         <DialogContent>
           <TextField
