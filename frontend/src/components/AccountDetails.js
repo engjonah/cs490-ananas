@@ -180,34 +180,34 @@ const AccountDetails = () => {
         )}
         </div>
         <Dialog open={passwordUpdateFormOpen} onCLose={handlePasswordUpdateClose}>
-        <DialogTitle>Change Password</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="New Password"
-            type="password"
-            fullWidth
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
-          <TextField
-            margin="dense"
-            label="Verify New Password"
-            type="password"
-            fullWidth
-            value={verifyNewPassword}
-            onChange={(e) => setVerifyNewPassword(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handlePasswordUpdateClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handlePasswordUpdateSubmit} color="primary">
-            Submit
-          </Button>
-        </DialogActions>
+          <DialogTitle>Change Password</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="New Password"
+              type="password"
+              fullWidth
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <TextField
+              margin="dense"
+              label="Verify New Password"
+              type="password"
+              fullWidth
+              value={verifyNewPassword}
+              onChange={(e) => setVerifyNewPassword(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handlePasswordUpdateClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handlePasswordUpdateSubmit} color="primary">
+              Submit
+            </Button>
+          </DialogActions>
         </Dialog>
         <form style={{ width: '100%', marginTop: '16px' }} noValidate>
           
