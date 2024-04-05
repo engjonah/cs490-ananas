@@ -157,8 +157,6 @@ const changePassword = async (newPassword) => {
             throw e;
         }
         // An error occurred while updating password
-        return false;
-        
     }
 };
 
