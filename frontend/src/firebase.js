@@ -147,11 +147,18 @@ const changePassword = async (newPassword) => {
         console.log(user.providerData[0].providerId)
         // Replace the user's password
         await updatePassword(user, newPassword);
-        
+        return true;
     
-    } catch (error) {
+    } catch (e) {
+
+        if (e.message.includes(AuthErrorCodes.WEAK_PASSWORD)){
+            throw Error("Please choose a stronger password!")
+        }else {
+            throw e;
+        }
         // An error occurred while updating password
-        console.error("Error updating password:", error);
+        return false;
+        
     }
 };
 

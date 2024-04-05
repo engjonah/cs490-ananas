@@ -55,15 +55,13 @@ const AccountDetails = () => {
   };
 
   const handlePasswordUpdateSubmit = () => {
-    // Handle form submission logic (e.g., password validation, API call)
     if (newPassword === verifyNewPassword) {
-      // Passwords match, proceed with password change
-      //console.log('Password changed successfully!');
+
       setNewPassword(newPassword);
       handleUpdatePassword();
-      handlePasswordUpdateClose(); // Close the dialog after successful submission
+      handlePasswordUpdateClose(); 
     } else {
-      // Passwords do not match, handle error or validation message
+
       toast.error('Passwords do not match!');
       
     }
@@ -96,17 +94,27 @@ const AccountDetails = () => {
   };
   
 
-  const handleUpdatePassword = () => {
+  const handleUpdatePassword = async () => {
     const firstParty = firebaseOnlyUser();
     if (firstParty)
     {
-      // const newPassword = prompt("Enter new password:");
       if (newPassword != null)
       {
         if (newPassword.length > 5)
       {
-        changePassword(newPassword);
-        toast.success("Password Updated");
+        try {
+
+        
+          const passChanged = await changePassword(newPassword);
+          if (passChanged)
+          {
+            toast.success("Password Updated");
+          } else {
+            toast.error("Cannot Change Password");
+          }
+        } catch (e) {
+          toast.error(e);
+        }
       }
       else toast.error("Password too short!");
       }
