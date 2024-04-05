@@ -86,26 +86,26 @@ const AccountDetails = () => {
   };
 
   const handleUpdatePassword = async () => {
-    const firstParty = firebaseOnlyUser();
-    if (firstParty) {
-      if (newPassword != null) {
-        if (newPassword.length > 5) {
-          try {
-            const passChanged = await changePassword(newPassword);
-            if (passChanged) {
-              toast.success("Password Updated");
-            } else {
-              toast.error("Cannot Change Password");
-            }
-          } catch (e) {
-            toast.error(e);
-          }
-        } else {
-          toast.error("Password too short!");
-        }
+    if (newPassword == null) {
+      return;
+    }
+    if (!firebaseOnlyUser()) {
+      toast.error("Refer to third party provider to update password!");
+      return;
+    }
+    if (newPassword.length < 5) {
+      toast.error("Password too short!");
+      return;
+    }
+    try {
+      const passChanged = await changePassword(newPassword);
+      if (passChanged) {
+        toast.success("Password Updated");
+      } else {
+        toast.error("Cannot Change Password");
       }
-    } else {
-      toast.error("Refer to third party provider to update password!")
+    } catch (e) {
+      toast.error(e);
     }
   };
 
