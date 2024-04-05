@@ -73,20 +73,15 @@ const AccountDetails = () => {
 
   const handleNameUpdateSubmit = () => {
     if (newName) {
-
       setNewName(newName);
       handleUpdateName();
       handleNameUpdateClose(); 
     } else {
-
       toast.error('Name cannot be blank');
-      
     }
   };
 
   const handleUpdateName = () => {
-
-    
     const userId = JSON.parse(localStorage.getItem("user")).uid;
 
     if (newName) {
