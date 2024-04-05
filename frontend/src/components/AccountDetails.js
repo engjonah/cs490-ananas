@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ApiUrl from '../ApiUrl';
 import { changePassword, firebaseOnlyUser, deleteAccount } from '../firebase';
-import { Button, Typography, Container, Avatar, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from '@mui/material';
+import { Button, Typography, Container, Avatar, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import { useLogout } from '../hooks/useLogOut';
@@ -22,9 +22,7 @@ const AccountDetails = () => {
   const firstParty = firebaseOnlyUser();
   const {user} = useAuthContext();
 
-
   useEffect(() => {
-
     fetch(`${ApiUrl}/api/account/${userId}`, {
       headers: {
         'Authorization':`Bearer ${user.token}`
@@ -44,7 +42,6 @@ const AccountDetails = () => {
         setError(error.message);
       });
   }, [userId, user.token]); 
-  
 
   const handlePasswordUpdateOpen = () => {
     setPasswordUpdateFormOpen(true);
@@ -56,24 +53,19 @@ const AccountDetails = () => {
 
   const handlePasswordUpdateSubmit = () => {
     if (newPassword === verifyNewPassword) {
-
       setNewPassword(newPassword);
       handleUpdatePassword();
       handlePasswordUpdateClose(); 
     } else {
-
       toast.error('Passwords do not match!');
-      
     }
   };
 
   const handleUpdateName = () => {
-
     const newName = prompt("Enter new name:");
     const userId = JSON.parse(localStorage.getItem("user")).uid;
 
     if (newName) {
-
       fetch(`${ApiUrl}/api/account/${userId}`, {
         method: 'PUT',
         headers: {
@@ -92,46 +84,33 @@ const AccountDetails = () => {
       });
     }
   };
-  
 
   const handleUpdatePassword = async () => {
     const firstParty = firebaseOnlyUser();
-    if (firstParty)
-    {
-      if (newPassword != null)
-      {
-        if (newPassword.length > 5)
-      {
-        try {
-
-        
-          const passChanged = await changePassword(newPassword);
-          if (passChanged)
-          {
-            toast.success("Password Updated");
-          } else {
-            toast.error("Cannot Change Password");
+    if (firstParty) {
+      if (newPassword != null) {
+        if (newPassword.length > 5) {
+          try {
+            const passChanged = await changePassword(newPassword);
+            if (passChanged) {
+              toast.success("Password Updated");
+            } else {
+              toast.error("Cannot Change Password");
+            }
+          } catch (e) {
+            toast.error(e);
           }
-        } catch (e) {
-          toast.error(e);
+        } else {
+          toast.error("Password too short!");
         }
       }
-      else toast.error("Password too short!");
-      }
-    }
-    else
-    {
+    } else {
       toast.error("Refer to third party provider to update password!")
     }
-    
-  
   };
 
   const handleDeleteAccount = () => {
-    
-
-    if (window.confirm("Delete this account?"))
-    {
+    if (window.confirm("Delete this account?")) {
       fetch(`${ApiUrl}/api/account/${userId}`, { 
         method: 'DELETE',
         headers: {
@@ -154,7 +133,7 @@ const AccountDetails = () => {
       logout();
       toast.success("Account Deleted");
       navigate("/")
-  }
+    }
   };
 
   return (
@@ -237,7 +216,6 @@ const AccountDetails = () => {
             type="button"
             fullWidth
             variant="contained"
-            
             style={{ marginTop: '16px', backgroundColor: 'darkRed'}}
             onClick={handleDeleteAccount}
           >
