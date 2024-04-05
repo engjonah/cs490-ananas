@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import ApiUrl from '../ApiUrl';
 import { changePassword, firebaseOnlyUser, deleteAccount } from '../firebase';
-import { Button, Grid } from '@mui/material';
+import { Button, Typography, Container, Avatar, CssBaseline} from '@mui/material';
 import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import { useLogout } from '../hooks/useLogOut';
 import { ErrorReport } from '../services/ErrorReport';
-import { useAuthContext } from '../hooks/useAuthContext'
+import { useAuthContext } from '../hooks/useAuthContext';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+
 
 const AccountDetails = () => {
   const navigate = useNavigate();
@@ -16,6 +18,7 @@ const AccountDetails = () => {
   const userId = JSON.parse(localStorage.getItem("user")).uid;
   const firstParty = firebaseOnlyUser();
   const {user} = useAuthContext();
+
 
   useEffect(() => {
 
@@ -118,37 +121,69 @@ const AccountDetails = () => {
       navigate("/")
   }
   };
-  
-  
+
   return (
-    <div className="AccountPage">
-      <Grid container spacing={2} justifyContent="center" alignItems="center" className="AccountPage-content">
-        <Grid item xs={12} sm={6}>
-          <h1>Account Information</h1>
-          {userInfo && (
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Avatar style={{ margin: '8px', backgroundColor: '#1976d2' }}>
+          <ManageAccountsIcon />
+        </Avatar>
+        <Typography component="h1" variant="h4" paddingBottom={2}>
+          Account Details
+        </Typography>
+        <div style={{alignItems: 'left'}}>
+        {userInfo && (
             <>
-              <h3>Email: {userInfo.email}</h3>
-              <h3>Name: {userInfo.name}</h3>
+            <Typography variant="h5" gutterBottom>
+              <b>Name:</b> {userInfo.name}
+            </Typography>
+            <Typography variant="h5" gutterBottom >
+              <b>Email:</b> {userInfo.email}
+            </Typography>
             </>
-          )}
-
-          <Button variant="contained" onClick={handleUpdateName}>Update Name</Button>
-          <br></br><br></br>
-          {firstParty && 
-          (
-            <>
-          <Button variant="contained" onClick={handleUpdatePassword}>Update Password</Button> 
-          <br></br><br></br>
-            </>
-          )}
+        )}
+        </div>
+        <form style={{ width: '100%', marginTop: '16px' }} noValidate>
           
-          <Button variant="contained" onClick={handleDeleteAccount}>Delete Account</Button>
-
+          <Button
+            type="button"
+            fullWidth
+            variant="contained"
+            color="primary"
+            style={{ marginTop: '16px' }}
+            onClick={handleUpdateName}
+          >
+            Update Name
+          </Button>
+          {firstParty && ( 
+            <Button
+              type="button"
+              fullWidth
+              variant="contained"
+              color="primary"
+              style={{ marginTop: '16px' }}
+              onClick={handleUpdatePassword}
+            >
+              Update Password
+            </Button>
+            )}
+          <Button
+            type="button"
+            fullWidth
+            variant="contained"
+            
+            style={{ marginTop: '16px', backgroundColor: 'darkRed'}}
+            onClick={handleDeleteAccount}
+          >
+            Delete Account
+          </Button>
           {error && <p>{error}</p>}
-        </Grid>
-      </Grid>
-    </div>
+        </form>
+      </div>
+    </Container>
   );
-}
+};
+
 
 export default AccountDetails;

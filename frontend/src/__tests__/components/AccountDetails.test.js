@@ -50,8 +50,8 @@ describe('AccountDetails component', () => {
       );
 
     await waitFor(() => {
-      expect(screen.getByText('Email: test@example.com')).toBeInTheDocument();
-      expect(screen.getByText('Name: Test User')).toBeInTheDocument();
+      expect(screen.getByText('test@example.com')).toBeInTheDocument();
+      expect(screen.getByText('Test User')).toBeInTheDocument();
     });
   });
 
