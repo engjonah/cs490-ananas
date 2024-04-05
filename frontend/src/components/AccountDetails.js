@@ -1,24 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import ApiUrl from '../ApiUrl';
 import { changePassword, firebaseOnlyUser, deleteAccount } from '../firebase';
-import { Button, Grid } from '@mui/material';
+import { Button, Typography, Container, Avatar, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import { useLogout } from '../hooks/useLogOut';
 import { ErrorReport } from '../services/ErrorReport';
-import { useAuthContext } from '../hooks/useAuthContext'
+import { useAuthContext } from '../hooks/useAuthContext';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+
 
 const AccountDetails = () => {
   const navigate = useNavigate();
   const {logout} = useLogout()
   const [userInfo, setUserInfo] = useState(null);
   const [error, setError] = useState(null);
+  const [passwordUpdateFormOpen, setPasswordUpdateFormOpen] = useState(false);
+  const [nameUpdateFormOpen, setNameUpdateFormOpen] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [newName, setNewName] = useState('');
+  const [verifyNewPassword, setVerifyNewPassword] = useState('');
   const userId = JSON.parse(localStorage.getItem("user")).uid;
   const firstParty = firebaseOnlyUser();
   const {user} = useAuthContext();
 
   useEffect(() => {
-
     fetch(`${ApiUrl}/api/account/${userId}`, {
       headers: {
         'Authorization':`Bearer ${user.token}`
@@ -38,14 +44,47 @@ const AccountDetails = () => {
         setError(error.message);
       });
   }, [userId, user.token]); 
-  
-  const handleUpdateName = () => {
 
-    const newName = prompt("Enter new name:");
+  const handlePasswordUpdateOpen = () => {
+    setPasswordUpdateFormOpen(true);
+  };
+
+  const handlePasswordUpdateClose = () => {
+    setPasswordUpdateFormOpen(false);
+  };
+
+  const handlePasswordUpdateSubmit = () => {
+    if (newPassword === verifyNewPassword) {
+      setNewPassword(newPassword);
+      handleUpdatePassword();
+      handlePasswordUpdateClose(); 
+    } else {
+      toast.error('Passwords do not match!');
+    }
+  };
+
+  const handleNameUpdateOpen = () => {
+    setNameUpdateFormOpen(true);
+  };
+
+  const handleNameUpdateClose = () => {
+    setNameUpdateFormOpen(false);
+  };
+
+  const handleNameUpdateSubmit = () => {
+    if (newName) {
+      setNewName(newName);
+      handleUpdateName();
+      handleNameUpdateClose(); 
+    } else {
+      toast.error('Name cannot be blank');
+    }
+  };
+
+  const handleUpdateName = () => {
     const userId = JSON.parse(localStorage.getItem("user")).uid;
 
     if (newName) {
-
       fetch(`${ApiUrl}/api/account/${userId}`, {
         method: 'PUT',
         headers: {
@@ -64,36 +103,33 @@ const AccountDetails = () => {
       });
     }
   };
-  
 
-  const handleUpdatePassword = () => {
-    const firstParty = firebaseOnlyUser();
-    if (firstParty)
-    {
-      const newPassword = prompt("Enter new password:");
-      if (newPassword != null)
-      {
-        if (newPassword.length > 5)
-      {
-        changePassword(newPassword);
+  const handleUpdatePassword = async () => {
+    if (newPassword == null) {
+      return;
+    }
+    if (!firebaseOnlyUser()) {
+      toast.error("Refer to third party provider to update password!");
+      return;
+    }
+    if (newPassword.length < 5) {
+      toast.error("Password too short!");
+      return;
+    }
+    try {
+      const passChanged = await changePassword(newPassword);
+      if (passChanged) {
         toast.success("Password Updated");
+      } else {
+        toast.error("Cannot Change Password");
       }
-      else toast.error("Password too short!");
-      }
+    } catch (e) {
+      toast.error(e);
     }
-    else
-    {
-      toast.error("Refer to third party provider to update password!")
-    }
-    
-  
   };
 
   const handleDeleteAccount = () => {
-    
-
-    if (window.confirm("Delete this account?"))
-    {
+    if (window.confirm("Delete this account?")) {
       fetch(`${ApiUrl}/api/account/${userId}`, { 
         method: 'DELETE',
         headers: {
@@ -116,39 +152,123 @@ const AccountDetails = () => {
       logout();
       toast.success("Account Deleted");
       navigate("/")
-  }
+    }
   };
-  
-  
+
   return (
-    <div className="AccountPage">
-      <Grid container spacing={2} justifyContent="center" alignItems="center" className="AccountPage-content">
-        <Grid item xs={12} sm={6}>
-          <h1>Account Information</h1>
-          {userInfo && (
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Avatar style={{ margin: '8px', backgroundColor: '#1976d2' }}>
+          <ManageAccountsIcon />
+        </Avatar>
+        <Typography component="h1" variant="h4" paddingBottom={2}>
+          Account Details
+        </Typography>
+        <div style={{alignItems: 'left'}}>
+        {userInfo && (
             <>
-              <h3>Email: {userInfo.email}</h3>
-              <h3>Name: {userInfo.name}</h3>
+            <Typography variant="h5" gutterBottom>
+              <b>Name:</b> {userInfo.name}
+            </Typography>
+            <Typography variant="h5" gutterBottom >
+              <b>Email:</b> {userInfo.email}
+            </Typography>
             </>
-          )}
+        )}
+        </div>
+        <Dialog open={passwordUpdateFormOpen} onClose={handlePasswordUpdateClose} fullWidth={true}>
+          <DialogTitle>Change Password</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="New Password"
+              type="password"
+              fullWidth
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <TextField
+              margin="dense"
+              label="Verify New Password"
+              type="password"
+              fullWidth
+              value={verifyNewPassword}
+              onChange={(e) => setVerifyNewPassword(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handlePasswordUpdateClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handlePasswordUpdateSubmit} color="primary">
+              Submit
+            </Button>
+          </DialogActions>
+        </Dialog>
 
-          <Button variant="contained" onClick={handleUpdateName}>Update Name</Button>
-          <br></br><br></br>
-          {firstParty && 
-          (
-            <>
-          <Button variant="contained" onClick={handleUpdatePassword}>Update Password</Button> 
-          <br></br><br></br>
-            </>
-          )}
+        <Dialog open={nameUpdateFormOpen} onClose={handleNameUpdateClose} fullWidth={true}>
+          <DialogTitle>Change Name</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="New Name"
+              type="plaintext"
+              fullWidth
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleNameUpdateClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleNameUpdateSubmit} color="primary">
+              Submit
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <form style={{ width: '100%', marginTop: '16px' }} noValidate>
           
-          <Button variant="contained" onClick={handleDeleteAccount}>Delete Account</Button>
-
+          <Button
+            type="button"
+            fullWidth
+            variant="contained"
+            color="primary"
+            style={{ marginTop: '16px' }}
+            onClick={handleNameUpdateOpen}
+          >
+            Update Name
+          </Button>
+          {firstParty && ( 
+            <Button
+              type="button"
+              fullWidth
+              variant="contained"
+              color="primary"
+              style={{ marginTop: '16px' }}
+              onClick={handlePasswordUpdateOpen}
+            >
+              Update Password
+            </Button>
+            )}
+          <Button
+            type="button"
+            fullWidth
+            variant="contained"
+            style={{ marginTop: '16px', backgroundColor: 'darkRed'}}
+            onClick={handleDeleteAccount}
+          >
+            Delete Account
+          </Button>
           {error && <p>{error}</p>}
-        </Grid>
-      </Grid>
-    </div>
+        </form>
+      </div>
+    </Container>
   );
-}
+};
+
 
 export default AccountDetails;
