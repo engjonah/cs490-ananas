@@ -136,7 +136,7 @@ const firebaseOnlyUser = async () => {
         }
         return false;
     } catch (error) {
-        console.error("Error updating password:", error);
+        console.error("Error checking firebase provider:", error);
     }
 }
 
