@@ -115,6 +115,9 @@ describe('AccountDetails component', () => {
       );
     
     firebaseOnlyUser.mockReturnValueOnce(true);
+    await waitFor(() => {
+      expect(screen.getByText('Update Password')).toBeInTheDocument();
+    });
     const updatePasswordButton = screen.getByText('Update Password');
     fireEvent.click(updatePasswordButton);
     jest.spyOn(window, 'fetch').mockResolvedValueOnce({
