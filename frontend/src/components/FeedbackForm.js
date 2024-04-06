@@ -91,7 +91,6 @@ function FeedbackForm(props) {
             fontSize: '30px',
             fontWeight: 'normal',
             backgroundColor: '#d3d3d3', // Grey background color
-            borderRadius: '8px',
           }}
         >
           Rate This Translation
