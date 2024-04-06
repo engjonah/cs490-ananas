@@ -21,8 +21,16 @@ const AccountDetails = () => {
   const [newName, setNewName] = useState('');
   const [verifyNewPassword, setVerifyNewPassword] = useState('');
   const userId = JSON.parse(localStorage.getItem("user")).uid;
-  const firstParty = firebaseOnlyUser();
+  const [isFirstParty, setIsFirstParty] = useState(null);
   const {user} = useAuthContext();
+
+  useEffect(() => {
+    async function checkFirebaseOnlyUser() {
+      const result = await firebaseOnlyUser();
+      setIsFirstParty(result);
+    }
+    checkFirebaseOnlyUser();
+  }, [])
 
   useEffect(() => {
     fetch(`${ApiUrl}/api/account/${userId}`, {
@@ -108,7 +116,7 @@ const AccountDetails = () => {
     if (newPassword == null) {
       return;
     }
-    if (!firebaseOnlyUser()) {
+    if (!isFirstParty) {
       toast.error("Refer to third party provider to update password!");
       return;
     }
@@ -242,7 +250,7 @@ const AccountDetails = () => {
           >
             Update Name
           </Button>
-          {firstParty && ( 
+          {isFirstParty && ( 
             <Button
               type="button"
               fullWidth
