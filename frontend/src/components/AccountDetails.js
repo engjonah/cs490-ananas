@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ApiUrl from '../ApiUrl';
 import { changePassword, firebaseOnlyUser, deleteAccount } from '../firebase';
-import { Button, Typography, Container, Avatar, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from '@mui/material';
+import { Button, Typography, Container, Avatar, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import { useLogout } from '../hooks/useLogOut';
@@ -21,12 +21,18 @@ const AccountDetails = () => {
   const [newName, setNewName] = useState('');
   const [verifyNewPassword, setVerifyNewPassword] = useState('');
   const userId = JSON.parse(localStorage.getItem("user")).uid;
-  const firstParty = firebaseOnlyUser();
+  const [isFirstParty, setIsFirstParty] = useState(null);
   const {user} = useAuthContext();
 
+  useEffect(() => {
+    async function checkFirebaseOnlyUser() {
+      const result = await firebaseOnlyUser();
+      setIsFirstParty(result);
+    }
+    checkFirebaseOnlyUser();
+  }, [])
 
   useEffect(() => {
-
     fetch(`${ApiUrl}/api/account/${userId}`, {
       headers: {
         'Authorization':`Bearer ${user.token}`
@@ -46,7 +52,6 @@ const AccountDetails = () => {
         setError(error.message);
       });
   }, [userId, user.token]); 
-  
 
   const handlePasswordUpdateOpen = () => {
     setPasswordUpdateFormOpen(true);
@@ -58,14 +63,11 @@ const AccountDetails = () => {
 
   const handlePasswordUpdateSubmit = () => {
     if (newPassword === verifyNewPassword) {
-
       setNewPassword(newPassword);
       handleUpdatePassword();
       handlePasswordUpdateClose(); 
     } else {
-
       toast.error('Passwords do not match!');
-      
     }
   };
 
@@ -79,24 +81,18 @@ const AccountDetails = () => {
 
   const handleNameUpdateSubmit = () => {
     if (newName) {
-
       setNewName(newName);
       handleUpdateName();
       handleNameUpdateClose(); 
     } else {
-
       toast.error('Name cannot be blank');
-      
     }
   };
 
   const handleUpdateName = () => {
-
-    
     const userId = JSON.parse(localStorage.getItem("user")).uid;
 
     if (newName) {
-
       fetch(`${ApiUrl}/api/account/${userId}`, {
         method: 'PUT',
         headers: {
@@ -115,46 +111,33 @@ const AccountDetails = () => {
       });
     }
   };
-  
 
   const handleUpdatePassword = async () => {
-    const firstParty = firebaseOnlyUser();
-    if (firstParty)
-    {
-      if (newPassword != null)
-      {
-        if (newPassword.length > 5)
-      {
-        try {
-
-        
-          const passChanged = await changePassword(newPassword);
-          if (passChanged)
-          {
-            toast.success("Password Updated");
-          } else {
-            toast.error("Cannot Change Password");
-          }
-        } catch (e) {
-          toast.error(e);
-        }
-      }
-      else toast.error("Password too short!");
-      }
+    if (newPassword == null) {
+      return;
     }
-    else
-    {
-      toast.error("Refer to third party provider to update password!")
+    if (!isFirstParty) {
+      toast.error("Refer to third party provider to update password!");
+      return;
     }
-    
-  
+    if (newPassword.length < 5) {
+      toast.error("Password too short!");
+      return;
+    }
+    try {
+      const passChanged = await changePassword(newPassword);
+      if (passChanged) {
+        toast.success("Password Updated");
+      } else {
+        toast.error("Cannot Change Password");
+      }
+    } catch (e) {
+      toast.error(e);
+    }
   };
 
   const handleDeleteAccount = () => {
-    
-
-    if (window.confirm("Delete this account?"))
-    {
+    if (window.confirm("Delete this account?")) {
       fetch(`${ApiUrl}/api/account/${userId}`, { 
         method: 'DELETE',
         headers: {
@@ -177,7 +160,7 @@ const AccountDetails = () => {
       logout();
       toast.success("Account Deleted");
       navigate("/")
-  }
+    }
   };
 
   return (
@@ -202,58 +185,58 @@ const AccountDetails = () => {
             </>
         )}
         </div>
-        <Dialog open={passwordUpdateFormOpen} onCLose={handlePasswordUpdateClose}>
-        <DialogTitle>Change Password</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="New Password"
-            type="password"
-            fullWidth
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
-          <TextField
-            margin="dense"
-            label="Verify New Password"
-            type="password"
-            fullWidth
-            value={verifyNewPassword}
-            onChange={(e) => setVerifyNewPassword(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handlePasswordUpdateClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handlePasswordUpdateSubmit} color="primary">
-            Submit
-          </Button>
-        </DialogActions>
+        <Dialog open={passwordUpdateFormOpen} onClose={handlePasswordUpdateClose} fullWidth={true}>
+          <DialogTitle>Change Password</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="New Password"
+              type="password"
+              fullWidth
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <TextField
+              margin="dense"
+              label="Verify New Password"
+              type="password"
+              fullWidth
+              value={verifyNewPassword}
+              onChange={(e) => setVerifyNewPassword(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handlePasswordUpdateClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handlePasswordUpdateSubmit} color="primary">
+              Submit
+            </Button>
+          </DialogActions>
         </Dialog>
 
-        <Dialog open={nameUpdateFormOpen} onCLose={handleNameUpdateClose}>
-        <DialogTitle>Change Name</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="New Name"
-            type="plaintext"
-            fullWidth
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleNameUpdateClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleNameUpdateSubmit} color="primary">
-            Submit
-          </Button>
-        </DialogActions>
+        <Dialog open={nameUpdateFormOpen} onClose={handleNameUpdateClose} fullWidth={true}>
+          <DialogTitle>Change Name</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="New Name"
+              type="plaintext"
+              fullWidth
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleNameUpdateClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleNameUpdateSubmit} color="primary">
+              Submit
+            </Button>
+          </DialogActions>
         </Dialog>
         <form style={{ width: '100%', marginTop: '16px' }} noValidate>
           
@@ -267,7 +250,7 @@ const AccountDetails = () => {
           >
             Update Name
           </Button>
-          {firstParty && ( 
+          {isFirstParty && ( 
             <Button
               type="button"
               fullWidth
@@ -283,7 +266,6 @@ const AccountDetails = () => {
             type="button"
             fullWidth
             variant="contained"
-            
             style={{ marginTop: '16px', backgroundColor: 'darkRed'}}
             onClick={handleDeleteAccount}
           >
