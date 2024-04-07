@@ -7,21 +7,15 @@ import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import Rating from '@mui/material/Rating';
-import { styled } from '@mui/system';
 import ApiUrl from '../ApiUrl';
 import { ErrorReport } from '../services/ErrorReport';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { CssBaseline, Container} from '@mui/material';
+import toast from 'react-hot-toast';
 
 
-// Styled component for stars wrapper
-const StarsWrapper = styled('div')({
-  display: 'flex',
-  justifyContent: 'flex-end', // Align stars to the right
-  alignItems: 'flex-start', // Align stars to the top
-  marginTop: '-40px',
-  marginBottom: '-10px', // Adjust margin to position stars
-  paddingRight: '4px', // Add some padding to align with the title
-});
+
+
   
 function FeedbackForm(props) {
   const [open, setOpen] = useState(false);
@@ -68,7 +62,7 @@ function FeedbackForm(props) {
         },
     })
     .then(() => {
-        console.log("Feedback submitted");
+        toast.success('Feedback Submitted!')
     })
     .catch((err) => {
         ErrorReport("Feedback Form:" + err.message);
@@ -82,7 +76,7 @@ function FeedbackForm(props) {
   };
 
   return (
-    <div>
+    <Container>
       <Tooltip title={translationId ? "Submit Feedback" : "Translate something first!"}>
         <span>
           <Button disabled={!translationId} variant="contained" style={{ backgroundColor: '#CACACA', color: 'black'}} onClick={handleOpen}>
@@ -90,17 +84,16 @@ function FeedbackForm(props) {
         </Button>
         </span>
       </Tooltip>
-      <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth={true}>
+      <CssBaseline/>
+      <Dialog open={open} onClose={handleClose} maxWidth="xs" >
         <DialogTitle
           style={{
             fontSize: '30px',
             fontWeight: 'normal',
             backgroundColor: '#d3d3d3', // Grey background color
-            borderRadius: '8px',
           }}
         >
           Rate This Translation
-          <StarsWrapper> {/* Align stars to the top right */}
             <Rating
               name="feedback-rating"
               value={rating}
@@ -109,7 +102,6 @@ function FeedbackForm(props) {
               }}
               size="large" // Make stars bigger
             />
-          </StarsWrapper>
         </DialogTitle>
         <DialogContent
           style={{
@@ -119,13 +111,12 @@ function FeedbackForm(props) {
         >
           <TextField
             autoFocus
-            margin="normal"
+            margin="dense"
             label="Leave a review"
             type="text"
-            fullWidth={true}
+            fullWidth
             value={review}
             onChange={handleReviewChange}
-            style={{ fontSize: '2px' }} 
             multiline={true}
           />
         </DialogContent>
@@ -139,7 +130,7 @@ function FeedbackForm(props) {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </Container>
   );
 }
 
