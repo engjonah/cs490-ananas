@@ -102,10 +102,9 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
   const userId = JSON.parse(localStorage.getItem("user"))?.uid;
   const {user} = useAuthContext()
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (userId) {
-      let url = `${ApiUrl}/api/translateHistory/${userId}`;
-      fetch(url, { 
+      fetch(`${ApiUrl}/api/translateHistory/${userId}`, { 
         method: 'GET',
         headers: {
           "Content-type": "application/json",
@@ -114,7 +113,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
       })
         .then(response => response.json())
         .then(data => {
-          const sortedTranslations = data.Translations.reverse();
+          const sortedTranslations = data.Translations.sort((a, b) => new Date(b.translatedAt) - new Date(a.translatedAt));
           setTranslations(sortedTranslations);
         })
         .catch(error => {
@@ -123,7 +122,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
     }
   }, [outputLoading, userId, user.token]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if(outputLoading) {
       setSortOrder('desc')
       setSortCriteria('translatedAt')
@@ -171,7 +170,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
   };
 
   //move back a page if deleted element on last page
-  useEffect(() => {
+  React.useEffect(() => {
     if (page !== 1 && page > Math.ceil(translations.length / itemsPerPage)) {
       setPage(page-1);
     }
