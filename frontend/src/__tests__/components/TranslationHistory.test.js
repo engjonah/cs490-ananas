@@ -32,7 +32,7 @@ describe('TranslationHistory Component', () => {
     jest.spyOn(React, 'useEffect').mockImplementation(mockUseEffect)
 
     const { getByText } = render(<TranslationHistory testTranslations={sampleTranslations}/>);
-    await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(3));
+    await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(4));
 
     expect(getByText('Translation History')).toBeInTheDocument();
     expect(getByText('input4')).toBeInTheDocument();
@@ -52,7 +52,7 @@ describe('TranslationHistory Component', () => {
         Promise.resolve({ json: () => Promise.resolve([]) })
       )
 
-    const { getByText, getByLabelText } = render(<TranslationHistory 
+    const { getByLabelText, queryByText } = render(<TranslationHistory 
       testTranslations={[{
         _id: '1',
         inputLang: `input1`,
@@ -64,7 +64,8 @@ describe('TranslationHistory Component', () => {
       }]}
     />);
     
-    await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(3));
+    await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(4));
+    expect(queryByText('input1')).toBeInTheDocument();
 
     fireEvent.click(getByLabelText('delete'));
     expect(fetchMock).toHaveBeenCalledWith(`${ApiUrl}/api/translateHistory/1`, { 
@@ -73,7 +74,7 @@ describe('TranslationHistory Component', () => {
         "Content-type": "application/json",
         'Authorization':`Bearer 123`
       }});
-    expect(getByText('You have no translations!')).toBeInTheDocument();
+    expect(queryByText('input1')).not.toBeInTheDocument();
   });
 
   test('expands translation on button click', async () => {
@@ -95,7 +96,7 @@ describe('TranslationHistory Component', () => {
       }]}
     />);
 
-    await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(3));
+    await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(4));
 
     fireEvent.click(getByLabelText('expand'));
     expect(getByText('Input Code:')).toBeInTheDocument();
@@ -111,7 +112,7 @@ describe('TranslationHistory Component', () => {
 
     const { getByText, queryByText } = render(<TranslationHistory testTranslations={sampleTranslations}/>);
 
-    await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(3));
+    await waitFor(() => expect(mockUseEffect).toHaveBeenCalledTimes(4));
 
     expect(getByText('input0')).toBeInTheDocument();
     expect(queryByText('input5')).not.toBeInTheDocument();
