@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import { Paper, Typography, IconButton, Grid, Divider, Collapse, Pagination, Container, Tooltip } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Paper, Typography, IconButton, Grid, Divider, Collapse, Pagination, Container, Tooltip, MenuItem, Select } from '@mui/material';
 import ApiUrl from '../ApiUrl';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import Editor from '@monaco-editor/react';
 import toast from 'react-hot-toast';
 import { useAuthContext } from '../hooks/useAuthContext';
@@ -95,12 +97,15 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
   const [page, setPage] = useState(1);
   const itemsPerPage = 5; // Number of items per page
   const [expandedIndex, setExpandedIndex] = useState(null);
+  const [sortCriteria, setSortCriteria] = useState('translatedAt');
+  const [sortOrder, setSortOrder] = useState('desc'); // 'desc' for descending, 'asc' for ascending
   const userId = JSON.parse(localStorage.getItem("user"))?.uid;
   const {user} = useAuthContext()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (userId) {
-      fetch(`${ApiUrl}/api/translateHistory/${userId}`, { 
+      let url = `${ApiUrl}/api/translateHistory/${userId}`;
+      fetch(url, { 
         method: 'GET',
         headers: {
           "Content-type": "application/json",
@@ -109,7 +114,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
       })
         .then(response => response.json())
         .then(data => {
-          const sortedTranslations = data.Translations.sort((a, b) => new Date(b.translatedAt) - new Date(a.translatedAt));
+          const sortedTranslations = data.Translations.reverse();
           setTranslations(sortedTranslations);
         })
         .catch(error => {
@@ -117,6 +122,13 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
         });
     }
   }, [outputLoading, userId, user.token]);
+
+  useEffect(() => {
+    if(outputLoading) {
+      setSortOrder('desc')
+      setSortCriteria('translatedAt')
+    }
+  }, [outputLoading, sortOrder, sortCriteria])
 
 
   const handleDelete = async(index) => {
@@ -143,8 +155,23 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
     }
   };
 
+  const handleSort = (criteria, order) => {
+    const sortedTranslations = [...translations].sort((a, b) => {
+      if (criteria === 'translatedAt') {
+        return order === 'asc' ? new Date(a[criteria]) - new Date(b[criteria]) : new Date(b[criteria]) - new Date(a[criteria]);
+      } else {
+        const comparison = a[criteria] < b[criteria] ? -1 : a[criteria] > b[criteria] ? 1 : 0;
+        return order === 'asc' ? comparison : -comparison;
+      }
+    });
+  
+    setSortOrder(order);
+    setSortCriteria(criteria);
+    setTranslations(sortedTranslations);
+  };
+
   //move back a page if deleted element on last page
-  React.useEffect(() => {
+  useEffect(() => {
     if (page !== 1 && page > Math.ceil(translations.length / itemsPerPage)) {
       setPage(page-1);
     }
@@ -189,6 +216,21 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
   return (
     <Container style={{ borderRadius: '5px', padding: "20px", alignItems: "left"}}>
       <Typography variant="h4" gutterBottom>Translation History</Typography>
+      <div style={{ marginBottom: '10px' }}>
+        <Typography variant="body2" style={{ display: 'inline-block', marginRight: '10px' }}>Sort By:</Typography>
+        <Select
+          value={sortCriteria || ''}
+          onChange={(e) => handleSort(e.target.value, sortOrder)}
+          style={{ minWidth: '120px', marginRight: '10px' }}
+        >
+          <MenuItem value="inputLang">Input Language</MenuItem>
+          <MenuItem value="outputLang">Output Language</MenuItem>
+          <MenuItem value="translatedAt">Date</MenuItem>
+        </Select>
+        <IconButton onClick={() => handleSort(sortCriteria, sortOrder === 'asc' ? 'desc' : 'asc')}>
+          {sortOrder === 'asc' ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}
+        </IconButton>
+      </div>
       {translations.length === 0 ? (
         <Typography variant="subtitle1">You have no translations!</Typography>
       ) : (
