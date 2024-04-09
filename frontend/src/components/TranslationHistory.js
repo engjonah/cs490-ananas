@@ -60,7 +60,7 @@ const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onE
               {expanded? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </IconButton>
           </Tooltip>
-          <Tooltip title={"Edit"}>
+          <Tooltip title={"View"}>
             <IconButton aria-label="edit" onClick={onEdit}>
               <VisibilityIcon />
             </IconButton>

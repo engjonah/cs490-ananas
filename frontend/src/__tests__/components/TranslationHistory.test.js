@@ -236,6 +236,42 @@ describe('TranslationHistory Component', () => {
     });
   });
 
+  test('output filter checkboxes', async () => {
+    useAuthContext.mockReturnValue({user : {token : 123}});
+    localStorage.setItem('user', JSON.stringify({ uid: '123' }));
+
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve({ Translations: sampleTranslations }),
+      }),
+    )
+
+    const { queryByLabelText, getByLabelText} = render(<TranslationHistory testTranslations={sampleTranslations}/>);
+    
+    fireEvent.click(getByLabelText('filterButton'));
+    fireEvent.click(getByLabelText('clearAllOutputFilterButton'));
+    fireEvent.click(getByLabelText('closeFilterMenuButton'));
+
+    languageNames.forEach((language) => {
+      expect(queryByLabelText(`outputLabel${language}`)).not.toBeInTheDocument();
+
+      fireEvent.click(getByLabelText('filterButton'));
+      fireEvent.click(getByLabelText(`output${language}Checkbox`));
+      fireEvent.click(getByLabelText('closeFilterMenuButton'));
+      
+      expect(getByLabelText(`outputLabel${language}`)).toBeInTheDocument();
+      languageNames
+        .filter((lang) => lang !== language)
+        .forEach((otherLanguage) => {
+          expect(queryByLabelText(`outputLabel${otherLanguage}`)).not.toBeInTheDocument();
+        });
+
+      fireEvent.click(getByLabelText('filterButton'));
+      fireEvent.click(getByLabelText(`output${language}Checkbox`));
+      fireEvent.click(getByLabelText('closeFilterMenuButton'));
+    });
+  });
+
   test('sort order change', async () => {
     useAuthContext.mockReturnValue({user : {token : 123}});
     localStorage.setItem('user', JSON.stringify({ uid: '123' }));
