@@ -9,7 +9,6 @@ import { ErrorReport } from '../services/ErrorReport';
 import { useAuthContext } from '../hooks/useAuthContext';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 
-
 const AccountDetails = () => {
   const navigate = useNavigate();
   const {logout} = useLogout()
@@ -49,6 +48,7 @@ const AccountDetails = () => {
       })
       .catch(error => {
         ErrorReport("Account Details:" + error.message);
+        toast.error(error.message);
         setError(error.message);
       });
   }, [userId, user.token]); 
@@ -107,7 +107,9 @@ const AccountDetails = () => {
         toast.success("Name Updated!")
       })
       .catch(error => {
-        console.log("error:" + error)
+        ErrorReport("Account Details Update:" + error.message);
+        toast.error(error.message);
+        console.log("error:" + error);
       });
     }
   };
@@ -122,6 +124,7 @@ const AccountDetails = () => {
     }
     if (newPassword.length < 5) {
       toast.error("Password too short!");
+      ErrorReport("Password too short!");
       return;
     }
     try {
@@ -129,9 +132,11 @@ const AccountDetails = () => {
       if (passChanged) {
         toast.success("Password Updated");
       } else {
+        ErrorReport("Cannot Change Password");
         toast.error("Cannot Change Password");
       }
     } catch (e) {
+      ErrorReport("Account Details:" + e.message);
       toast.error(e);
     }
   };
@@ -154,6 +159,8 @@ const AccountDetails = () => {
         setUserInfo(data);
       })
       .catch(error => {
+        ErrorReport("Account Details Delete Acc:" + error.message);
+        toast.error(error.message)
         setError(error.message);
       });
       deleteAccount();

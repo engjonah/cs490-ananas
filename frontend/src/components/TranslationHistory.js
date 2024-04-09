@@ -9,6 +9,8 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import Editor from '@monaco-editor/react';
 import toast from 'react-hot-toast';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { ErrorReport } from '../services/ErrorReport';
+
 
 const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onEdit }) => {
   const { inputLang, outputLang, inputCode, outputCode, status, translatedAt } = translation;
@@ -113,6 +115,8 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
           setTranslations(sortedTranslations);
         })
         .catch(error => {
+          ErrorReport("Translation History Fetch:" + error.message);
+          toast.error(error.message);
           console.error('Error fetching translations:', error);
         });
     }
@@ -132,6 +136,8 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
           toast.success("Deleted translation!");
         })
         .catch(error => {
+          ErrorReport("Translation History Delete:" + error.message);
+          toast.error(error.message);
           console.error('Error fetching translations:', error);
           return;
         });

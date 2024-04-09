@@ -105,6 +105,7 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
     })
     .catch((err) => {
         ErrorReport("Translation history:" + err.message);
+        toast.error("An error occured when storig the translation")
         console.log(err.message)
     })
   };
@@ -151,6 +152,7 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
       .catch((err) => {
         ErrorReport("CodeBox:" + err.message);
         console.log(err.message)
+        toast.error("An error occurred during the translation process.");
         return "Translation Failed"
       })
     console.log(output)
