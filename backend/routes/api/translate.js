@@ -11,14 +11,14 @@ router.use(requireAuth);
 const translateRateLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute window
   max: 3, // limit each user to 3 requests per windowMs
-  message: "Too many requests, please try again later.", // message to return when rate limit is exceeded
+  message: "Rate Limit Exceeded", // message to return when rate limit is exceeded
   keyGenerator: (req) => {
     // Assuming user identification through req.user.id, modify as per your auth setup
     return req.user.id;
   },
   handler: (req, res, /*next, options*/) => {
     return res.status(429).json({
-      error: "Too many requests, please try again later."
+      error: "Rate Limit Exceeded"
     });
   }
 });
