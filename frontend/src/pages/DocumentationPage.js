@@ -10,10 +10,20 @@ function DocumentationPage() {
         <div className="background-gif" />
         <h1 className="title">Documentation</h1>
       </div>
+      {/* Help Section */}
+      <div className="help-container">
+        <h2>User Guide</h2>
+        <p><a  href={userguide} target="_blank" rel="noopener noreferrer">Download our user guide</a> or watch the walkthrough below for instructions on how to use this site!</p>
+        <div class="video-container">
+          <iframe class="video-frame" title="Ananas Walkthrough" src="https://www.youtube.com/embed/K17iPxd6xAg?si=08ZKWO7rMgK-HvXLtgbNymZ7vqY" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"  allowfullscreen />
+        </div>
+        <FAQ/>
+      </div>
       <div className="content">
-        <h2>MERN</h2>
+        <h2>Developer Guide</h2>
+        <h3>MERN</h3>
         <p>
-          This website was created with the MERN Stack:
+          This web application was created with the MERN Stack:
         </p>
         <ul>
           <li><strong>MongoDB:</strong> A NoSQL database used for storing application data.</li>
@@ -22,35 +32,25 @@ function DocumentationPage() {
           <li><strong>Node.js:</strong> A JavaScript runtime environment that executes JavaScript code server-side.</li>
         </ul>
         
-        <h2>Translation</h2>
+        <h3>Translation</h3>
         <p>
-          Code Translation is done through OpenAI API utilizing the <b>GPT 3.5 turbo model</b>. 
+          Code Translation is done through OpenAI API utilizing the <a href="https://platform.openai.com/docs/models/gpt-3-5-turbo"><b>GPT-3.5 Turbo Model</b></a>. 
         </p>
         
-        <h2>Authentication</h2>
+        <h3>Authentication</h3>
         <p>
           Authentication is handled through <b>Firebase API</b>. 
         </p>
-        
-        <h2>Data Collection</h2>
-        <p>
-          Information we keep:
-        </p>
-        <ul>
-          <li><strong>User Details:</strong> We keep emails and usernames. Passwords are handled through Firebase</li>
-          <li><strong>Translation History:</strong> We keep the translation history for to make improvements in the future</li>
-        </ul>
       </div>
-
-      {/* Help Section */}
-      <div className="help-container">
-        <h2>Help</h2>
-        <FAQ/>
-        <div className="user-guide">
-        <h3>User Guide</h3>
-          <p>Download our user guide for instructions on how to use this site!</p>
-          <a href={userguide} target="_blank" rel="noopener noreferrer">Download User Guide </a>
-        </div>
+      <div class="content">
+        <h2>Disclosures</h2>
+          <p>
+            Information we collect:
+          </p>
+          <ul>
+            <li><strong>User Details:</strong> We store emails and usernames. Passwords are handled through Firebase</li>
+            <li><strong>Translation History:</strong> We store the translation history to make improvements to our translation tool</li>
+          </ul>
       </div>
     </div>
   );

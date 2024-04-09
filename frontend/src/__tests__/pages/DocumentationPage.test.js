@@ -1,31 +1,44 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import DocumentationPage from '../../pages/DocumentationPage';
 
 describe('DocumentationPage component', () => {
   it('renders all sections correctly', () => {
-    const { getByText } = render(<DocumentationPage />);
-    
+    const { container, getByText } = render(<DocumentationPage />);
+
     // Check if the title is rendered
     expect(getByText('Documentation')).toBeInTheDocument();
 
+    // Ensures section are rendered
+    const sections = ['User Guide', 'Developer Guide', 'Disclosures']
+    let section
+    for (let i = 0; i < sections.length; i++) {
+      section = sections[i]
+      expect(getByText(section).toBeInTheDocument)
+    }
 
-    expect(getByText('Translation')).toBeInTheDocument();
-    expect(getByText('GPT 3.5 turbo model')).toBeInTheDocument();
+    // Ensures subsections are rendered
+    const subsections = ['Frequently Asked Questions', 'MERN', 'Translation', 'Authentication']
+    let subsection
+    for (let i = 0; i < subsections.length; i++) {
+      subsection = subsections[i]
+      expect(getByText(subsection)).toBeInTheDocument();
+    }
 
-    // Check if Authentication section is rendered
-    expect(getByText('Authentication')).toBeInTheDocument();
-    expect(getByText('Firebase API')).toBeInTheDocument();
+    // Ensures major items from subsections are rendered (excludes FAQ section since it's independently tested)
+    const link = getByText('Download our user guide')
+    expect(link).toBeInTheDocument()
+    const videoElement = container.querySelector('iframe')
+    expect(videoElement).toBeInTheDocument()
+    expect(videoElement).toHaveAttribute('src', 'https://www.youtube.com/embed/K17iPxd6xAg?si=08ZKWO7rMgK-HvXLtgbNymZ7vqY')
+    const majorItems = ['MongoDB:', 'Express.js:', 'React.js:', 'Node.js:', 'GPT-3.5 Turbo Model', 'Firebase API', 'User Details:', 'Translation History:']
+    let majorItem
+    for (let i = 0; i < majorItems.length; i++) {
+      majorItem = majorItems[i]
+      expect(getByText(majorItem)).toBeInTheDocument();
+    }
 
-
-    expect(getByText('Help')).toBeInTheDocument();
-
-    expect(getByText('User Guide')).toBeInTheDocument();
-
-    const link = getByText('Download User Guide');
-    fireEvent.click(link);
-
+    // Tests user guide download
+    expect(link.getAttribute('href')).toContain('AnanasUserGuide')
   });
-
-
 });
