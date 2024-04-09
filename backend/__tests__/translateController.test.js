@@ -8,10 +8,8 @@ const jwt = require("jsonwebtoken");
 const baseURL = 'https://api.openai.com'
 const endpoint = '/v1/chat/completions'
 
-function generateMockToken(number) {
-    // Ensure the number is correctly converted to a string and appended to 'mockUserId'
-    const uid = `mockUserId${number.toString()}`;
-    return jwt.sign({ uid: uid }, process.env.JWT_TOKEN_KEY, { expiresIn: '1h' });
+function generateMockToken(id = 'default') {
+    return jwt.sign({ uid: `mockUserId${id}` }, process.env.JWT_TOKEN_KEY, { expiresIn: '1h' });
 }
   
 beforeEach(() => {
@@ -37,7 +35,7 @@ describe('OpenAI Token Authentication', () => {
     afterAll(() => {
         process.env = originalEnv;
     });
-    const token = generateMockToken(1);
+    const token = generateMockToken('InvalidTest');
     it('should return 500 status code for invalid token', async() => {
         return await request(app)
         .post("/api/translate")
@@ -48,7 +46,7 @@ describe('OpenAI Token Authentication', () => {
 })
 
 describe('/api/translate real API requests', () => {
-    const token = generateMockToken(2);
+    const token = generateMockToken('RealTest');
     it("should return 200 status code and translation for successful translation and save translation", async () =>{
         Translation.prototype.save = jest.fn()
         return await request(app)
@@ -67,25 +65,25 @@ describe('/api/translate real API requests', () => {
           return new Promise(r => setTimeout(r, 1000))
         })
       }))
-      const tokenTwo = generateMockToken(3);
+      const tokenMulti = generateMockToken('QueueTest');
       request(app)
           .post("/api/translate")
           .send({inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")"})
-          .set('Authorization', `Bearer ${tokenTwo}`)
+          .set('Authorization', `Bearer ${tokenMulti}`)
           .then(response => {
             expect(response.body.translation).not.toBe("")
           });
       request(app)
           .post("/api/translate")
           .send({inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")"})
-          .set('Authorization', `Bearer ${tokenTwo}`)
+          .set('Authorization', `Bearer ${token}`)
           .then(response => {
             expect(response.body.translation).not.toBe("")
           });
       await request(app)
           .post("/api/translate")
           .send({inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")"})
-          .set('Authorization', `Bearer ${tokenTwo}`)
+          .set('Authorization', `Bearer ${token}`)
           .then(response => {
             expect(response.body.translation).not.toBe("")
           });
@@ -98,7 +96,7 @@ describe('/api/translate mocked API requests', () => {
     afterEach(() => {
         nock.cleanAll()
     })
-    const token = generateMockToken(4);
+    const token = generateMockToken('MockTest');
     it("should return 429 status code with error for rate limit exceeded", async () => {
         nock(baseURL)
         .post(endpoint)
@@ -113,7 +111,6 @@ describe('/api/translate mocked API requests', () => {
             expect(response.body.error).toBe("Rate Limit Exceeded")
         })
     })
-    const tokenTwo = generateMockToken(6);
     it("should return 503 status code with error for API connection error", async () => {
         nock(baseURL)
         .post(endpoint)
@@ -121,14 +118,13 @@ describe('/api/translate mocked API requests', () => {
         return await request(app)
         .post("/api/translate")
         .send({ inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")" })
-        .set('Authorization', `Bearer ${tokenTwo}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(503)
         .expect('Content-Type', /json/)
         .then(response => {
             expect(response.body.error).toBe("API Connection Error")
         })
     })
-    const tokenThree = generateMockToken(7);
     it("should return 500 status code with error for unknown error occurred", async () => {
         nock(baseURL)
         .post(endpoint)
@@ -136,7 +132,7 @@ describe('/api/translate mocked API requests', () => {
         return await request(app)
         .post("/api/translate")
         .send({inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")"})
-        .set('Authorization', `Bearer ${tokenThree}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(500)
         .expect('Content-Type', /json/)
         .then(response => {
@@ -144,10 +140,11 @@ describe('/api/translate mocked API requests', () => {
         })
     })
 })
+
 describe('/api/translate rate limiting', () => {
-    const token = generateMockToken(5);
+    const token = generateMockToken('RateLimit');
     beforeAll(() => {
-        // Set up any necessary mock responses for the first 3 requests here if needed
+
     });
 
     afterAll(() => {
