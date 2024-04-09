@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, userEvent } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import TranslationHistory from '../../components/TranslationHistory';
 import ApiUrl from '../../ApiUrl';
