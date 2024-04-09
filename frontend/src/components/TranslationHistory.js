@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Paper, Typography, IconButton, Grid, Divider, Collapse, Pagination, Container, Tooltip, MenuItem, Select, FormControlLabel, Checkbox, Menu } from '@mui/material';
+import { Paper, Typography, IconButton, Grid, Divider, Collapse, Pagination, Container, Tooltip, MenuItem, Select, FormControlLabel, Checkbox, Menu, Button } from '@mui/material';
 import ApiUrl from '../ApiUrl';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -114,8 +114,8 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
   const [expandedIndex, setExpandedIndex] = useState(null);
   const [sortCriteria, setSortCriteria] = useState('translatedAt');
   const [sortOrder, setSortOrder] = useState('desc'); // 'desc' for descending, 'asc' for ascending
-  const [selectedInputLanguages, setSelectedInputLanguages] = useState([]);
-  const [selectedOutputLanguages, setSelectedOutputLanguages] = useState([]);
+  const [selectedInputLanguages, setSelectedInputLanguages] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+  const [selectedOutputLanguages, setSelectedOutputLanguages] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8]);
   const userId = JSON.parse(localStorage.getItem("user"))?.uid;
   const {user} = useAuthContext();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -150,8 +150,8 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
   // filtering
   React.useEffect(() => {
     const newFilteredTranslations = translations.filter(translation => {
-      const inputLanguageSelected = selectedInputLanguages.length === 0 || selectedInputLanguages.includes(nameToLanguage[translation.inputLang]);
-      const outputLanguageSelected = selectedOutputLanguages.length === 0 || selectedOutputLanguages.includes(nameToLanguage[translation.outputLang]);
+      const inputLanguageSelected = selectedInputLanguages.includes(nameToLanguage[translation.inputLang]);
+      const outputLanguageSelected = selectedOutputLanguages.includes(nameToLanguage[translation.outputLang]);
       return inputLanguageSelected && outputLanguageSelected;
     });
     setFilteredTranslations(newFilteredTranslations);
@@ -214,6 +214,22 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
           return [...prevLanguages, language];
         }
       });
+    }
+  };
+
+  const handleCheckboxSelectAll = (type) => {
+    if (type === 'input') {
+      setSelectedInputLanguages([0, 1, 2, 3, 4, 5, 6, 7, 8])
+    } else if (type === 'output') {
+      setSelectedOutputLanguages([0, 1, 2, 3, 4, 5, 6, 7, 8])
+    }
+  };
+
+  const handleCheckboxClearAll = (type) => {
+    if (type === 'input') {
+      setSelectedInputLanguages([])
+    } else if (type === 'output') {
+      setSelectedOutputLanguages([])
     }
   };
 
@@ -302,6 +318,8 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
                     />
                   ))}
                 </div>
+                <Button onClick={() => handleCheckboxSelectAll('input')}>SELECT ALL</Button>
+                <Button onClick={() => handleCheckboxClearAll('input')}>CLEAR</Button>
               </div>
               <div>
                 <Typography variant="subtitle1">Output Languages:</Typography>
@@ -319,6 +337,8 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
                     />
                   ))}
                 </div>
+                <Button onClick={() => handleCheckboxSelectAll('output')}>SELECT ALL</Button>
+                <Button onClick={() => handleCheckboxClearAll('output')}>CLEAR</Button>
               </div>
             </div>
         </Menu>
