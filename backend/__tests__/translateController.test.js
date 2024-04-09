@@ -4,6 +4,7 @@ const Translation = require('../models/Translation.model');
 const mongoose = require("mongoose");
 const nock = require('nock')
 const jwt = require("jsonwebtoken");
+const { cache, clearCache } = require('../controllers/translateController.js')
 
 const baseURL = 'https://api.openai.com'
 const endpoint = '/v1/chat/completions'
@@ -15,6 +16,7 @@ function generateMockToken() {
 beforeEach(() => {
   jest.clearAllMocks();
   jest.spyOn(global.console, 'log').mockImplementationOnce(()=>{})
+  clearCache()
 });
 
 afterAll(done => {
@@ -47,7 +49,7 @@ describe('OpenAI Token Authentication', () => {
 
 describe('/api/translate real API requests', () => {
     const token = generateMockToken();
-    it("should return 200 status code and translation for successful translation and save translation", async () =>{
+    it("should return 200 status code and translation for successful translation and save translation and cache results", async () =>{
         Translation.prototype.save = jest.fn()
         return await request(app)
         .post("/api/translate")
@@ -57,7 +59,7 @@ describe('/api/translate real API requests', () => {
         .expect('Content-Type', /json/)
         .then(response => {
             expect(response.body.translation).not.toBe("")
-        })
+        }) && expect(cache.length).not.toBe(0)
     })
     it("should have a queue if multiple requests are submitted at once", async () => {
       jest.mock("axios", () => ({
