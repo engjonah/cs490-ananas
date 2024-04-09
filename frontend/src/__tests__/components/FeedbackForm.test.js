@@ -14,6 +14,7 @@ describe('FeedbackForm component', () => {
     useAuthContext.mockReturnValue({user : {token : 123}});
 
     const { getByText } = render(<FeedbackForm />);
+    // eslint-disable-next-line testing-library/prefer-screen-queries
     const feedbackButton = getByText('Feedback');
     expect(feedbackButton).toBeInTheDocument();
   });
@@ -58,5 +59,23 @@ describe('FeedbackForm component', () => {
     fireEvent.click(feedbackButton);
     expect(leaveReviewTextField.value).toBe('');
   });
+
+  test('feedback form input text cannot exceed character limit', () => {
+    useAuthContext.mockReturnValue({user : {token : 123}});
+  
+    // Assuming the character limit is 1000 characters
+    const characterLimit = 1000;
+    const excessiveText = 'a'.repeat(characterLimit + 1); // Create a string that exceeds the limit
+  
+    const { getByText, getByLabelText } = render(<FeedbackForm translationId="mockTranslationId" />);
+    const feedbackButton = getByText('Feedback');
+    fireEvent.click(feedbackButton);
+  
+    const leaveReviewTextField = getByLabelText('Leave a review');
+    fireEvent.change(leaveReviewTextField, { target: { value: excessiveText } });
+  
+    // The actual value should not exceed the character limit
+    expect(leaveReviewTextField.value.length).toBe(characterLimit);
+  });  
 
 });

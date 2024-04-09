@@ -36,6 +36,14 @@ function FeedbackForm(props) {
 
   const handleReviewChange = (event) => {
     setReview(event.target.value);
+    const inputText = event.target.value;
+    // Ensure the review does not exceed the character limit
+    if (inputText.length <= characterLimit) {
+      setReview(inputText);
+    } else {
+      // If the input text exceeds the limit, trim it and set the state
+      setReview(inputText.slice(0, characterLimit));
+    }
   };
 
   const handleRatingChange = (newValue) => {
@@ -63,6 +71,7 @@ function FeedbackForm(props) {
       })
       .catch((err) => {
         ErrorReport("Feedback Form:" + err.message);
+        toast.error(err.message);
         console.log(err.message);
       });
   };

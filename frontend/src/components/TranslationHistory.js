@@ -12,6 +12,8 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import Editor from '@monaco-editor/react';
 import toast from 'react-hot-toast';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { ErrorReport } from '../services/ErrorReport';
+
 
 const nameToLanguage = {
   "Unknown": 0,
@@ -135,6 +137,8 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
           setTranslations(sortedTranslations);
         })
         .catch(error => {
+          ErrorReport("Translation History Fetch:" + error.message);
+          toast.error(error.message);
           console.error('Error fetching translations:', error);
         });
     }
@@ -171,6 +175,8 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
           toast.success("Deleted translation!");
         })
         .catch(error => {
+          ErrorReport("Translation History Delete:" + error.message);
+          toast.error(error.message);
           console.error('Error fetching translations:', error);
           return;
         });

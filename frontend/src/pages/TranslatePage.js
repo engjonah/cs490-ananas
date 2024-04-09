@@ -11,6 +11,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import ApiUrl from '../ApiUrl';
 import { ErrorReport } from '../services/ErrorReport';
 import TranslationHistory from '../components/TranslationHistory';
+import toast from 'react-hot-toast';
 
 function TranslatePage() {
   let [test, setTest] = useState(null);
@@ -38,7 +39,8 @@ function TranslatePage() {
           setTest(res);
         })
         .catch((err) => {
-          console.log('error here');
+          console.log('error here', err);
+          toast.error(err.message);
           ErrorReport("Translate Page: " + err);
         })
     } else {
