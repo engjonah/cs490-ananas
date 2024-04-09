@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Paper, Typography, IconButton, Grid, Divider, Collapse, Pagination, Container, Tooltip, MenuItem, Select, FormControlLabel, Checkbox, Menu, Button } from '@mui/material';
 import ApiUrl from '../ApiUrl';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -9,6 +9,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import CloseIcon from '@mui/icons-material/Close';
 import Editor from '@monaco-editor/react';
 import toast from 'react-hot-toast';
 import { useAuthContext } from '../hooks/useAuthContext';
@@ -46,9 +47,11 @@ const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onE
     <Paper elevation={1} style={{ padding: '15px', marginBottom: '10px', overflow: 'hidden', backgroundColor: "#f5f5f5", textAlign:"left"}}>
       <Grid container alignItems="center">
         <Grid item xs={8}>
-          <Typography variant="subtitle1"><strong>{`${inputLang} `}</strong>
-            <ArrowForwardIcon fontSize="15px" />
-            <strong>{` ${outputLang}`}</strong></Typography>
+          <Grid container alignItems="center">
+            <Typography aria-label={`inputLabel${inputLang}`} variant="subtitle1"><strong>{`${inputLang}  `}</strong> </Typography>
+              <ArrowForwardIcon fontSize="15px" />
+            <Typography aria-label={`outputLabel${outputLang}`} variant="subtitle1"><strong>{`  ${outputLang}`}</strong></Typography>
+          </Grid>
           <Typography variant="body2"><strong>Date: </strong>{new Date(translatedAt).toLocaleString()}</Typography>
         </Grid>
         <Grid item xs={4} container justifyContent="flex-end" alignItems="center">
@@ -144,7 +147,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
     }
   }, [outputLoading, userId, user.token]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if(outputLoading) {
       setSortOrder('desc')
       setSortCriteria('translatedAt')
@@ -152,7 +155,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
   }, [outputLoading, sortOrder, sortCriteria]);
 
   // filtering
-  React.useEffect(() => {
+  useEffect(() => {
     const newFilteredTranslations = translations.filter(translation => {
       const inputLanguageSelected = selectedInputLanguages.includes(nameToLanguage[translation.inputLang]);
       const outputLanguageSelected = selectedOutputLanguages.includes(nameToLanguage[translation.outputLang]);
@@ -284,21 +287,23 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
       <div style={{ marginBottom: '10px', display:'flex', alignItems: 'center' }}>
         <Typography variant="subtitle1" style={{ display: 'inline-block', marginRight: '10px'}}><strong>Sort By:</strong></Typography>
         <Select
+          inputProps={{ "aria-label": "sortCategoriesButton" }}
           value={sortCriteria || ''}
           onChange={(e) => handleSort(e.target.value, sortOrder)}
           style={{ minWidth: '175px', maxHeight: '30px'}}
+          aria-label='sortCategoriesButton'
         >
-          <MenuItem value="inputLang">Input Language</MenuItem>
-          <MenuItem value="outputLang">Output Language</MenuItem>
-          <MenuItem value="translatedAt">Date</MenuItem>
+          <MenuItem aria-label='inputLangSortCategoriesButton' value="inputLang">Input Language</MenuItem>
+          <MenuItem aria-label='outputLangSortCategoriesButton' value="outputLang">Output Language</MenuItem>
+          <MenuItem aria-label='dateSortCategoriesButton' value="translatedAt">Date</MenuItem>
         </Select>
         <Tooltip title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}>
-          <IconButton onClick={() => handleSort(sortCriteria, sortOrder === 'asc' ? 'desc' : 'asc')}>
+          <IconButton aria-label='sortOrderButton' onClick={() => handleSort(sortCriteria, sortOrder === 'asc' ? 'desc' : 'asc')}>
             {sortOrder === 'asc' ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}
           </IconButton>
         </Tooltip>
         <Tooltip title={'Filter'}>
-          <IconButton onClick={handleMenuOpen}>
+          <IconButton aria-label='filterButton' onClick={handleMenuOpen}>
             <FilterAltIcon/>
           </IconButton>
         </Tooltip>
@@ -307,7 +312,12 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
         >
-            <div style={{ display: 'flex', marginLeft: '10px', marginRight: '10px'}}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <IconButton aria-label="closeFilterMenuButton" onClick={handleMenuClose} style={{ fontSize: 'small', position: 'absolute', top: 5, right: 0 }}>
+                <CloseIcon/>
+              </IconButton>
+            </div>
+            <div style={{ display: 'flex', marginTop: '10px', marginLeft: '20px', marginRight: '10px'}}>
               <div style={{ marginRight: '20px' }}>
                 <Typography variant="subtitle1">Input Languages:</Typography>
                 <div>
@@ -316,6 +326,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
                       key={language}
                       control={
                         <Checkbox
+                          aria-label={`input${language}Checkbox`}
                           checked={selectedInputLanguages.includes(nameToLanguage[language])}
                           onChange={() => handleCheckboxChange(nameToLanguage[language], 'input')}
                         />
@@ -324,8 +335,8 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
                     />
                   ))}
                 </div>
-                <Button onClick={() => handleCheckboxSelectAll('input')}>SELECT ALL</Button>
-                <Button onClick={() => handleCheckboxClearAll('input')}>CLEAR</Button>
+                <Button aria-label='selectAllInputFilterButton' onClick={() => handleCheckboxSelectAll('input')}>SELECT ALL</Button>
+                <Button aria-label='clearAllInputFilterButton' onClick={() => handleCheckboxClearAll('input')}>CLEAR</Button>
               </div>
               <div>
                 <Typography variant="subtitle1">Output Languages:</Typography>
@@ -335,6 +346,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
                       key={language}
                       control={
                         <Checkbox
+                          aria-label={`output${language}Checkbox`}
                           checked={selectedOutputLanguages.includes(nameToLanguage[language])}
                           onChange={() => handleCheckboxChange(nameToLanguage[language], 'output')}
                         />
@@ -343,8 +355,8 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
                     />
                   ))}
                 </div>
-                <Button onClick={() => handleCheckboxSelectAll('output')}>SELECT ALL</Button>
-                <Button onClick={() => handleCheckboxClearAll('output')}>CLEAR</Button>
+                <Button aria-label='selectAllOutputFilterButton' onClick={() => handleCheckboxSelectAll('output')}>SELECT ALL</Button>
+                <Button aria-label='clearAllOutputFilterButton' onClick={() => handleCheckboxClearAll('output')}>CLEAR</Button>
               </div>
             </div>
         </Menu>
