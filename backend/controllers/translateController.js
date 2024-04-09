@@ -9,11 +9,13 @@ const clearCache = () => {
 const getTranslation = async (req, res) => {
         const { inputLang, outputLang, inputCode } = req.body
         // check cache for same input code, input language, and output language
+        console.time('apiCall');
         for (let i = 0; i < cache.length; i++) {
             let entry = cache[i]
             if (entry.inputCode === inputCode && entry.inputLang === inputLang && entry.outputLang === outputLang) {
                 res.status(200).json({translation: entry.outputCode})
-                // console.log("Saved API Call With Cache")
+                console.log("Saved API Call With Cache")
+                console.timeEnd('apiCall')
                 return
             }
         }
@@ -48,6 +50,7 @@ const getTranslation = async (req, res) => {
             }
             console.log(`error occurred: ${error.message}`)
         })
+        console.timeEnd('apiCall')
 }
 
 module.exports = {
