@@ -254,4 +254,31 @@ describe('TranslationHistory Component', () => {
     expect(queryByLabelText('inputLabelPython')).not.toBeInTheDocument();
     expect(getByLabelText('inputLabelKotlin')).toBeInTheDocument();
   });
+
+  test('sort categories change', async () => {
+    useAuthContext.mockReturnValue({user : {token : 123}});
+    localStorage.setItem('user', JSON.stringify({ uid: '123' }));
+
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve({ Translations: sampleTranslations }),
+      }),
+    )
+
+    const { queryByLabelText, getByLabelText} = render(<TranslationHistory testTranslations={sampleTranslations}/>);
+
+    expect(getByLabelText('inputLabelPython')).toBeInTheDocument();
+    expect(queryByLabelText('inputLabelKotlin')).not.toBeInTheDocument();
+    fireEvent.change(getByLabelText('sortCategoriesButton').querySelector('input'), {
+      target: { value: "inputLang" }
+    });
+    expect(getByLabelText('inputLabelRuby')).toBeInTheDocument();
+    expect(queryByLabelText('inputLabelC++')).not.toBeInTheDocument();
+
+    fireEvent.change(getByLabelText('sortCategoriesButton').querySelector('input'), {
+      target: { value: "outputLang" }
+    });
+    expect(getByLabelText('outputLabelRuby')).toBeInTheDocument();
+    expect(queryByLabelText('outputLabelC++')).not.toBeInTheDocument();
+  });
 });
