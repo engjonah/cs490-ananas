@@ -1,17 +1,6 @@
 const router = require('express').Router();
 const translateController = require('../../controllers/translateController');
 const expressQueue = require('express-queue');
-const requireAuth = require("../../middleware/requireAuth")
-
-router.use(requireAuth)
-const queue = expressQueue({ activeLimit: 1, queuedLimit: -1 });
-
-queue.queue.on("queue", (job) => {
-  job.data.req.queueDepth = job.queue.getLength();
-  console.log("queue length", job.data.req.queueDepth);
-});const router = require('express').Router();
-const translateController = require('../../controllers/translateController');
-const expressQueue = require('express-queue');
 const rateLimit = require('express-rate-limit'); // Import express-rate-limit
 const requireAuth = require("../../middleware/requireAuth");
 
