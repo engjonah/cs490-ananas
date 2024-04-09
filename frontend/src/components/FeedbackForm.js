@@ -63,6 +63,7 @@ function FeedbackForm(props) {
       })
       .catch((err) => {
         ErrorReport("Feedback Form:" + err.message);
+        toast.error(err.message);
         console.log(err.message);
       });
   };
