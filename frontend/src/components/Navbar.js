@@ -38,6 +38,7 @@ function Navbar() {
           return res;
         })
         .catch((err) => {
+          ErrorReport("Navbar:" + err.message);
           console.log('error here', err);
         })
       }

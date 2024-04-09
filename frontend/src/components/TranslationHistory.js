@@ -1,14 +1,32 @@
-import React, { useState } from 'react';
-import { Paper, Typography, IconButton, Grid, Divider, Collapse, Pagination, Container, Tooltip } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Paper, Typography, IconButton, Grid, Divider, Collapse, Pagination, Container, Tooltip, MenuItem, Select, FormControlLabel, Checkbox, Menu, Button } from '@mui/material';
 import ApiUrl from '../ApiUrl';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import CloseIcon from '@mui/icons-material/Close';
 import Editor from '@monaco-editor/react';
 import toast from 'react-hot-toast';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { ErrorReport } from '../services/ErrorReport';
+
+
+const nameToLanguage = {
+  "Unknown": 0,
+  "Python": 1,  // Python
+  "Java": 2,  // Java
+  "C++": 3,  // Cpp
+  "Ruby": 4,  // Ruby
+  "C#": 5,  // Csharp
+  "JavaScript": 6,  // javascript
+  "Kotlin": 7,  // Kotlin
+  "Objective-C": 8,  // Objective-C
+};
 
 const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onEdit }) => {
   const { inputLang, outputLang, inputCode, outputCode, status, translatedAt } = translation;
@@ -29,9 +47,11 @@ const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onE
     <Paper elevation={1} style={{ padding: '15px', marginBottom: '10px', overflow: 'hidden', backgroundColor: "#f5f5f5", textAlign:"left"}}>
       <Grid container alignItems="center">
         <Grid item xs={8}>
-          <Typography variant="subtitle1"><strong>{`${inputLang} `}</strong>
-            <ArrowForwardIcon fontSize="15px" />
-            <strong>{` ${outputLang}`}</strong></Typography>
+          <Grid container alignItems="center">
+            <Typography aria-label={`inputLabel${inputLang}`} variant="subtitle1"><strong>{`${inputLang}  `}</strong> </Typography>
+              <ArrowForwardIcon fontSize="15px" />
+            <Typography aria-label={`outputLabel${outputLang}`} variant="subtitle1"><strong>{`  ${outputLang}`}</strong></Typography>
+          </Grid>
           <Typography variant="body2"><strong>Date: </strong>{new Date(translatedAt).toLocaleString()}</Typography>
         </Grid>
         <Grid item xs={4} container justifyContent="flex-end" alignItems="center">
@@ -40,7 +60,7 @@ const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onE
               {expanded? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </IconButton>
           </Tooltip>
-          <Tooltip title={"Edit"}>
+          <Tooltip title={"View"}>
             <IconButton aria-label="edit" onClick={onEdit}>
               <VisibilityIcon />
             </IconButton>
@@ -89,14 +109,21 @@ const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onE
 };
 
 
+
 const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, setCodeUpload, setOutputCode, setInputLang, setOutputLang}) => {
 
   const [translations, setTranslations] = useState(testTranslations? testTranslations : []);
+  const [filteredTranslations, setFilteredTranslations] = useState(testTranslations? testTranslations : []);
   const [page, setPage] = useState(1);
   const itemsPerPage = 5; // Number of items per page
   const [expandedIndex, setExpandedIndex] = useState(null);
+  const [sortCriteria, setSortCriteria] = useState('translatedAt');
+  const [sortOrder, setSortOrder] = useState('desc'); // 'desc' for descending, 'asc' for ascending
+  const [selectedInputLanguages, setSelectedInputLanguages] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+  const [selectedOutputLanguages, setSelectedOutputLanguages] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8]);
   const userId = JSON.parse(localStorage.getItem("user"))?.uid;
-  const {user} = useAuthContext()
+  const {user} = useAuthContext();
+  const [anchorEl, setAnchorEl] = useState(null);
 
   React.useEffect(() => {
     if (userId) {
@@ -113,11 +140,30 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
           setTranslations(sortedTranslations);
         })
         .catch(error => {
+          ErrorReport("Translation History Fetch:" + error.message);
+          toast.error(error.message);
           console.error('Error fetching translations:', error);
         });
     }
   }, [outputLoading, userId, user.token]);
 
+  useEffect(() => {
+    if(outputLoading) {
+      setSortOrder('desc')
+      setSortCriteria('translatedAt')
+    }
+  }, [outputLoading, sortOrder, sortCriteria]);
+
+  // filtering
+  useEffect(() => {
+    const newFilteredTranslations = translations.filter(translation => {
+      const inputLanguageSelected = selectedInputLanguages.includes(nameToLanguage[translation.inputLang]);
+      const outputLanguageSelected = selectedOutputLanguages.includes(nameToLanguage[translation.outputLang]);
+      return inputLanguageSelected && outputLanguageSelected;
+    });
+    setFilteredTranslations(newFilteredTranslations);
+  }, [translations, selectedInputLanguages, selectedOutputLanguages]);
+  
 
   const handleDelete = async(index) => {
     fetch(`${ApiUrl}/api/translateHistory/${translations[index]._id}`, { 
@@ -132,6 +178,8 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
           toast.success("Deleted translation!");
         })
         .catch(error => {
+          ErrorReport("Translation History Delete:" + error.message);
+          toast.error(error.message);
           console.error('Error fetching translations:', error);
           return;
         });
@@ -141,6 +189,65 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
     if (index === expandedIndex) {
       setExpandedIndex(null);
     }
+  };
+
+  const handleSort = (criteria, order) => {
+    const sortedTranslations = [...translations].sort((a, b) => {
+      if (criteria === 'translatedAt') {
+        return order === 'asc' ? new Date(a[criteria]) - new Date(b[criteria]) : new Date(b[criteria]) - new Date(a[criteria]);
+      } else {
+        const comparison = a[criteria] < b[criteria] ? -1 : a[criteria] > b[criteria] ? 1 : 0;
+        return order === 'asc' ? comparison : -comparison;
+      }
+    });
+  
+    setSortOrder(order);
+    setSortCriteria(criteria);
+    setTranslations(sortedTranslations);
+  };
+
+  const handleCheckboxChange = (language, type) => {
+    if (type === 'input') {
+      setSelectedInputLanguages(prevLanguages => {
+        if (prevLanguages.includes(language)) {
+          return prevLanguages.filter(lang => lang !== language);
+        } else {
+          return [...prevLanguages, language];
+        }
+      });
+    } else if (type === 'output') {
+      setSelectedOutputLanguages(prevLanguages => {
+        if (prevLanguages.includes(language)) {
+          return prevLanguages.filter(lang => lang !== language);
+        } else {
+          return [...prevLanguages, language];
+        }
+      });
+    }
+  };
+
+  const handleCheckboxSelectAll = (type) => {
+    if (type === 'input') {
+      setSelectedInputLanguages([0, 1, 2, 3, 4, 5, 6, 7, 8])
+    } else if (type === 'output') {
+      setSelectedOutputLanguages([0, 1, 2, 3, 4, 5, 6, 7, 8])
+    }
+  };
+
+  const handleCheckboxClearAll = (type) => {
+    if (type === 'input') {
+      setSelectedInputLanguages([])
+    } else if (type === 'output') {
+      setSelectedOutputLanguages([])
+    }
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
   };
 
   //move back a page if deleted element on last page
@@ -156,18 +263,6 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
     } else {
       setExpandedIndex(index);
     }
-  };
-
-  const nameToLanguage = {
-    "Unknown": 0,
-    "Python": 1,  // Python
-    "Java": 2,  // Java
-    "C++": 3,  // Cpp
-    "Ruby": 4,  // Ruby
-    "C#": 5,  // Csharp
-    "JavaScript": 6,  // javascript
-    "Kotlin": 7,  // Kotlin
-    "Objective-C": 8,  // Objective-C
   };
 
   const handleEdit = (index) => {
@@ -189,11 +284,91 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
   return (
     <Container style={{ borderRadius: '5px', padding: "20px", alignItems: "left"}}>
       <Typography variant="h4" gutterBottom>Translation History</Typography>
-      {translations.length === 0 ? (
-        <Typography variant="subtitle1">You have no translations!</Typography>
+      <div style={{ marginBottom: '10px', display:'flex', alignItems: 'center' }}>
+        <Typography variant="subtitle1" style={{ display: 'inline-block', marginRight: '10px'}}><strong>Sort By:</strong></Typography>
+        <Select
+          value={sortCriteria || ''}
+          onChange={(e) => handleSort(e.target.value, sortOrder)}
+          style={{ minWidth: '175px', maxHeight: '30px'}}
+          aria-label= "sortCategoriesButton"
+        >
+          <MenuItem aria-label='inputLangSortCategoriesButton' value="inputLang">Input Language</MenuItem>
+          <MenuItem aria-label='outputLangSortCategoriesButton' value="outputLang">Output Language</MenuItem>
+          <MenuItem aria-label='dateSortCategoriesButton' value="translatedAt">Date</MenuItem>
+        </Select>
+        <Tooltip title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}>
+          <IconButton aria-label='sortOrderButton' onClick={() => handleSort(sortCriteria, sortOrder === 'asc' ? 'desc' : 'asc')}>
+            {sortOrder === 'asc' ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}
+          </IconButton>
+        </Tooltip>
+        <Tooltip title={'Filter'}>
+          <IconButton aria-label='filterButton' onClick={handleMenuOpen}>
+            <FilterAltIcon/>
+          </IconButton>
+        </Tooltip>
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+        >
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <IconButton aria-label="closeFilterMenuButton" onClick={handleMenuClose} style={{ fontSize: 'small', position: 'absolute', top: 5, right: 0 }}>
+                <CloseIcon/>
+              </IconButton>
+            </div>
+            <div style={{ display: 'flex', marginTop: '10px', marginLeft: '20px', marginRight: '10px'}}>
+              <div style={{ marginRight: '20px' }}>
+                <Typography variant="subtitle1">Input Languages:</Typography>
+                <div>
+                  {Object.keys(nameToLanguage).map(language => (
+                    <FormControlLabel style={{display: 'block'}}
+                      key={language}
+                      control={
+                        <Checkbox
+                          aria-label={`input${language}Checkbox`}
+                          checked={selectedInputLanguages.includes(nameToLanguage[language])}
+                          onChange={() => handleCheckboxChange(nameToLanguage[language], 'input')}
+                        />
+                      }
+                      label={language}
+                    />
+                  ))}
+                </div>
+                <Button aria-label='selectAllInputFilterButton' onClick={() => handleCheckboxSelectAll('input')}>SELECT ALL</Button>
+                <Button aria-label='clearAllInputFilterButton' onClick={() => handleCheckboxClearAll('input')}>CLEAR</Button>
+              </div>
+              <div>
+                <Typography variant="subtitle1">Output Languages:</Typography>
+                <div>
+                  {Object.keys(nameToLanguage).map(language => (
+                    <FormControlLabel style={{display: 'block'}}
+                      key={language}
+                      control={
+                        <Checkbox
+                          aria-label={`output${language}Checkbox`}
+                          checked={selectedOutputLanguages.includes(nameToLanguage[language])}
+                          onChange={() => handleCheckboxChange(nameToLanguage[language], 'output')}
+                        />
+                      }
+                      label={language}
+                    />
+                  ))}
+                </div>
+                <Button aria-label='selectAllOutputFilterButton' onClick={() => handleCheckboxSelectAll('output')}>SELECT ALL</Button>
+                <Button aria-label='clearAllOutputFilterButton' onClick={() => handleCheckboxClearAll('output')}>CLEAR</Button>
+              </div>
+            </div>
+        </Menu>
+      </div>
+      {filteredTranslations.length === 0 ? (
+        (translations.length === 0) ? (
+          <Typography variant="subtitle1">You have no translations!</Typography>
+        ) : (
+          <Typography variant="subtitle1">No translations match that filtering!</Typography>
+        )
       ) : (
         <>
-          {translations.slice(startIndex, endIndex).map((translation, index) => (
+          {filteredTranslations.slice(startIndex, endIndex).map((translation, index) => (
             <React.Fragment key={startIndex + index}>
               <TranslationHistoryItem
                 translation={translation}
@@ -206,7 +381,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
             </React.Fragment>
           ))}
           <Pagination
-            count={Math.ceil(translations.length / itemsPerPage)}
+            count={Math.ceil(filteredTranslations.length / itemsPerPage)}
             page={page}
             onChange={handleChangePage}
             style={{ marginTop: '20px' }}
