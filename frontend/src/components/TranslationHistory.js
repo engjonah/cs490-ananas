@@ -287,11 +287,10 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
       <div style={{ marginBottom: '10px', display:'flex', alignItems: 'center' }}>
         <Typography variant="subtitle1" style={{ display: 'inline-block', marginRight: '10px'}}><strong>Sort By:</strong></Typography>
         <Select
-          inputProps={{ "aria-label": "sortCategoriesButton" }}
           value={sortCriteria || ''}
           onChange={(e) => handleSort(e.target.value, sortOrder)}
           style={{ minWidth: '175px', maxHeight: '30px'}}
-          aria-label='sortCategoriesButton'
+          aria-label= "sortCategoriesButton"
         >
           <MenuItem aria-label='inputLangSortCategoriesButton' value="inputLang">Input Language</MenuItem>
           <MenuItem aria-label='outputLangSortCategoriesButton' value="outputLang">Output Language</MenuItem>
