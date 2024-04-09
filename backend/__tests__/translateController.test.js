@@ -140,3 +140,45 @@ describe('/api/translate mocked API requests', () => {
         })
     })
 })
+describe('/api/translate rate limiting', () => {
+    const token = generateMockToken();
+    beforeAll(() => {
+        // Set up any necessary mock responses for the first 3 requests here if needed
+    });
+
+    afterAll(() => {
+        // Clean up any mocks or nock interceptors
+        nock.cleanAll();
+    });
+
+    it("should return 429 status code on the 4th attempt within a minute due to rate limiting", async () => {
+        // Assuming Translation.prototype.save is mocked if necessary
+        // First request
+        await request(app)
+            .post("/api/translate")
+            .send({ inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello, World!\")" })
+            .set('Authorization', `Bearer ${token}`);
+
+        // Second request
+        await request(app)
+            .post("/api/translate")
+            .send({ inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello again\")" })
+            .set('Authorization', `Bearer ${token}`);
+
+        // Third request
+        await request(app)
+            .post("/api/translate")
+            .send({ inputLang: "Python", outputLang: "Java", inputCode: "print(\"And again\")" })
+            .set('Authorization', `Bearer ${token}`);
+
+        // Fourth request - Should trigger rate limiting
+        const response = await request(app)
+            .post("/api/translate")
+            .send({ inputLang: "Python", outputLang: "Java", inputCode: "print(\"This should fail\")" })
+            .set('Authorization', `Bearer ${token}`);
+
+        // Verify the 429 status code for the fourth request
+        expect(response.status).toBe(429);
+        expect(response.body.error).toBe("Too many requests, please try again later.");
+    });
+});
