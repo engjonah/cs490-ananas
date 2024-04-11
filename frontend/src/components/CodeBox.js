@@ -9,6 +9,7 @@ import { ErrorReport } from '../services/ErrorReport';
 import loadingPenguin from '../assets/loadingPenguin.gif'
 import toast from 'react-hot-toast';
 import detectLang from 'lang-detector';
+import { languageMap, nameToLanguage } from '../constants'
 
 export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputLang, codeUpload, inputLang, setInputLang, user, outputCode, setOutputCode , outputLoading, setOutputLoading, setTranslationId}) {
   const editorRef = useRef(null);
@@ -51,17 +52,6 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
       return;
     }
     const detectedLang = detectLang(code) || "Unknown";
-    const nameToLanguage = {
-      "Unknown": 0,
-      "Python": 1,  // Python
-      "Java": 2,  // Java
-      "C++": 3,  // Cpp
-      "Ruby": 4,  // Ruby
-      "C#": 5,  // Csharp
-      "JavaScript": 6,  // javascript
-      "Kotlin": 7,  // Kotlin
-      "Objective-C": 8,  // Objective-C
-    };
     const langNum = nameToLanguage[detectedLang] || 0;
     setInputLang(langNum);
   };
@@ -180,18 +170,6 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
       setInputLang(newTab);
     }
   };
-
-  const languageMap = [
-    { syntaxName: "python", name: "Python", extension: ".py" },
-    { syntaxName: "java", name: "Java", extension: ".java" },
-    { syntaxName: "cpp", name: "C++", extension: ".cpp" },
-    { syntaxName: "ruby", name: "Ruby", extension: ".rb" },
-    { syntaxName: "csharp", name: "C#", extension: ".cs" },
-    { syntaxName: "javascript", name: "JavaScript", extension: ".js" },
-    { syntaxName: "kotlin", name: "Kotlin", extension: ".kt" },
-    { syntaxName: "objectivec", name: "Objective-C", extension: ".m" },
-    // add more languages here
-  ];
 
   return (
     <>
