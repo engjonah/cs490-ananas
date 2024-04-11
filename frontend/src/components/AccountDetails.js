@@ -122,7 +122,7 @@ const AccountDetails = () => {
       toast.error("Refer to third party provider to update password!");
       return;
     }
-    if (newPassword.length < 5) {
+    if (newPassword.length <= 5) {
       toast.error("Password too short!");
       ErrorReport("Password too short!");
       return;
