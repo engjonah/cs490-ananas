@@ -220,7 +220,6 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
           theme="light"
           loading="Loading your pudgy penguins..."
           defaultValue={defaultValue}
-          defaultLanguage='python'
           value={readOnly && outputCode}
           language={currTab !== 0 ? languageMap[currTab - 1].syntaxName : "detect this language"}
           options={{ "readOnly": readOnly }}
