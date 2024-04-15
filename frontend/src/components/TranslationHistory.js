@@ -211,9 +211,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
         });
     setTranslations([]);
     setPage(1);
-    if (index === expandedIndex) {
-      setExpandedIndex(null);
-    }
+    setExpandedIndex(null);
     setClearMenuOpen(false);
   };
 
