@@ -14,19 +14,7 @@ import Editor from '@monaco-editor/react';
 import toast from 'react-hot-toast';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { ErrorReport } from '../services/ErrorReport';
-
-
-const nameToLanguage = {
-  "Unknown": 0,
-  "Python": 1,  // Python
-  "Java": 2,  // Java
-  "C++": 3,  // Cpp
-  "Ruby": 4,  // Ruby
-  "C#": 5,  // Csharp
-  "JavaScript": 6,  // javascript
-  "Kotlin": 7,  // Kotlin
-  "Objective-C": 8,  // Objective-C
-};
+import { nameToLanguage } from '../constants'
 
 const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onEdit }) => {
   const { inputLang, outputLang, inputCode, outputCode, status, translatedAt } = translation;

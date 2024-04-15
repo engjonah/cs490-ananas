@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {useDropzone} from 'react-dropzone'
 import { Button, Container }  from '@mui/material';
+import { extensionToLanguage } from '../constants';
 
 export default function FileUpload({setCodeUpload, setInputLang}) {
   const onDrop = useCallback((acceptedFiles) => {
@@ -19,17 +20,6 @@ export default function FileUpload({setCodeUpload, setInputLang}) {
       reader.readAsText(file)
 
       const fileExtension = file.name.split('.').pop();
-
-      const extensionToLanguage = {
-        py: 1,  // Python
-        java: 2,  // Java
-        cpp: 3,  // Cpp
-        rb: 4,  // Ruby
-        cs: 5,  // Csharp
-        js: 6,  // javascript
-        kt: 7,  // Kotlin
-        m: 8,  // Objective-C
-      };
 
       if (extensionToLanguage[fileExtension]) {
         setInputLang(extensionToLanguage[fileExtension]);
