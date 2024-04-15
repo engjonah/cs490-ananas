@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Paper, Typography, IconButton, Grid, Divider, Collapse, Pagination, Container, Tooltip, MenuItem, Select, FormControlLabel, Checkbox, Menu, Button } from '@mui/material';
+import { Paper, Typography, IconButton, Grid, Divider, Collapse, Pagination, Container, Tooltip, MenuItem, Select, FormControlLabel, Checkbox, Menu, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import ApiUrl from '../ApiUrl';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -112,6 +112,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
   const userId = JSON.parse(localStorage.getItem("user"))?.uid;
   const {user} = useAuthContext();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [clearMenuOpen, setClearMenuOpen] = useState(false);
 
   React.useEffect(() => {
     if (userId) {
@@ -151,7 +152,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
     });
     setFilteredTranslations(newFilteredTranslations);
   }, [translations, selectedInputLanguages, selectedOutputLanguages]);
-  
+
 
   const handleDelete = async(index) => {
     fetch(`${ApiUrl}/api/translateHistory/${translations[index]._id}`, { 
@@ -177,6 +178,29 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
     if (index === expandedIndex) {
       setExpandedIndex(null);
     }
+  };
+
+  const handleClearHistory = async(index) => {
+    fetch(`${ApiUrl}/api/translateHistory/clearHistory/${userId}`, { 
+      method: 'DELETE',
+      headers: {
+        "Content-type": "application/json",
+        'Authorization':`Bearer ${user.token}`
+      },
+    })
+        .then(response => response.json())
+        .then(data => {
+          toast.success("Cleared translation history!");
+        })
+        .catch(error => {
+          ErrorReport("Translation History Clear:" + error.message);
+          toast.error(error.message);
+          return;
+        });
+    setTranslations([]);
+    setPage(1);
+    setExpandedIndex(null);
+    setClearMenuOpen(false);
   };
 
   const handleSort = (criteria, order) => {
@@ -294,6 +318,27 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
             <FilterAltIcon/>
           </IconButton>
         </Tooltip>
+        <Tooltip title={'Clear History'}>
+          <Button aria-label='clearHistoryButton' onClick={() => setClearMenuOpen(true)}>
+            Clear History
+          </Button>
+        </Tooltip>
+        <Dialog open={clearMenuOpen} onClose={() => setClearMenuOpen(false)}>
+          <DialogTitle>Confirm Clear History</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to clear your history?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setClearMenuOpen(false)} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={() => handleClearHistory()} color="primary" autoFocus>
+              Confirm
+            </Button>
+          </DialogActions>
+        </Dialog>
         <Menu
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}

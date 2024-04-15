@@ -81,10 +81,23 @@ const deleteTranslationById = async (req, res) => {
     }
 }
 
+const clearTranslationHistoryByUid = async (req, res) => {
+    try {
+        const { uid } = req.params;
+        await Translation.deleteMany({ "uid" : uid });
+
+        res.status(200).json({ Message: "Translation history cleared successfully" });
+    } catch (error) {
+        console.log(`Error occurred: ${error.message}`);
+        res.status(500).json({ error: error.message });
+    }
+}
+
 
 module.exports = {
     createTranslation,
     readTranslationsByUid,
     updateTranslationById,
-    deleteTranslationById
+    deleteTranslationById,
+    clearTranslationHistoryByUid
 }
