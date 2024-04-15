@@ -20,10 +20,10 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/documentation" element={<DocumentationPage />} />
-          <Route path="/translate" element={user ? <TranslatePage /> : <Navigate to='/SignIn'/>} />
-          <Route path="/SignIn" element={!user ? <SignInPage/> : <Navigate to='/translate'/>}/>
-          <Route path="/SignUp" element={!user ? <SignUpPage/> : <Navigate to='/translate'/>}/>
-          <Route path="/account" element={user ? <AccountPage /> : <Navigate to='/SignIn'/>} />
+          <Route path="/translate" element={user ? <TranslatePage /> : <Navigate to='/SignIn' replace/> } />
+          <Route path="/SignIn" element={!user ? <SignInPage/> : <Navigate to='/translate' replace/>}/>
+          <Route path="/SignUp" element={!user ? <SignUpPage/> : <Navigate to='/translate' replace/>}/>
+          <Route path="/account" element={user ? <AccountPage /> : <Navigate to='/SignIn' replace/>} />
           <Route path="/resetPassword" element={<ResetPasswordPage /> } />
         </Routes>
       </div>
