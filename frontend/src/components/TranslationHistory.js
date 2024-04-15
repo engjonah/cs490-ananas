@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Paper, Typography, IconButton, Grid, Divider, Collapse, Pagination, Container, Tooltip, MenuItem, Select, FormControlLabel, Checkbox, Menu, Button } from '@mui/material';
+import { Paper, Typography, IconButton, Grid, Divider, Collapse, Pagination, Container, Tooltip, MenuItem, Select, FormControlLabel, Checkbox, Menu, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import ApiUrl from '../ApiUrl';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -17,7 +17,7 @@ import { ErrorReport } from '../services/ErrorReport';
 
 
 const nameToLanguage = {
-  "Detect Language": 0,
+  "Unknown": 0,
   "Python": 1,  // Python
   "Java": 2,  // Java
   "C++": 3,  // Cpp
@@ -124,9 +124,9 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
   const userId = JSON.parse(localStorage.getItem("user"))?.uid;
   const {user} = useAuthContext();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [clearMenuOpen, setClearMenuOpen] = useState(false);
 
   React.useEffect(() => {
-    console.log("grabbing translations")
     if (userId) {
       fetch(`${ApiUrl}/api/translateHistory/${userId}`, { 
         method: 'GET',
@@ -139,7 +139,6 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
         .then(data => {
           const sortedTranslations = data.Translations.sort((a, b) => new Date(b.translatedAt) - new Date(a.translatedAt));
           setTranslations(sortedTranslations);
-          console.log(sortedTranslations)
         })
         .catch(error => {
           ErrorReport("Translation History Fetch:" + error.message);
@@ -158,14 +157,12 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
 
   // filtering
   useEffect(() => {
-    console.log("filtering")
     const newFilteredTranslations = translations.filter(translation => {
       const inputLanguageSelected = selectedInputLanguages.includes(nameToLanguage[translation.inputLang]);
       const outputLanguageSelected = selectedOutputLanguages.includes(nameToLanguage[translation.outputLang]);
       return inputLanguageSelected && outputLanguageSelected;
     });
     setFilteredTranslations(newFilteredTranslations);
-    console.log(newFilteredTranslations)
   }, [translations, selectedInputLanguages, selectedOutputLanguages]);
 
 
@@ -217,6 +214,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
     if (index === expandedIndex) {
       setExpandedIndex(null);
     }
+    setClearMenuOpen(false);
   };
 
   const handleSort = (criteria, order) => {
@@ -335,10 +333,26 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
           </IconButton>
         </Tooltip>
         <Tooltip title={'Clear History'}>
-          <Button aria-label='clearHistoryButton' onClick={handleClearHistory}>
+          <Button aria-label='clearHistoryButton' onClick={() => setClearMenuOpen(true)}>
             Clear History
           </Button>
         </Tooltip>
+        <Dialog open={clearMenuOpen} onClose={() => setClearMenuOpen(false)}>
+          <DialogTitle>Confirm Clear History</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to clear your history?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setClearMenuOpen(false)} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={() => handleClearHistory()} color="primary" autoFocus>
+              Confirm
+            </Button>
+          </DialogActions>
+        </Dialog>
         <Menu
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
