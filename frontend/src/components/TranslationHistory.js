@@ -17,7 +17,7 @@ import { ErrorReport } from '../services/ErrorReport';
 
 
 const nameToLanguage = {
-  "Unknown": 0,
+  "Detect Language": 0,
   "Python": 1,  // Python
   "Java": 2,  // Java
   "C++": 3,  // Cpp
@@ -126,6 +126,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
   const [anchorEl, setAnchorEl] = useState(null);
 
   React.useEffect(() => {
+    console.log("grabbing translations")
     if (userId) {
       fetch(`${ApiUrl}/api/translateHistory/${userId}`, { 
         method: 'GET',
@@ -138,6 +139,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
         .then(data => {
           const sortedTranslations = data.Translations.sort((a, b) => new Date(b.translatedAt) - new Date(a.translatedAt));
           setTranslations(sortedTranslations);
+          console.log(sortedTranslations)
         })
         .catch(error => {
           ErrorReport("Translation History Fetch:" + error.message);
@@ -156,14 +158,16 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
 
   // filtering
   useEffect(() => {
+    console.log("filtering")
     const newFilteredTranslations = translations.filter(translation => {
       const inputLanguageSelected = selectedInputLanguages.includes(nameToLanguage[translation.inputLang]);
       const outputLanguageSelected = selectedOutputLanguages.includes(nameToLanguage[translation.outputLang]);
       return inputLanguageSelected && outputLanguageSelected;
     });
     setFilteredTranslations(newFilteredTranslations);
+    console.log(newFilteredTranslations)
   }, [translations, selectedInputLanguages, selectedOutputLanguages]);
-  
+
 
   const handleDelete = async(index) => {
     fetch(`${ApiUrl}/api/translateHistory/${translations[index]._id}`, { 
@@ -186,6 +190,30 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
     const updatedTranslations = [...translations];
     updatedTranslations.splice(index, 1);
     setTranslations(updatedTranslations);
+    if (index === expandedIndex) {
+      setExpandedIndex(null);
+    }
+  };
+
+  const handleClearHistory = async(index) => {
+    fetch(`${ApiUrl}/api/translateHistory/clearHistory/${userId}`, { 
+      method: 'POST',
+      headers: {
+        "Content-type": "application/json",
+        'Authorization':`Bearer ${user.token}`
+      },
+    })
+        .then(response => response.json())
+        .then(data => {
+          toast.success("Cleared translation history!");
+        })
+        .catch(error => {
+          ErrorReport("Translation History Clear:" + error.message);
+          toast.error(error.message);
+          return;
+        });
+    setTranslations([]);
+    setPage(1);
     if (index === expandedIndex) {
       setExpandedIndex(null);
     }
@@ -305,6 +333,11 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
           <IconButton aria-label='filterButton' onClick={handleMenuOpen}>
             <FilterAltIcon/>
           </IconButton>
+        </Tooltip>
+        <Tooltip title={'Clear History'}>
+          <Button aria-label='clearHistoryButton' onClick={handleClearHistory}>
+            Clear History
+          </Button>
         </Tooltip>
         <Menu
           anchorEl={anchorEl}
