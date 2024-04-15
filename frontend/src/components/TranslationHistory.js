@@ -194,7 +194,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
 
   const handleClearHistory = async(index) => {
     fetch(`${ApiUrl}/api/translateHistory/clearHistory/${userId}`, { 
-      method: 'POST',
+      method: 'DELETE',
       headers: {
         "Content-type": "application/json",
         'Authorization':`Bearer ${user.token}`
