@@ -10,12 +10,16 @@ import {
   Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import ApiUrl from '../ApiUrl';
 import { Button, Grid } from '@mui/material';
+import { useAuthContext } from '../hooks/useAuthContext';
 import './HomePage.css'; // Import the CSS file for HomePage
 
 
 
 const HomePage = () => {
+  var ratingCounts, averageRating;
+  const { user } = useAuthContext();
 
   ChartJS.register(
     CategoryScale,
@@ -40,13 +44,24 @@ const HomePage = () => {
   };
 
   const labels = ['1', '2', '3', '4', '5'];
-
+  fetch(`${ApiUrl}/api/feedback/metrics`, {
+    method: "GET",
+    headers: {
+      'Authorization': `Bearer ${user.token}`,
+    },
+  }).then(response=> response.json())
+  .then( data => {
+    ratingCounts = data.RatingCounts;
+    console.log(ratingCounts)
+    console.log([1,2,3,4,10])
+    averageRating = data.AverageRating;
+  })
   const data = {
     labels,
     datasets: [
       {
         label: 'User Ratings',
-        data: [26,20,44,23,55],
+        data: ratingCounts,
         backgroundColor: 'pink',
       },
 
@@ -81,14 +96,12 @@ const HomePage = () => {
         <Grid item xs={12} sm={6}>
           <h2>Reviews</h2>
           <p>See what real users have to say about our service!</p>
-          {/* <Bar
-            options={options}
-            data={data}/> */}
+         
         </Grid>
       </Grid>
 
       <Grid container justifyContent="center" className="HomePage-feedback-bar-chart">
-        <Grid item>
+        <Grid item xs={6} sm={3} >
             <Bar
             options={options}
             data={data}/>

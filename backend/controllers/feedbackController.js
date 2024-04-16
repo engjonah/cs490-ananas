@@ -19,7 +19,34 @@ const insertFeedback = async(req,res) =>{
     }
 };
 
+const getFeedbackCountByRating = async(req,res) => {
+    try {
+        var ratingCounts = [] 
+        var temp;
+        for (var i = 1; i <= 5; i++) {
+            ratingCounts.push(await Feedback.countDocuments({rating : i}))
+        }
+        const averageRating =  parseFloat(( ( 1*ratingCounts[0] + 2*ratingCounts[1] + 3*ratingCounts[2] + 4*ratingCounts[3] + 5*ratingCounts[4] ) / await Feedback.countDocuments() ).toFixed(2))
+        res.status(200).json({ RatingCounts : ratingCounts, AverageRating : averageRating })
+    } catch (error) {
+        console.log(`Error occurred: ${error.message}`);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+const getFeedback = async(req,res) => {
+    try {
+        const allFeedback = await Feedback.find()
+        res.status(200).json({ AllFeedback : allFeedback })
+
+    } catch (error) {
+        console.log(`Error occurred: ${error.message}`);
+        res.status(500).json({ error: error.message });
+    }
+}
 
 module.exports = {
   insertFeedback,
+  getFeedbackCountByRating,
+  getFeedback
 }
