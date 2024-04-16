@@ -18,7 +18,7 @@ const translateRateLimiter = rateLimit({
   },
   handler: (req, res, /*next, options*/) => {
     return res.status(429).json({
-      error: "Rate Limit Exceeded"
+      error: "Ananas Rate Limit Exceeded"
     });
   }
 });
@@ -39,11 +39,5 @@ router.use(queue);
 
 // Route handler for translations
 router.post("/", translateController.getTranslation);
-
-module.exports = router;
-
-
-router.use(queue);
-router.post("/", translateController.getTranslation)
 
 module.exports = router;
