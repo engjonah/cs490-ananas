@@ -1,4 +1,4 @@
-import React from 'react';
+import React,  { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Chart as ChartJS,
@@ -14,12 +14,41 @@ import ApiUrl from '../ApiUrl';
 import { Button, Grid } from '@mui/material';
 import { useAuthContext } from '../hooks/useAuthContext';
 import './HomePage.css'; // Import the CSS file for HomePage
+import { ErrorReport } from '../services/ErrorReport';
+
 
 
 
 const HomePage = () => {
-  var ratingCounts, averageRating;
   const { user } = useAuthContext();
+  const [ratingCounts, setRatingCounts] = useState([0,0,0,0,0]);
+  const [averageRating, setAverageRating] = useState(0);
+  const [error, setError] = useState(null);
+
+
+
+  useEffect(() => {
+    fetch(`${ApiUrl}/api/feedback/metrics`, {
+      headers: {
+        'Authorization':`Bearer ${user.token}`
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error retrieving feedback');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setRatingCounts(data.RatingCounts);
+        setAverageRating(data.AverageRating);
+      })
+      .catch(error => {
+        ErrorReport("Account Details:" + error.message);
+        setError(error.message);
+        console.log(error);
+      });
+  }, [user.token]); 
 
   ChartJS.register(
     CategoryScale,
@@ -43,19 +72,11 @@ const HomePage = () => {
     },
   };
 
+
+  console.log("rating counts: " + ratingCounts)
+
   const labels = ['1', '2', '3', '4', '5'];
-  fetch(`${ApiUrl}/api/feedback/metrics`, {
-    method: "GET",
-    headers: {
-      'Authorization': `Bearer ${user.token}`,
-    },
-  }).then(response=> response.json())
-  .then( data => {
-    ratingCounts = data.RatingCounts;
-    console.log(ratingCounts)
-    console.log([1,2,3,4,10])
-    averageRating = data.AverageRating;
-  })
+  
   const data = {
     labels,
     datasets: [
