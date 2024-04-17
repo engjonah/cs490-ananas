@@ -145,22 +145,19 @@ describe('/api/translate mocked API requests', () => {
 
 describe('/api/translate rate limiting', () => {
     const token = generateMockToken('RateLimit');
-    it("should return 429 status code on the 10th attempt within a minute due to rate limiting", async () => {
-        // Assuming Translation.prototype.save is mocked if necessary
-        // First request
-        count = 0;
-        for(let i=0; i<=10; i++){
+    it("should return 429 status code on the 11th attempt within a minute due to rate limiting", async () => {
+        //send 10 requests to endpoint
+        for(let i=0; i<10; i++){
             await request(app)
                 .post("/api/translate")
                 .send({ inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello, World!\")" })
                 .set('Authorization', `Bearer ${token}`);
-            count = i;
         }
         const response = await request(app)
             .post("/api/translate")
             .send({ inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello, World!\")" })
             .set('Authorization', `Bearer ${token}`);
-        // Verify the 429 status code for the fourth request
+        // Verify the 429 status code for the 11th request
         expect(response.status).toBe(429);
         expect(response.body.error).toBe("Ananas Rate Limit Exceeded");
     });
