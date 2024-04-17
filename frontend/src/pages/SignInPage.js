@@ -1,68 +1,71 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { logInWithEmailAndPassword, signInWithGoogle,signInWithGithub } from '../firebase';
-import {Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Divider, FormGroup, FormControlLabel, Checkbox} from '@mui/material';
+import { auth, logInWithEmailAndPassword, signInWithGoogle, signInWithGithub, RecaptchaVerifier } from '../firebase';
+import { Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Divider, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import GoogleButton from 'react-google-button';
-import GithubButton from 'react-github-login-button/dist/react-github-button'; 
+import GithubButton from 'react-github-login-button/dist/react-github-button';
 import toast from 'react-hot-toast';
 import { useLogin } from '../hooks/useLogIn';
 import { ErrorReport } from '../services/ErrorReport';
 
 const SignInPage = () => {
- 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [remember, setRemember] = useState(false);
-    const {login} = useLogin();
-    const navigate = useNavigate();
 
-    const onSubmitEmailPass = async (event) => {     
-        event.preventDefault();
-        try {
-            const uid = await logInWithEmailAndPassword(email, password);
-            await login(email, uid,remember) 
-            toast.success("Logged in!")
-            navigate("/translate")
-        // Handle successful signup (e.g., redirect to protected content)
-        } catch (error) {
-            console.log(error.message);
-            toast.error(error.message);
-            ErrorReport("Signin page:" + error.message);;
-        }
-      
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [remember, setRemember] = useState(false);
+  const { login } = useLogin();
+  const navigate = useNavigate();
+
+  const onSubmitEmailPass = async () => {
+    try {
+      const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-firebase', { "size": "invisible" });
+      const uid = await logInWithEmailAndPassword(email, password, recaptchaVerifier);
+      await login(email, uid, remember)
+      toast.success("Logged in!")
+      navigate("/translate")
+      recaptchaVerifier.clear();
+      return;
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message);
+      ErrorReport("Signin page:" + error.message);;
     }
-    const onSubmitGoogle = async (event) => {
-      event.preventDefault();
-        try {
-            const {email,uid} = await signInWithGoogle();
-            await login(email,uid,true)
-            toast.success("Logged in!")
-            navigate("/translate")
-        // Handle successful signup (e.g., redirect to protected content)
-        } catch (error) {
-          console.log(error.message);
-          toast.error(error.message);
-          ErrorReport("Signin page:" + error.message);
-        }
+  }
+
+  const onSubmitGoogle = async () => {
+    try {
+      const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-firebase', { "size": "invisible" });
+      const { email, uid } = await signInWithGoogle(recaptchaVerifier);
+      await login(email, uid, true);
+      toast.success("Logged in!");
+      navigate("/translate");
+      recaptchaVerifier.clear();
+      return;
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message);
+      ErrorReport("Signin page:" + error.message);
     }
-    const onSubmitGithub = async (event) => {
-      event.preventDefault();
-        try {
-            const {email,uid} = await signInWithGithub();
-            await login(email,uid,true)
-            toast.success("Logged in!")
-            navigate("/translate")
-        // Handle successful signup (e.g., redirect to protected content)
-        } catch (error) {
-          console.log(error.message);
-          toast.error(error.message);
-          ErrorReport("Signin page:" + error.message);
-        }
+  }
+  const onSubmitGithub = async (event) => {
+    try {
+      const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-firebase', { "size": "invisible" });
+      const { email, uid } = await signInWithGithub(recaptchaVerifier);
+      await login(email, uid, true)
+      toast.success("Logged in!")
+      navigate("/translate")
+      recaptchaVerifier.clear();
+      return;
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message);
+      ErrorReport("Signin page:" + error.message);
     }
- 
+  }
+
   return (
-    <main >        
+    <main >
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -79,53 +82,54 @@ const SignInPage = () => {
           <Typography component="h1" variant="h5">
             Sign In
           </Typography>
-          <Box component="form" noValidate onSubmit={onSubmitEmailPass} sx={{ mt: 3, mb: 2}}>
+          <Box component="form" noValidate onSubmit={onSubmitEmailPass} sx={{ mt: 3, mb: 2 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                    required
-                    fullWidth
-                    type="email"
-                    label="Email address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}  
-                    placeholder="Email address" 
+                  required
+                  fullWidth
+                  type="email"
+                  label="Email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Email address"
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                    required
-                    fullWidth
-                    type="password"
-                    label="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)} 
-                    placeholder="Password"
+                  required
+                  fullWidth
+                  type="password"
+                  label="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
                 />
               </Grid>
               <Grid item xs={12}>
                 <FormGroup>
-                  <FormControlLabel 
-                    margin={5} 
-                    control={<Checkbox/>} 
-                    checked={remember} 
-                    onChange={e=> {
-                        setRemember(e.target.checked)
-                      }} 
-                    label="Remember Me" 
+                  <FormControlLabel
+                    margin={5}
+                    control={<Checkbox />}
+                    checked={remember}
+                    onChange={e => {
+                      setRemember(e.target.checked)
+                    }}
+                    label="Remember Me"
                   />
                 </FormGroup>
               </Grid>
+              <div id="recaptcha-firebase"></div>
               <Grid item xs={12}>
                 <Button
-                type="submit"
-                variant="contained"
-                xs={12}
-                fullWidth
+                  type="submit"
+                  variant="contained"
+                  xs={12}
+                  fullWidth
                 >
                   Log In
                 </Button>
-              </Grid>           
+              </Grid>
               <Grid container marginTop={2} marginBottom={2} marginLeft={2}>
                 <Grid item xs>
                   <Link href="/resetPassword" variant="body2">
@@ -140,38 +144,32 @@ const SignInPage = () => {
                 </Grid>
               </Grid>
             </Grid>
-            <Divider color = "black" />
+            <Divider color="black" />
           </Box>
           <Box marginTop={2}>
             <Grid container spacing={2}></Grid>
             <GoogleButton
-                type="dark"
-                onClick={onSubmitGoogle}
-                variant="contained"
-                title='google-button'
-              >
-                Log In With Google
+
+              type="dark"
+              onClick={onSubmitGoogle}
+              variant="contained"
+              title='google-button'
+            >
+              Log In With Google
             </GoogleButton>
             <GithubButton
-                type="dark"
-                onClick={onSubmitGithub}
-                variant="contained"
-                title='github-button'
-              >
-                Log In With Github
+              type="dark"
+              onClick={onSubmitGithub}
+              variant="contained"
+              title='github-button'
+            >
+              Log In With Github
             </GithubButton>
           </Box>
-          
-          
-
-          
         </Box>
       </Container>
     </main>
-
-    
-
   )
 }
- 
+
 export default SignInPage
