@@ -118,7 +118,7 @@ body {
   .video-frame {
     position: absolute;
     top: 50%;
-    left: 50%;
+    left: 100%;
     transform: translate(-50%, -50%);
     width: 100%; /* Set the iframe width to fill its container */
     height: 100%; /* Set the iframe height to fill its container */
