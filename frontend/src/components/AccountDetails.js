@@ -126,7 +126,7 @@ const AccountDetails = () => {
   const enrollUserMfa = async () => {
     try {
       const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-firebase', { "size": "invisible" });
-      await enrollUserMfaBack(phoneNumber, user, recaptchaVerifier);
+      await enrollUserMfaBack(phoneNumber, recaptchaVerifier);
       recaptchaVerifier.clear();
       handleMobileFormClose();
       return;

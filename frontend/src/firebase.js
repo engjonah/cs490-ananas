@@ -206,8 +206,9 @@ const resetPasswordEmail = async (email) => {
     }
 }
 
-const enrollUserMfaBack = async (phone, user, recaptchaVerifier) => {
+const enrollUserMfaBack = async (phone, recaptchaVerifier) => {
     try {
+        var user = auth.currentUser;
         console.log("get user session")
         console.log(user)
         console.log(multiFactor(user).getSession());
