@@ -16,7 +16,6 @@ export const useLogin = () =>{
             body: JSON.stringify({
                 email,
                 uid,
-                remember,
             }),
             headers:{
                 "Content-type": "application/json"
