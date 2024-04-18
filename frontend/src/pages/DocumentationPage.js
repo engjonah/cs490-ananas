@@ -1,9 +1,33 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './DocumentationPage.css'; // Import CSS for styling
 import userguide from "../assets/AnanasUserGuide.pdf";
 import FAQ from "../components/FAQ";
 
 function DocumentationPage() {
+
+  useEffect(() => {
+    // JavaScript
+    function initializeVideo() {
+      // Get reference to the video container and thumbnail
+      const videoContainer = document.querySelector(".video-container");
+      const thumbnail = videoContainer.querySelector(".video-thumbnail");
+
+      // Add click event listener to the thumbnail
+      thumbnail.addEventListener("click", function() {
+          // Replace the thumbnail with the iframe
+          videoContainer.innerHTML = `
+              <iframe class="video-frame" title="Ananas Walkthrough" 
+              src="https://www.youtube.com/embed/K17iPxd6xAg?autoplay=1" 
+              frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+              referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+              </iframe>
+          `;
+      });
+    }
+
+    // Call the function to initialize video functionality
+    initializeVideo();
+  }, []);
   return (
     <div className="documentation-container">
       <div className="header">
@@ -15,7 +39,7 @@ function DocumentationPage() {
         <h2>User Guide</h2>
         <p><a  href={userguide} target="_blank" rel="noopener noreferrer">Download our user guide</a> or watch the walkthrough below for instructions on how to use this site!</p>
         <div class="video-container">
-          <iframe class="video-frame" title="Ananas Walkthrough" src="https://www.youtube.com/embed/K17iPxd6xAg?si=08ZKWO7rMgK-HvXLtgbNymZ7vqY" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"  allowfullscreen />
+        <img className="video-thumbnail" src="https://i.ytimg.com/vi/K17iPxd6xAg/hqdefault.jpg" alt="Video Thumbnail" />
         </div>
         <FAQ/>
       </div>
