@@ -17,11 +17,12 @@ function DocumentationPage() {
           // Replace the thumbnail with the iframe
           videoContainer.innerHTML = `
               <iframe class="video-frame" title="Ananas Walkthrough" 
-              src="https://www.youtube.com/embed/K17iPxd6xAg?autoplay=1" 
+              src="https://www.youtube.com/embed/K17iPxd6xAg?si=08ZKWO7rMgK-HvXLtgbNymZ7vqY" 
               frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
               referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
               </iframe>
           `;
+
       });
     }
 

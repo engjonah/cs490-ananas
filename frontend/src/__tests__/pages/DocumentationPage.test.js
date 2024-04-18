@@ -1,10 +1,10 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent , screen} from '@testing-library/react';
 import DocumentationPage from '../../pages/DocumentationPage';
 
 describe('DocumentationPage component', () => {
   it('renders all sections correctly', () => {
-    const { container, getByText } = render(<DocumentationPage />);
+    const { container, getByText, getByAltText } = render(<DocumentationPage />);
 
     // Check if the title is rendered
     expect(getByText('Documentation')).toBeInTheDocument();
@@ -28,6 +28,8 @@ describe('DocumentationPage component', () => {
     // Ensures major items from subsections are rendered (excludes FAQ section since it's independently tested)
     const link = getByText('Download our user guide')
     expect(link).toBeInTheDocument()
+    const thumbnail = getByAltText("Video Thumbnail")
+    fireEvent.click(thumbnail)
     const videoElement = container.querySelector('iframe')
     expect(videoElement).toBeInTheDocument()
     expect(videoElement).toHaveAttribute('src', 'https://www.youtube.com/embed/K17iPxd6xAg?si=08ZKWO7rMgK-HvXLtgbNymZ7vqY')
