@@ -36,8 +36,9 @@ const getFeedbackCountByRating = async(req,res) => {
 
 const getFeedback = async(req,res) => {
     try {
-        const allFeedback = await Feedback.find()
-        res.status(200).json({ AllFeedback : allFeedback })
+        const allFeedback = await Feedback.distinct('review')
+        const filteredFeedback = allFeedback.filter(feedback => feedback.trim() !== "");
+        res.status(200).json({ AllFeedback: filteredFeedback });
 
     } catch (error) {
         console.log(`Error occurred: ${error.message}`);
