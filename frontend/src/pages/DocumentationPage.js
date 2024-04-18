@@ -10,7 +10,7 @@ function DocumentationPage() {
     function initializeVideo() {
       // Get reference to the video container and thumbnail
       const videoContainer = document.querySelector(".video-container");
-      const thumbnail = videoContainer.querySelector(".video-thumbnail");
+      const thumbnail = videoContainer.querySelector(".video-frame");
 
       // Add click event listener to the thumbnail
       thumbnail.addEventListener("click", function() {
@@ -40,7 +40,7 @@ function DocumentationPage() {
         <h2>User Guide</h2>
         <p><a  href={userguide} target="_blank" rel="noopener noreferrer">Download our user guide</a> or watch the walkthrough below for instructions on how to use this site!</p>
         <div class="video-container">
-        <img className="video-thumbnail" src="https://i.ytimg.com/vi/K17iPxd6xAg/hqdefault.jpg" alt="Video Thumbnail" />
+        <img className="video-frame" src="https://i.ytimg.com/vi/K17iPxd6xAg/hqdefault.jpg" alt="Video Thumbnail" />
         </div>
         <FAQ/>
       </div>
