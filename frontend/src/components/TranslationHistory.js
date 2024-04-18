@@ -15,6 +15,7 @@ import toast from 'react-hot-toast';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { ErrorReport } from '../services/ErrorReport';
 import { nameToLanguage } from '../constants'
+import { GetUID } from '../services/UserInfo';
 
 const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onEdit }) => {
   const { inputLang, outputLang, inputCode, outputCode, status, translatedAt } = translation;
@@ -109,7 +110,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
   const [sortOrder, setSortOrder] = useState('desc'); // 'desc' for descending, 'asc' for ascending
   const [selectedInputLanguages, setSelectedInputLanguages] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8]);
   const [selectedOutputLanguages, setSelectedOutputLanguages] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8]);
-  const userId = JSON.parse(localStorage.getItem("user"))?.uid;
+  const userId = GetUID();
   const {user} = useAuthContext();
   const [anchorEl, setAnchorEl] = useState(null);
   const [clearMenuOpen, setClearMenuOpen] = useState(false);
