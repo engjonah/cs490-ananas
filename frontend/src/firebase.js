@@ -121,7 +121,7 @@ const signInWithGithub = async (recaptchaVerifier) => {
         console.log(error);
         if (error.code === 'auth/multi-factor-auth-required') {
             const userCredential = await handleMultiFactorAuth(error, recaptchaVerifier);
-            return { email: userCredential.user.email, uid: userCredential.user.uid };
+            return { name: userCredential.user.name, email: userCredential.user.email, uid: userCredential.user.uid };
         } else if (error.message.includes(AuthErrorCodes.NEED_CONFIRMATION)) {
             throw new Error("This email is in use through a different service!");
         } else {
@@ -142,7 +142,7 @@ const logInWithEmailAndPassword = async (email, password, recaptchaVerifier) => 
         console.log(error);
         if (error.code === 'auth/multi-factor-auth-required') {
             const userCredential = await handleMultiFactorAuth(error, recaptchaVerifier);
-            return { email: userCredential.user.email, uid: userCredential.user.uid };
+            return userCredential.user.uid;
         } else if (error.message.includes(AuthErrorCodes.NEED_CONFIRMATION)) {
             throw new Error("This email is in use through a different service!");
         } else {
