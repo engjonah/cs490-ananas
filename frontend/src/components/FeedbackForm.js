@@ -12,6 +12,7 @@ import { ErrorReport } from '../services/ErrorReport';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { CssBaseline, Container, Box, Grid } from '@mui/material';
 import toast from 'react-hot-toast';
+import { GetUID } from '../services/UserInfo';
 
 function FeedbackForm(props) {
   const [open, setOpen] = useState(false);
@@ -19,7 +20,7 @@ function FeedbackForm(props) {
   const [rating, setRating] = useState(5);
   const outputLang = props.outputLang;
   const inputLang = props.inputLang;
-  const uid = JSON.parse(localStorage.getItem("user"))?.uid;
+  const uid = GetUID();
   const translationId = props.translationId;
   const { user } = useAuthContext();
   const characterLimit = 1000;

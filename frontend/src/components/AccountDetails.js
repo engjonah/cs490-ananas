@@ -8,6 +8,7 @@ import { useLogout } from '../hooks/useLogOut';
 import { ErrorReport } from '../services/ErrorReport';
 import { useAuthContext } from '../hooks/useAuthContext';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import { GetUID } from '../services/UserInfo';
 
 const AccountDetails = () => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ const AccountDetails = () => {
   const [newPassword, setNewPassword] = useState('');
   const [newName, setNewName] = useState('');
   const [verifyNewPassword, setVerifyNewPassword] = useState('');
-  const userId = JSON.parse(localStorage.getItem("user")).uid;
+  const userId = GetUID();
   const [isFirstParty, setIsFirstParty] = useState(null);
   const {user} = useAuthContext();
 
@@ -90,8 +91,6 @@ const AccountDetails = () => {
   };
 
   const handleUpdateName = () => {
-    const userId = JSON.parse(localStorage.getItem("user")).uid;
-
     if (newName) {
       fetch(`${ApiUrl}/api/account/${userId}`, {
         method: 'PUT',
