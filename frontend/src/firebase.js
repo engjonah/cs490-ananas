@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, multiFactor, getMultiFactorResolver, RecaptchaVerifier, PhoneMultiFactorGenerator, signInWithPhoneNumber, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, AuthErrorCodes, updatePassword, deleteUser, sendPasswordResetEmail, PhoneAuthProvider } from "firebase/auth";
+import { getAuth, sendEmailVerification, multiFactor, getMultiFactorResolver, RecaptchaVerifier, PhoneMultiFactorGenerator, signInWithPhoneNumber, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, AuthErrorCodes, updatePassword, deleteUser, sendPasswordResetEmail, PhoneAuthProvider } from "firebase/auth";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -81,6 +81,7 @@ const registerWithEmailAndPassword = async (name, email, password, password2) =>
         }
         const response = await createUserWithEmailAndPassword(auth, email, password)
         const user = response.user
+        await sendEmailVerification(user);
         return user.uid
         // await registerUserToMongo(name, email, user.uid)
     } catch (e) {
@@ -104,6 +105,7 @@ const signInWithGoogle = async (recaptchaVerifier) => {
     } catch (error) {
         console.log(error);
         if (error.code === 'auth/multi-factor-auth-required') {
+            console.log('auth/multi-factor-auth-required');
             const userCredential = await handleMultiFactorAuth(error, recaptchaVerifier);
             return { email: userCredential.user.email, uid: userCredential.user.uid };
         } else if (error.message.includes(AuthErrorCodes.NEED_CONFIRMATION)) {
@@ -145,9 +147,12 @@ const logInWithEmailAndPassword = async (email, password, recaptchaVerifier) => 
             return userCredential.user.uid;
         } else if (error.message.includes(AuthErrorCodes.NEED_CONFIRMATION)) {
             throw new Error("This email is in use through a different service!");
-        } else {
+        }else if (error.name === 'TimeoutError') {
+            console.error("Timeout occurred:", error);
+            throw new Error("Request timed out, please try again later.");
+          } else {
             throw error;
-        }
+          }
     }
 }
 
@@ -202,51 +207,31 @@ const resetPasswordEmail = async (email) => {
 
     } catch (error) {
         // An error occurred while updating password
-        console.error("Error updating password:", error);
+        throw new Error("Error updating password:", error);
     }
 }
 
 const enrollUserMfaBack = async (phone, recaptchaVerifier) => {
     try {
-        var user = auth.currentUser;
-        console.log("get user session")
-        console.log(user)
-        console.log(multiFactor(user).getSession());
-        /*multiFactor(user).getSession().then(function (multiFactorSession) {
-            // Specify the phone number and pass the MFA session.
-            const phoneInfoOptions = {
-                phoneNumber: phone,
-                session: multiFactorSession
-            };
-
-            const phoneAuthProvider = new PhoneAuthProvider(auth);
-            // Send SMS verification code.
-            return phoneAuthProvider.verifyPhoneNumber(phoneInfoOptions, recaptchaVerifier);
-        }).then(function (verificationId) {
-            const verificationCode = window.prompt('Please enter the verification code sent to your device');
-            const cred = PhoneAuthProvider.credential(verificationId, verificationCode);
-            const multiFactorAssertion = PhoneMultiFactorGenerator.assertion(cred);
-
-            // Complete enrollment.
-            return multiFactor(user).enroll(multiFactorAssertion, "Phone");
-        });
-        
-        const multiFactorSession = multiFactor(user).getSession();
-        console.log("session got")
+        var user = auth.currentUser;        
+        const multiFactorSession = await multiFactor(user).getSession();
         const phoneInfoOptions = {
             phoneNumber: phone,
             session: multiFactorSession
         };
         const phoneAuthProvider = new PhoneAuthProvider(auth);
-
-        phoneAuthProvider.verifyPhoneNumber(phoneInfoOptions, recaptchaVerifier);
         const verificationId = await phoneAuthProvider.verifyPhoneNumber(phoneInfoOptions, recaptchaVerifier);
         const verificationCode = window.prompt('Please enter the verification code sent to your device');
         const cred = PhoneAuthProvider.credential(verificationId, verificationCode);
         const multiFactorAssertion = PhoneMultiFactorGenerator.assertion(cred);
-        return multiFactor(user).enroll(multiFactorAssertion, user.displayName);*/
+        return multiFactor(user).enroll(multiFactorAssertion, 'phone');
     } catch (error) {
-        console.error("Could not setup mfa: ", error);
+        if(error.code === 'auth/unverified-email'){
+            await sendEmailVerification(user);
+            throw new Error("Email was not verified: ", error);
+        }else{
+            throw new Error("Could not setup mfa: ", error);
+        }
     }
 }
 

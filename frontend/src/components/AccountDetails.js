@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ApiUrl from '../ApiUrl';
-import { auth, changePassword, firebaseOnlyUser, deleteAccount, RecaptchaVerifier, enrollUserMfaBack } from '../firebase';
+import { changePassword, firebaseOnlyUser, deleteAccount, enrollUserMfaBack } from '../firebase';
 import { Button, Typography, Container, Avatar, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import { useLogout } from '../hooks/useLogOut';
@@ -9,6 +10,7 @@ import { ErrorReport } from '../services/ErrorReport';
 import { useAuthContext } from '../hooks/useAuthContext';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { GetUID } from '../services/UserInfo';
+import { useRecaptcha } from "../hooks/useRecaptcha";
 
 
 const AccountDetails = () => {
@@ -26,6 +28,7 @@ const AccountDetails = () => {
   const [isFirstParty, setIsFirstParty] = useState(null);
   const { user } = useAuthContext();
   const [phoneNumber, setPhoneNumber] = useState('');
+  const recaptcha = useRecaptcha('recaptcha-container');
 
   useEffect(() => {
     async function checkFirebaseOnlyUser() {
@@ -56,6 +59,14 @@ const AccountDetails = () => {
         setError(error.message);
       });
   }, [userId, user.token]);
+
+  const formatPhoneNumber = (value) => {
+    const phoneNumber = parsePhoneNumberFromString(value, 'US');
+    if (phoneNumber) {
+      return phoneNumber.formatInternational();
+    }
+    return value;
+  };
 
   const handleMobileFormOpen = () => {
     setMobileFormOpen(true);
@@ -125,15 +136,17 @@ const AccountDetails = () => {
 
   const enrollUserMfa = async () => {
     try {
-      const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-firebase', { "size": "invisible" });
-      await enrollUserMfaBack(phoneNumber, recaptchaVerifier);
-      recaptchaVerifier.clear();
+      const formattedNumber = formatPhoneNumber(phoneNumber);
+      console.log('Formatted Phone Number:', formattedNumber);
+      await enrollUserMfaBack(formattedNumber, recaptcha);
       handleMobileFormClose();
+      recaptcha.clear();
       return;
     } catch (error) {
       console.log(error.message);
       toast.error(error.message);
       ErrorReport("Error in enroll MFA:" + error.message);
+      recaptcha.clear();
     }
   };
 
@@ -247,9 +260,8 @@ const AccountDetails = () => {
             </Button>
           </DialogActions>
         </Dialog>
-
+        <div id="recaptcha-container"></div>
         <Dialog open={mobileFormOpen} onClose={handleMobileFormClose}>
-          <div id="recaptcha-firebase"></div>
           <DialogTitle>Update Phone Number</DialogTitle>
           <DialogContent>
             <TextField
@@ -261,13 +273,13 @@ const AccountDetails = () => {
               value={phoneNumber}
               onChange={e => setPhoneNumber(e.target.value)}
             />
-            <div id="recaptcha-container"></div>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleMobileFormClose}>Cancel</Button>
             <Button onClick={enrollUserMfa}>Verify Phone</Button>
           </DialogActions>
         </Dialog>
+
 
         <Dialog open={nameUpdateFormOpen} onClose={handleNameUpdateClose} fullWidth={true}>
           <DialogTitle>Change Name</DialogTitle>

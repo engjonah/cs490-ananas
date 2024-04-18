@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { auth, logInWithEmailAndPassword, signInWithGoogle, signInWithGithub, RecaptchaVerifier } from '../firebase';
+import { logInWithEmailAndPassword, signInWithGoogle, signInWithGithub } from '../firebase';
 import { Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Divider, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import GoogleButton from 'react-google-button';
@@ -8,6 +8,7 @@ import GithubButton from 'react-github-login-button/dist/react-github-button';
 import toast from 'react-hot-toast';
 import { useLogin } from '../hooks/useLogIn';
 import { ErrorReport } from '../services/ErrorReport';
+import {useRecaptcha} from "../hooks/useRecaptcha";
 
 const SignInPage = () => {
 
@@ -16,16 +17,14 @@ const SignInPage = () => {
   const [remember, setRemember] = useState(false);
   const { login } = useLogin();
   const navigate = useNavigate();
+  const recaptchaVerifier = useRecaptcha('recaptcha-container');
 
   const onSubmitEmailPass = async () => {
     try {
-      const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-firebase', { "size": "invisible" });
       const uid = await logInWithEmailAndPassword(email, password, recaptchaVerifier);
-      await login(email, uid, remember)
-      toast.success("Logged in!")
-      navigate("/translate")
-      recaptchaVerifier.clear();
-      return;
+      await login(email, uid, remember);
+      toast.success("Logged in!");
+      navigate("/translate");
     } catch (error) {
       console.log(error.message);
       toast.error(error.message);
@@ -35,13 +34,10 @@ const SignInPage = () => {
 
   const onSubmitGoogle = async () => {
     try {
-      const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-firebase', { "size": "invisible" });
       const { email, uid } = await signInWithGoogle(recaptchaVerifier);
-      await login(email, uid, true);
+      await login(email, uid, remember);
       toast.success("Logged in!");
       navigate("/translate");
-      recaptchaVerifier.clear();
-      return;
     } catch (error) {
       console.log(error.message);
       toast.error(error.message);
@@ -50,13 +46,10 @@ const SignInPage = () => {
   }
   const onSubmitGithub = async (event) => {
     try {
-      const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-firebase', { "size": "invisible" });
       const { email, uid } = await signInWithGithub(recaptchaVerifier);
-      await login(email, uid, true)
-      toast.success("Logged in!")
+      await login(email, uid, remember);
+      toast.success("Logged in!");
       navigate("/translate")
-      recaptchaVerifier.clear();
-      return;
     } catch (error) {
       console.log(error.message);
       toast.error(error.message);
@@ -82,7 +75,7 @@ const SignInPage = () => {
           <Typography component="h1" variant="h5">
             Sign In
           </Typography>
-          <Box component="form" noValidate onSubmit={onSubmitEmailPass} sx={{ mt: 3, mb: 2 }}>
+          <Box component="form" noValidate sx={{ mt: 3, mb: 2 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -119,10 +112,10 @@ const SignInPage = () => {
                   />
                 </FormGroup>
               </Grid>
-              <div id="recaptcha-firebase"></div>
+              <div id="recaptcha-container"></div>
               <Grid item xs={12}>
                 <Button
-                  type="submit"
+                  onClick={onSubmitEmailPass}
                   variant="contained"
                   xs={12}
                   fullWidth
