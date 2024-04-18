@@ -285,6 +285,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
     setInputLang(nameToLanguage[translations[index].inputLang] || 0)
     setOutputLang(nameToLanguage[translations[index].outputLang] || 0)
     setEditCalled(false)
+    window.scrollTo(0, 0);
   };
 
   const handleChangePage = (event, newPage) => {
