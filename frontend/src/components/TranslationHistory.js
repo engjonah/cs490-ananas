@@ -20,8 +20,8 @@ import { GetUID } from '../services/UserInfo';
 const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onEdit }) => {
   const { inputLang, outputLang, inputCode, outputCode, status, translatedAt } = translation;
 
-  const inputLanguageSyntax = languageMap.find((item) => item.name == inputLang).syntaxName;
-  const outputLanguageSyntax = languageMap.find((item) => item.name == outputLang).syntaxName;
+  const inputLanguageSyntax = languageMap.find((item) => item.name === inputLang).syntaxName;
+  const outputLanguageSyntax = languageMap.find((item) => item.name === outputLang).syntaxName;
 
   function handleEditorDidMount(editor, monaco) {
     monaco.editor.defineTheme('gray', {
