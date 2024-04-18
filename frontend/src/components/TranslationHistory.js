@@ -131,6 +131,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
         .then(data => {
           const sortedTranslations = data.Translations.sort((a, b) => new Date(b.translatedAt) - new Date(a.translatedAt));
           setTranslations(sortedTranslations);
+          setExpandedIndex(null);
         })
         .catch(error => {
           ErrorReport("Translation History Fetch:" + error.message);

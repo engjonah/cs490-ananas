@@ -62,7 +62,7 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
       inherit: true,
       rules: [],
       colors: {
-        'editor.background': '#f5f5f5',
+        'editor.background': '#ffffff',
       },
     });
     monaco.editor.setTheme('gray')
@@ -76,7 +76,7 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
         method: "POST",
         body: JSON.stringify({
           uid: user.uid,
-          inputLang: inputLang === "this unknown language"? "Detect Language" : inputLang,
+          inputLang: inputLang === "this unknown language"? "Unknown" : inputLang,
           outputLang: outputLang,
           inputCode: inputCode,
           outputCode: outputCode,
