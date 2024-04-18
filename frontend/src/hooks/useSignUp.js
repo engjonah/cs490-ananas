@@ -27,10 +27,8 @@ export const useSignup = () =>{
             ErrorReport("useSignUp:" + json.error);
             throw Error(json.error);
         }else{
-            console.log(json.token);
             localStorage.setItem("user", JSON.stringify(json));
             dispatch({type:'LOGIN',payload: json})
-            console.log("User registered");
             setIsLoading(false)
         }
     }
