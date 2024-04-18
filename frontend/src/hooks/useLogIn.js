@@ -28,7 +28,12 @@ export const useLogin = () =>{
             throw Error(json.error);
         }else{
             console.log(json.token);
-            localStorage.setItem("user", JSON.stringify(json));
+            if (remember) {
+              localStorage.setItem("user", JSON.stringify(json));
+            }
+            else {
+              sessionStorage.setItem("user", JSON.stringify(json));
+            }
             dispatch({type:'LOGIN',payload: json})
             console.log("User logged in");
             setIsLoading(false)
