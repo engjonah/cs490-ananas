@@ -14,11 +14,14 @@ import Editor from '@monaco-editor/react';
 import toast from 'react-hot-toast';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { ErrorReport } from '../services/ErrorReport';
-import { nameToLanguage } from '../constants'
+import { nameToLanguage, languageMap } from '../constants'
 import { GetUID } from '../services/UserInfo';
 
 const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onEdit }) => {
   const { inputLang, outputLang, inputCode, outputCode, status, translatedAt } = translation;
+
+  const inputLanguageSyntax = languageMap.find((item) => item.name == inputLang).syntaxName;
+  const outputLanguageSyntax = languageMap.find((item) => item.name == outputLang).syntaxName;
 
   function handleEditorDidMount(editor, monaco) {
     monaco.editor.defineTheme('gray', {
@@ -70,7 +73,7 @@ const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onE
           <Container style={{ "borderRadius": '15px', "padding": "6px", "backgroundColor": "#ffffff" }}>
             <Editor 
               height="15vh" 
-              defaultLanguage={inputLang} 
+              defaultLanguage={inputLanguageSyntax} 
               defaultValue={inputCode} 
               options={{ "readOnly": true }}
               onMount={handleEditorDidMount}
@@ -84,7 +87,7 @@ const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onE
           <Container style={{ "borderRadius": '15px', "padding": "6px", "backgroundColor": "#ffffff" }}>
             <Editor 
               height="15vh" 
-              defaultLanguage={inputLang} 
+              defaultLanguage={outputLanguageSyntax} 
               defaultValue={outputCode} 
               options={{ "readOnly": true }}
               onMount={handleEditorDidMount}
