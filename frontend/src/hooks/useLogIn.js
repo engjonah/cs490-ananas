@@ -27,7 +27,6 @@ export const useLogin = () =>{
             ErrorReport("useLogin:" + json.error);
             throw Error(json.error);
         }else{
-            console.log(json.token);
             if (remember) {
               localStorage.setItem("user", JSON.stringify(json));
             }
@@ -35,7 +34,6 @@ export const useLogin = () =>{
               sessionStorage.setItem("user", JSON.stringify(json));
             }
             dispatch({type:'LOGIN',payload: json})
-            console.log("User logged in");
             setIsLoading(false)
         }
     }
