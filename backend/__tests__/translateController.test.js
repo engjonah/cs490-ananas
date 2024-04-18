@@ -9,8 +9,8 @@ const { cache, clearCache } = require('../controllers/translateController.js')
 const baseURL = 'https://api.openai.com'
 const endpoint = '/v1/chat/completions'
 
-function generateMockToken() {
-    return jwt.sign({ uid: 'mockUserId' }, process.env.JWT_TOKEN_KEY, { expiresIn: '1h' });;
+function generateMockToken(id = 'default') {
+    return jwt.sign({ uid: `mockUserId${id}` }, process.env.JWT_TOKEN_KEY, { expiresIn: '1h' });
 }
   
 beforeEach(() => {
@@ -37,7 +37,7 @@ describe('OpenAI Token Authentication', () => {
     afterAll(() => {
         process.env = originalEnv;
     });
-    const token = generateMockToken();
+    const token = generateMockToken('InvalidTest');
     it('should return 500 status code for invalid token', async() => {
         return await request(app)
         .post("/api/translate")
@@ -48,7 +48,7 @@ describe('OpenAI Token Authentication', () => {
 })
 
 describe('/api/translate real API requests', () => {
-    const token = generateMockToken();
+    const token = generateMockToken('RealTest');
     it("should return 200 status code and translation for successful translation and save translation and cache results", async () =>{
         Translation.prototype.save = jest.fn()
         return await request(app)
@@ -67,11 +67,11 @@ describe('/api/translate real API requests', () => {
           return new Promise(r => setTimeout(r, 1000))
         })
       }))
-      const token = generateMockToken();
+      const tokenMulti = generateMockToken('QueueTest');
       request(app)
           .post("/api/translate")
           .send({inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello world\")"})
-          .set('Authorization', `Bearer ${token}`)
+          .set('Authorization', `Bearer ${tokenMulti}`)
           .then(response => {
             expect(response.body.translation).not.toBe("")
           });
@@ -98,7 +98,7 @@ describe('/api/translate mocked API requests', () => {
     afterEach(() => {
         nock.cleanAll()
     })
-    const token = generateMockToken();
+    const token = generateMockToken('MockTest');
     it("should return 429 status code with error for rate limit exceeded", async () => {
         nock(baseURL)
         .post(endpoint)
@@ -142,3 +142,23 @@ describe('/api/translate mocked API requests', () => {
         })
     })
 })
+
+describe('/api/translate rate limiting', () => {
+    const token = generateMockToken('RateLimit');
+    it("should return 429 status code on the 11th attempt within a minute due to rate limiting", async () => {
+        //send 10 requests to endpoint
+        for(let i=0; i<10; i++){
+            await request(app)
+                .post("/api/translate")
+                .send({ inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello, World!\")" })
+                .set('Authorization', `Bearer ${token}`);
+        }
+        const response = await request(app)
+            .post("/api/translate")
+            .send({ inputLang: "Python", outputLang: "Java", inputCode: "print(\"Hello, World!\")" })
+            .set('Authorization', `Bearer ${token}`);
+        // Verify the 429 status code for the 11th request
+        expect(response.status).toBe(429);
+        expect(response.body.error).toBe("Ananas Rate Limit Exceeded");
+    });
+});
