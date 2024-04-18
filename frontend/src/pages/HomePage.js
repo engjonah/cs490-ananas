@@ -12,15 +12,14 @@ import {
 import { Bar } from 'react-chartjs-2';
 import ApiUrl from '../ApiUrl';
 import { Button, Grid } from '@mui/material';
-import { useAuthContext } from '../hooks/useAuthContext';
 import './HomePage.css'; // Import the CSS file for HomePage
 import { ErrorReport } from '../services/ErrorReport';
+import FeedbackDisplay from '../components/FeedbackDisplay';
 
 
 
 
 const HomePage = () => {
-  const { user } = useAuthContext();
   const [ratingCounts, setRatingCounts] = useState([0,0,0,0,0]);
   const [averageRating, setAverageRating] = useState(0);
   const [error, setError] = useState(null);
@@ -28,11 +27,7 @@ const HomePage = () => {
 
 
   useEffect(() => {
-    fetch(`${ApiUrl}/api/feedback/metrics`, {
-      headers: {
-        'Authorization':`Bearer ${user.token}`
-      }
-    })
+    fetch(`${ApiUrl}/api/feedbackDisplay/metrics`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Error retrieving feedback');
@@ -48,7 +43,7 @@ const HomePage = () => {
         setError(error.message);
         console.log(error);
       });
-  }, [user.token]); 
+  }, []); 
 
   ChartJS.register(
     CategoryScale,
@@ -128,6 +123,20 @@ const HomePage = () => {
             data={data}/>
         </Grid>
       </Grid>
+      <Grid container spacing={2} justifyContent="center" alignItems="center" className="HomePage-content">
+        <Grid item xs={12} sm={6}>
+          <h3>Average Rating: {averageRating} / 5</h3>
+         
+        </Grid>
+      </Grid>
+
+      <Grid container spacing={2} justifyContent="center" alignItems="center" className="HomePage-content">
+        <Grid item xs={12} sm={6}>
+          <FeedbackDisplay/>
+        </Grid>
+      </Grid>
+
+      
     </div>
   );
 }
