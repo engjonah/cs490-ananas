@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import TranslatePage from './pages/TranslatePage';
 import AccountPage from './pages/AccountPage';
@@ -10,13 +10,21 @@ import Navbar from './components/Navbar';
 import {Toaster} from 'react-hot-toast';
 import { useAuthContext } from './hooks/useAuthContext';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import { initRecaptcha } from './firebase';
+
+
 function App() {
   const {user} = useAuthContext();
+  useEffect(() => {
+    initRecaptcha();
+  }, []);
+
   return (
     <Router>
       <div>
         <Toaster/>
         <Navbar />
+        <div id="recaptcha-container" style={{ visibility: 'hidden' }}></div>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/documentation" element={<DocumentationPage />} />

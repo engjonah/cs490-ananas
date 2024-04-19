@@ -39,6 +39,22 @@ const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
 
+let verifier;
+function initRecaptcha() {
+    verifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        size: 'invisible'
+    });
+}
+
+function setRecaptchaVisibility(visible) {
+    const element = document.getElementById('recaptcha-container');
+    if (element) {
+        element.style.visibility = visible ? 'visible' : 'hidden';
+    } else {
+        console.error('Recaptcha container not found in the DOM.');
+    }
+}
+
 
 const thirdPartySignin = async (provider) => {
     try {
@@ -50,7 +66,7 @@ const thirdPartySignin = async (provider) => {
     }
 }
 
-const handleMultiFactorAuth = async (error, recaptchaVerifier) => {
+const handleMultiFactorAuth = async (error) => {
     const resolver = getMultiFactorResolver(auth, error);
     if (!resolver.hints || resolver.hints.length === 0 || resolver.hints[0].factorId !== PhoneMultiFactorGenerator.FACTOR_ID) {
         throw new Error("MFA is required but no methods are available.");
@@ -60,7 +76,7 @@ const handleMultiFactorAuth = async (error, recaptchaVerifier) => {
         session: resolver.session
     };
     const phoneAuthProvider = new PhoneAuthProvider(auth);
-    const verificationId = await phoneAuthProvider.verifyPhoneNumber(phoneInfoOptions, recaptchaVerifier);
+    const verificationId = await phoneAuthProvider.verifyPhoneNumber(phoneInfoOptions, verifier);
     const verificationCode = window.prompt('Please enter the verification code sent to your device');
     const cred = PhoneAuthProvider.credential(verificationId, verificationCode);
     const multiFactorAssertion = PhoneMultiFactorGenerator.assertion(cred);
@@ -98,7 +114,7 @@ const registerWithEmailAndPassword = async (name, email, password, password2) =>
     }
 }
 
-const signInWithGoogle = async (recaptchaVerifier) => {
+const signInWithGoogle = async () => {
     try {
         const { name, email, uid } = await thirdPartySignin(googleProvider);
         return { name, email, uid };
@@ -106,7 +122,7 @@ const signInWithGoogle = async (recaptchaVerifier) => {
         console.log(error);
         if (error.code === 'auth/multi-factor-auth-required') {
             console.log('auth/multi-factor-auth-required');
-            const userCredential = await handleMultiFactorAuth(error, recaptchaVerifier);
+            const userCredential = await handleMultiFactorAuth(error);
             return { email: userCredential.user.email, uid: userCredential.user.uid };
         } else if (error.message.includes(AuthErrorCodes.NEED_CONFIRMATION)) {
             throw new Error("This email is in use through a different service!");
@@ -115,14 +131,14 @@ const signInWithGoogle = async (recaptchaVerifier) => {
         }
     }
 };
-const signInWithGithub = async (recaptchaVerifier) => {
+const signInWithGithub = async () => {
     try {
         const { name, email, uid } = await thirdPartySignin(githubProvider);
         return { name: name, email: email, uid: uid }
     } catch (error) {
         console.log(error);
         if (error.code === 'auth/multi-factor-auth-required') {
-            const userCredential = await handleMultiFactorAuth(error, recaptchaVerifier);
+            const userCredential = await handleMultiFactorAuth(error);
             return { name: userCredential.user.name, email: userCredential.user.email, uid: userCredential.user.uid };
         } else if (error.message.includes(AuthErrorCodes.NEED_CONFIRMATION)) {
             throw new Error("This email is in use through a different service!");
@@ -132,7 +148,7 @@ const signInWithGithub = async (recaptchaVerifier) => {
     }
 }
 
-const logInWithEmailAndPassword = async (email, password, recaptchaVerifier) => {
+const logInWithEmailAndPassword = async (email, password) => {
     try {
         if (email === '' || password === '') {
             throw Error("Please fill in all fields!")
@@ -143,16 +159,16 @@ const logInWithEmailAndPassword = async (email, password, recaptchaVerifier) => 
     } catch (error) {
         console.log(error);
         if (error.code === 'auth/multi-factor-auth-required') {
-            const userCredential = await handleMultiFactorAuth(error, recaptchaVerifier);
+            const userCredential = await handleMultiFactorAuth(error);
             return userCredential.user.uid;
         } else if (error.message.includes(AuthErrorCodes.NEED_CONFIRMATION)) {
             throw new Error("This email is in use through a different service!");
-        }else if (error.name === 'TimeoutError') {
+        } else if (error.name === 'TimeoutError') {
             console.error("Timeout occurred:", error);
             throw new Error("Request timed out, please try again later.");
-          } else {
+        } else {
             throw error;
-          }
+        }
     }
 }
 
@@ -211,28 +227,41 @@ const resetPasswordEmail = async (email) => {
     }
 }
 
-const enrollUserMfaBack = async (phone, recaptchaVerifier) => {
+const enrollUserMfaBack = async (phone) => {
     try {
-        var user = auth.currentUser;        
+        var user = auth.currentUser;
         const multiFactorSession = await multiFactor(user).getSession();
         const phoneInfoOptions = {
             phoneNumber: phone,
             session: multiFactorSession
         };
         const phoneAuthProvider = new PhoneAuthProvider(auth);
-        const verificationId = await phoneAuthProvider.verifyPhoneNumber(phoneInfoOptions, recaptchaVerifier);
+        const verificationId = await phoneAuthProvider.verifyPhoneNumber(phoneInfoOptions, verifier);
         const verificationCode = window.prompt('Please enter the verification code sent to your device');
         const cred = PhoneAuthProvider.credential(verificationId, verificationCode);
         const multiFactorAssertion = PhoneMultiFactorGenerator.assertion(cred);
         return multiFactor(user).enroll(multiFactorAssertion, 'phone');
     } catch (error) {
-        if(error.code === 'auth/unverified-email'){
+        if (error.code === 'auth/unverified-email') {
             await sendEmailVerification(user);
             throw new Error("Email was not verified: ", error);
-        }else{
+        } else {
             throw new Error("Could not setup mfa: ", error);
         }
     }
 }
 
-export { app, auth, registerWithEmailAndPassword, signInWithGoogle, signInWithGithub, logInWithEmailAndPassword, changePassword, firebaseOnlyUser, deleteAccount, resetPasswordEmail, RecaptchaVerifier, signInWithPhoneNumber, enrollUserMfaBack };
+function checkUserMFA() {
+    var user = auth.currentUser;
+    if (user) {
+        // Check if there are any enrolled factors
+        const mfaEnabled = user.reloadUserInfo && user.reloadUserInfo.mfaInfo && user.reloadUserInfo.mfaInfo.length > 0;
+        return mfaEnabled;
+    } else {
+        // If no user is signed in, return false
+        console.error('No user is currently signed in.');
+        return false;
+    }
+}
+
+export { app, auth, checkUserMFA, setRecaptchaVisibility, initRecaptcha, registerWithEmailAndPassword, signInWithGoogle, signInWithGithub, logInWithEmailAndPassword, changePassword, firebaseOnlyUser, deleteAccount, resetPasswordEmail, RecaptchaVerifier, signInWithPhoneNumber, enrollUserMfaBack };

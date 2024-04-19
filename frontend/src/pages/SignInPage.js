@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { logInWithEmailAndPassword, signInWithGoogle, signInWithGithub } from '../firebase';
+import { setRecaptchaVisibility, logInWithEmailAndPassword, signInWithGoogle, signInWithGithub } from '../firebase';
 import { Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Divider, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import GoogleButton from 'react-google-button';
@@ -8,7 +8,6 @@ import GithubButton from 'react-github-login-button/dist/react-github-button';
 import toast from 'react-hot-toast';
 import { useLogin } from '../hooks/useLogIn';
 import { ErrorReport } from '../services/ErrorReport';
-import {useRecaptcha} from "../hooks/useRecaptcha";
 
 const SignInPage = () => {
 
@@ -17,11 +16,11 @@ const SignInPage = () => {
   const [remember, setRemember] = useState(false);
   const { login } = useLogin();
   const navigate = useNavigate();
-  const recaptchaVerifier = useRecaptcha('recaptcha-container');
 
   const onSubmitEmailPass = async () => {
+    setRecaptchaVisibility('visible');
     try {
-      const uid = await logInWithEmailAndPassword(email, password, recaptchaVerifier);
+      const uid = await logInWithEmailAndPassword(email, password);
       await login(email, uid, remember);
       toast.success("Logged in!");
       navigate("/translate");
@@ -30,11 +29,13 @@ const SignInPage = () => {
       toast.error(error.message);
       ErrorReport("Signin page:" + error.message);;
     }
+    setRecaptchaVisibility('hidden');
   }
 
   const onSubmitGoogle = async () => {
+    setRecaptchaVisibility('visible');
     try {
-      const { email, uid } = await signInWithGoogle(recaptchaVerifier);
+      const { email, uid } = await signInWithGoogle();
       await login(email, uid, remember);
       toast.success("Logged in!");
       navigate("/translate");
@@ -43,10 +44,12 @@ const SignInPage = () => {
       toast.error(error.message);
       ErrorReport("Signin page:" + error.message);
     }
+    setRecaptchaVisibility('hidden');
   }
   const onSubmitGithub = async (event) => {
+    setRecaptchaVisibility('visible');
     try {
-      const { email, uid } = await signInWithGithub(recaptchaVerifier);
+      const { email, uid } = await signInWithGithub();
       await login(email, uid, remember);
       toast.success("Logged in!");
       navigate("/translate")
@@ -55,6 +58,7 @@ const SignInPage = () => {
       toast.error(error.message);
       ErrorReport("Signin page:" + error.message);
     }
+    setRecaptchaVisibility('hidden');
   }
 
   return (
@@ -112,7 +116,6 @@ const SignInPage = () => {
                   />
                 </FormGroup>
               </Grid>
-              <div id="recaptcha-container"></div>
               <Grid item xs={12}>
                 <Button
                   onClick={onSubmitEmailPass}

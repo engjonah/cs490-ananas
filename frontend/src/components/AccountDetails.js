@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ApiUrl from '../ApiUrl';
-import { changePassword, firebaseOnlyUser, deleteAccount, enrollUserMfaBack } from '../firebase';
+import { checkUserMFA, setRecaptchaVisibility, changePassword, firebaseOnlyUser, deleteAccount, enrollUserMfaBack } from '../firebase';
 import { Button, Typography, Container, Avatar, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import toast from 'react-hot-toast';
@@ -10,7 +10,7 @@ import { ErrorReport } from '../services/ErrorReport';
 import { useAuthContext } from '../hooks/useAuthContext';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { GetUID } from '../services/UserInfo';
-import { useRecaptcha } from "../hooks/useRecaptcha";
+
 
 
 const AccountDetails = () => {
@@ -28,7 +28,7 @@ const AccountDetails = () => {
   const [isFirstParty, setIsFirstParty] = useState(null);
   const { user } = useAuthContext();
   const [phoneNumber, setPhoneNumber] = useState('');
-  const recaptcha = useRecaptcha('recaptcha-container');
+  const [hasMFA, setHasMFA] = useState(false);  // State to store MFA status
 
   useEffect(() => {
     async function checkFirebaseOnlyUser() {
@@ -37,6 +37,14 @@ const AccountDetails = () => {
     }
     checkFirebaseOnlyUser();
   }, [])
+
+  useEffect(() => {
+    async function fetchMFAStatus() {
+      const mfaStatus = await checkUserMFA();
+      setHasMFA(mfaStatus);
+    }
+    fetchMFAStatus();
+  }, [user]);  
 
   useEffect(() => {
     fetch(`${ApiUrl}/api/account/${userId}`, {
@@ -135,17 +143,19 @@ const AccountDetails = () => {
   };
 
   const enrollUserMfa = async () => {
+    setRecaptchaVisibility('visible');
     try {
       const formattedNumber = formatPhoneNumber(phoneNumber);
       console.log('Formatted Phone Number:', formattedNumber);
-      await enrollUserMfaBack(formattedNumber, recaptcha);
+      await enrollUserMfaBack(formattedNumber);
       handleMobileFormClose();
-      return;
     } catch (error) {
       console.log(error.message);
       toast.error(error.message);
       ErrorReport("Error in enroll MFA:" + error.message);
     }
+    setRecaptchaVisibility('hidden');
+
   };
 
   const handleUpdatePassword = async () => {
@@ -258,7 +268,6 @@ const AccountDetails = () => {
             </Button>
           </DialogActions>
         </Dialog>
-        <div id="recaptcha-container"></div>
         <Dialog open={mobileFormOpen} onClose={handleMobileFormClose}>
           <DialogTitle>Update Phone Number</DialogTitle>
           <DialogContent>
@@ -325,6 +334,7 @@ const AccountDetails = () => {
               Update Password
             </Button>
           )}
+          { !hasMFA && (
           <Button type="button"
             fullWidth
             variant="contained"
@@ -332,7 +342,7 @@ const AccountDetails = () => {
             style={{ marginTop: '16px' }} onClick={handleMobileFormOpen}
           >
             Add Phone Number 2FA
-          </Button>
+          </Button>)}
           <Button
             type="button"
             fullWidth
