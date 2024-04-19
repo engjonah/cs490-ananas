@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import AccountDetails from '../../components/AccountDetails';
-import { changePassword, firebaseOnlyUser, deleteAccount } from '../../firebase.js';
+import { changePassword, firebaseOnlyUser, deleteAccount, setRecaptchaVisibility, checkUserMFA } from '../../firebase.js';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { useAuthContext } from '../../hooks/useAuthContext.js';
 
@@ -9,6 +9,8 @@ jest.mock('../../firebase', () => ({
   changePassword: jest.fn(),
   firebaseOnlyUser: jest.fn(() => true),
   deleteAccount: jest.fn(),
+  setRecaptchaVisibility: jest.fn(),
+  checkUserMFA: jest.fn(),
 }));
 
 jest.mock('../../hooks/useLogOut', () => ({

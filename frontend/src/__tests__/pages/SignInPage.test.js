@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, waitFor, screen, getByLabelText } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen, getByLabelText,setRecaptchaVisibility } from '@testing-library/react';
 import { toast } from 'react-hot-toast';
 import SignInPage from '../../pages/SignInPage';
 import * as firebase from '../../firebase'
@@ -10,7 +10,8 @@ const router = require('react-router-dom')
 jest.mock('../../firebase', () => ({
     logInWithEmailAndPassword: jest.fn(),
     signInWithGoogle: jest.fn(),
-    signInWithGithub: jest.fn()
+    signInWithGithub: jest.fn(),
+    setRecaptchaVisibility: jest.fn(),
   }));
 // jest.mock('react-router-dom',()=>({
 //         ...jest.requireActual('react-router-dom'),
