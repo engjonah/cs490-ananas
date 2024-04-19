@@ -140,13 +140,11 @@ const AccountDetails = () => {
       console.log('Formatted Phone Number:', formattedNumber);
       await enrollUserMfaBack(formattedNumber, recaptcha);
       handleMobileFormClose();
-      recaptcha.clear();
       return;
     } catch (error) {
       console.log(error.message);
       toast.error(error.message);
       ErrorReport("Error in enroll MFA:" + error.message);
-      recaptcha.clear();
     }
   };
 
