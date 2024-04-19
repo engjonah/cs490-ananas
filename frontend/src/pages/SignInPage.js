@@ -28,8 +28,9 @@ const SignInPage = () => {
       console.log(error.message);
       toast.error(error.message);
       ErrorReport("Signin page:" + error.message);;
+    } finally {
+      setRecaptchaVisibility('hidden');
     }
-    setRecaptchaVisibility('hidden');
   }
 
   const onSubmitGoogle = async () => {
@@ -43,8 +44,9 @@ const SignInPage = () => {
       console.log(error.message);
       toast.error(error.message);
       ErrorReport("Signin page:" + error.message);
+    } finally {
+      setRecaptchaVisibility('hidden');
     }
-    setRecaptchaVisibility('hidden');
   }
   const onSubmitGithub = async (event) => {
     setRecaptchaVisibility('visible');
@@ -57,8 +59,9 @@ const SignInPage = () => {
       console.log(error.message);
       toast.error(error.message);
       ErrorReport("Signin page:" + error.message);
+    } finally {
+      setRecaptchaVisibility('hidden');
     }
-    setRecaptchaVisibility('hidden');
   }
 
   return (

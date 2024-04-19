@@ -44,7 +44,7 @@ const AccountDetails = () => {
       setHasMFA(mfaStatus);
     }
     fetchMFAStatus();
-  }, [user]);  
+  }, [user]);
 
   useEffect(() => {
     fetch(`${ApiUrl}/api/account/${userId}`, {
@@ -149,13 +149,14 @@ const AccountDetails = () => {
       console.log('Formatted Phone Number:', formattedNumber);
       await enrollUserMfaBack(formattedNumber);
       handleMobileFormClose();
+      setHasMFA(true);
     } catch (error) {
       console.log(error.message);
       toast.error(error.message);
       ErrorReport("Error in enroll MFA:" + error.message);
+    } finally {
+      setRecaptchaVisibility('hidden');
     }
-    setRecaptchaVisibility('hidden');
-
   };
 
   const handleUpdatePassword = async () => {
@@ -334,15 +335,15 @@ const AccountDetails = () => {
               Update Password
             </Button>
           )}
-          { !hasMFA && (
-          <Button type="button"
-            fullWidth
-            variant="contained"
-            color="primary"
-            style={{ marginTop: '16px' }} onClick={handleMobileFormOpen}
-          >
-            Add Phone Number 2FA
-          </Button>)}
+          {!hasMFA && (
+            <Button type="button"
+              fullWidth
+              variant="contained"
+              color="primary"
+              style={{ marginTop: '16px' }} onClick={handleMobileFormOpen}
+            >
+              Add Phone Number 2FA
+            </Button>)}
           <Button
             type="button"
             fullWidth
