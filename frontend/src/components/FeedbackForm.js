@@ -13,13 +13,14 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import { CssBaseline, Container, Box, Grid } from '@mui/material';
 import toast from 'react-hot-toast';
 import { GetUID } from '../services/UserInfo';
+import {languageMap} from '../constants.js';
 
 function FeedbackForm(props) {
   const [open, setOpen] = useState(false);
   const [review, setReview] = useState('');
   const [rating, setRating] = useState(5);
-  const outputLang = props.outputLang;
-  const inputLang = props.inputLang;
+  let outputLang = props.outputLang;
+  let inputLang = props.inputLang;
   const uid = GetUID();
   const translationId = props.translationId;
   const { user } = useAuthContext();
@@ -52,6 +53,9 @@ function FeedbackForm(props) {
   };
 
   const storeFeedback = async () => {
+    inputLang = languageMap[inputLang-1].name;
+    outputLang = languageMap[outputLang-1].name;
+
     await fetch(`${ApiUrl}/api/feedback`, {
       method: "POST",
       body: JSON.stringify({

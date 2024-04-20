@@ -108,33 +108,36 @@ const HomePage = () => {
         </Grid>
       </Grid>
 
-      <Grid container spacing={2} justifyContent="center" alignItems="center" className="HomePage-content">
-        <Grid item xs={12} sm={6}>
-          <h2>Reviews</h2>
-          <p>See what real users have to say about our service!</p>
-         
+        { averageRating > 0 &&
+        <>
+        <Grid container spacing={2} justifyContent="center" alignItems="center" className="HomePage-content">
+          <Grid item xs={12} sm={6}>
+            <h2>Reviews</h2>
+            <p>See what real users have to say about our service!</p>
+          
+          </Grid>
         </Grid>
-      </Grid>
 
-      <Grid container justifyContent="center" className="HomePage-feedback-bar-chart">
-        <Grid item xs={6} sm={3} >
-            <Bar
-            options={options}
-            data={data}/>
+        <Grid container justifyContent="center" className="HomePage-feedback-bar-chart">
+          <Grid item xs={6} sm={3} >
+              <Bar
+              options={options}
+              data={data}/>
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid container spacing={2} justifyContent="center" alignItems="center" className="HomePage-content">
-        <Grid item xs={12} sm={6}>
-          <h3>Average Rating: {averageRating} / 5</h3>
-         
+        <Grid container spacing={2} justifyContent="center" alignItems="center" className="HomePage-content">
+          <Grid item xs={12} sm={6}>
+            {averageRating > 0 && <h3>Average Rating: {averageRating} / 5</h3>}
+          
+          </Grid>
         </Grid>
-      </Grid>
 
-      <Grid container spacing={2} justifyContent="center" alignItems="center" className="HomePage-content">
-        <Grid item xs={12} sm={6}>
-          <FeedbackDisplay/>
+        <Grid container spacing={2} justifyContent="center" alignItems="center" className="HomePage-content">
+          <Grid item xs={12} sm={6}>
+            <FeedbackDisplay/>
+          </Grid>
         </Grid>
-      </Grid>
+        </>}
 
       
     </div>
