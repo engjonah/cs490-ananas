@@ -42,7 +42,7 @@ describe("CodeBox Component Functionality", () => {
       .mockImplementationOnce(() => [true, jest.fn()]) //input exists
       .mockImplementationOnce(() => ["hello world", jest.fn()]) //code
       .mockImplementationOnce(() => [1, jest.fn()]) //tab
-      .mockImplementationOnce(() => [101, jest.fn()]) //lines
+      .mockImplementationOnce(() => [1001, jest.fn()]) //lines
       .mockImplementation((x) => [x, jest.fn()]);
     render(<CodeBox />);
     
