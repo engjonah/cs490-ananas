@@ -22,7 +22,6 @@ import FeedbackDisplay from '../components/FeedbackDisplay';
 const HomePage = () => {
   const [ratingCounts, setRatingCounts] = useState([0,0,0,0,0]);
   const [averageRating, setAverageRating] = useState(0);
-  const [error, setError] = useState(null);
 
 
 
@@ -40,7 +39,6 @@ const HomePage = () => {
       })
       .catch(error => {
         ErrorReport("Account Details:" + error.message);
-        setError(error.message);
         console.log(error);
       });
   }, []); 
