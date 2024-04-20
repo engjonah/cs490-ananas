@@ -68,7 +68,7 @@ const FeedbackDisplay = () => {
   return (
     <Container style={{ borderRadius: '5px', padding: "20px", alignItems: "left" }}>
       {feedbacks.length === 0 ? (
-        <Typography variant="subtitle1"><p></p></Typography>
+        <Typography variant="subtitle1"><p>No feedback available.</p></Typography>
       ) : (
         <>
           {feedbacks.slice(startIndex, endIndex).map((feedback, index) => (
