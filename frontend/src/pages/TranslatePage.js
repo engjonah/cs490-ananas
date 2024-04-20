@@ -2,52 +2,15 @@ import React, { useState, useEffect } from 'react';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useMediaQuery, useTheme } from "@mui/material";
-import BackendStatus from '../components/BackendStatus';
 import CodeBox from '../components/CodeBox';
 import './App.css';
 import FeedbackForm from '../components/FeedbackForm';
 import FileUpload from '../components/FileUpload';
 import { useAuthContext } from '../hooks/useAuthContext';
-import ApiUrl from '../ApiUrl';
-import { ErrorReport } from '../services/ErrorReport';
 import TranslationHistory from '../components/TranslationHistory';
-import toast from 'react-hot-toast';
 
 function TranslatePage() {
-  let [test, setTest] = useState(null);
   const {user} = useAuthContext()
-  useEffect(()=>{
-    if (user){
-      fetch(`${ApiUrl}/api/test`, {
-        headers: {
-          'Authorization':`Bearer ${user.token}`
-        }
-      })
-        .then(res => {
-          if (res.status === 401) {
-            ErrorReport("Translate Page: Unauthorized access");
-            throw new Error("Unauthorized access");
-          }
-          if (!res.ok) {
-            ErrorReport("Translate Page: Something went wrong");
-            throw new Error("something went wrong");
-          }
-          return res;
-        })
-        .then(res => res.json())
-        .then(res => {
-          setTest(res);
-        })
-        .catch((err) => {
-          console.log('error here', err);
-          toast.error(err.message);
-          ErrorReport("Translate Page: " + err);
-        })
-    } else {
-      setTest([{test:'User must be logged in!'}])
-    }
-    
-  },[user]);
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -105,7 +68,6 @@ function TranslatePage() {
             </Grid>
           </Grid>
         </Container>
-        <BackendStatus status={test}/>
       </div>
     </div>
   );
