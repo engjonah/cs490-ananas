@@ -20,9 +20,7 @@ function FeedbackForm(props) {
   const [review, setReview] = useState('');
   const [rating, setRating] = useState(5);
   let outputLang = props.outputLang;
-  if (!outputLang) outputLang=1;
   let inputLang = props.inputLang;
-  if (!inputLang) inputLang=1;
   const uid = GetUID();
   const translationId = props.translationId;
   const { user } = useAuthContext();
