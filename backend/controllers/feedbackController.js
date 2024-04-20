@@ -51,7 +51,6 @@ const getFeedback = async (req, res) => {
     }
 }
 
-
 module.exports = {
   insertFeedback,
   getFeedbackCountByRating,
