@@ -6,8 +6,4 @@ router.use(requireAuth)
 router.post("/", feedbackController.insertFeedback)
 
 
-
-
-
-
 module.exports = router;
