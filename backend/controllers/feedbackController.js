@@ -34,17 +34,23 @@ const getFeedbackCountByRating = async(req,res) => {
     }
 }
 
-const getFeedback = async(req,res) => {
+const getFeedback = async (req, res) => {
     try {
-        const allFeedback = await Feedback.distinct('review')
-        const filteredFeedback = allFeedback.filter(feedback => feedback.trim() !== "");
-        res.status(200).json({ AllFeedback: filteredFeedback });
+        // Aggregate to group by review and select one document per group
+        const uniqueFeedback = await Feedback.aggregate([
+            // Group by review field
+            { $group: { _id: '$review', doc: { $first: '$$ROOT' } } },
+            // Project to include only selected fields
+            { $project: { _id: 0, inputLang: '$doc.inputLang', outputLang: '$doc.outputLang', review: '$doc.review', rating: '$doc.rating' } }
+        ]);
 
+        res.status(200).json({ AllFeedback: uniqueFeedback });
     } catch (error) {
         console.log(`Error occurred: ${error.message}`);
         res.status(500).json({ error: error.message });
     }
 }
+
 
 module.exports = {
   insertFeedback,

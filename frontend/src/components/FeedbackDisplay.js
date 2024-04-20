@@ -1,15 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { Paper, Typography, Container, Divider, Pagination } from '@mui/material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import Rating from '@mui/material/Rating';
 import { ErrorReport } from '../services/ErrorReport';
 import ApiUrl from '../ApiUrl';
+import { styled } from '@mui/system'; // Import styled for custom styling
+
+
+const StyledPaper = styled(Paper)({
+    padding: '15px',
+    marginBottom: '10px',
+    backgroundColor: '#f5f5f5',
+    textAlign: 'left',
+    overflow: 'hidden',
+    position: 'relative', // Add position relative to enable absolute positioning of Rating
+  });
 
 const FeedbackItem = ({ feedback }) => {
   return (
-    <Paper elevation={1} style={{ padding: '15px', marginBottom: '10px', backgroundColor: "#f5f5f5", textAlign: "left" }}>
-      <Typography variant="subtitle1" style={{ wordWrap: 'break-word' }}>
-        <strong>{feedback}</strong>
-      </Typography>
-    </Paper>
+    <StyledPaper elevation={1}>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Typography variant="subtitle1" style={{ wordWrap: 'break-word' }}>
+          <strong>{feedback.inputLang} <ArrowForwardIcon fontSize="15px" style={{ verticalAlign: 'middle' }} /> {feedback.outputLang}</strong>
+        </Typography>
+        <Rating
+          name="rating"
+          value={parseInt(feedback.rating)}
+          readOnly
+          style={{ position: 'absolute', top: '5px', right: '5px' }} // Position the Rating component to top right
+        />
+      </div>
+      <Typography variant="body2"><strong>Review:</strong> {feedback.review}</Typography>
+    </StyledPaper>
   );
 };
 
