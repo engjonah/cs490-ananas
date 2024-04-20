@@ -288,6 +288,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
     setInputLang(nameToLanguage[translations[index].inputLang] || 0)
     setOutputLang(nameToLanguage[translations[index].outputLang] || 0)
     setEditCalled(false)
+    window.scroll({top: 0, left: 0, behavior: 'smooth' })
   };
 
   const handleChangePage = (event, newPage) => {
