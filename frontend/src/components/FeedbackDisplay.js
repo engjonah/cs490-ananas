@@ -50,7 +50,6 @@ const FeedbackDisplay = () => {
       })
       .then(data => {
         setFeedbacks(data.AllFeedback);
-        console.log("Feedback list", data.AllFeedback);
       })
       .catch(error => {
         ErrorReport("Feedback Display:" + error.message);
