@@ -19,6 +19,8 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
   const [currTab, setCurrTab] = React.useState(readOnly ? 1 : 0);
   const [lineCount, setLineCount] = React.useState(0);
 
+  const maxLineLimit = 1000;
+
   function updateCurrentInput() {
     setCode(editorRef.current.getValue());
     setLineCount(editorRef.current.getModel().getLineCount());
@@ -211,9 +213,9 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
         </div>
         }
         {!readOnly &&
-          <Tooltip title={outputLoading ? "Translating...": !inputExists ? "Add some code first!" : (lineCount > 100 ? "Input exceeded max limit" : "Submit your code here")}>
+          <Tooltip title={outputLoading ? "Translating...": !inputExists ? "Add some code first!" : (lineCount > maxLineLimit ? "Input exceeded max limit" : "Submit your code here")}>
             <span>
-              <Button variant="outlined" disabled={!inputExists || lineCount > 100 || outputLoading} onClick={getTranslation}>Translate</Button>
+              <Button variant="outlined" disabled={!inputExists || lineCount > maxLineLimit || outputLoading} onClick={getTranslation}>Translate</Button>
             </span>
           </Tooltip>
         }
