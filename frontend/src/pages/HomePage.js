@@ -53,6 +53,7 @@ const HomePage = () => {
   );
 
   const options = {
+    devicePixelRatio: 5,
     scrollable: false,
     plugins: {
       legend: {
