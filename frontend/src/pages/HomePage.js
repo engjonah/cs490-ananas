@@ -67,7 +67,6 @@ const HomePage = () => {
   };
 
 
-  console.log("rating counts: " + ratingCounts)
 
   const labels = ['1', '2', '3', '4', '5'];
   
