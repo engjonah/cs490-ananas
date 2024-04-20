@@ -53,8 +53,8 @@ function FeedbackForm(props) {
   };
 
   const storeFeedback = async () => {
-    inputLang = languageMap[inputLang-1].name;
-    outputLang = languageMap[outputLang-1].name;
+    inputLang = languageMap[inputLang-1]?.name || "Unknown";
+    outputLang = languageMap[outputLang-1]?.name || "Unknown";
 
     await fetch(`${ApiUrl}/api/feedback`, {
       method: "POST",
