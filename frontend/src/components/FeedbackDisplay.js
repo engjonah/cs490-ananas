@@ -27,7 +27,7 @@ const FeedbackItem = ({ feedback }) => {
           name="rating"
           value={parseInt(feedback.rating)}
           readOnly
-          style={{ position: 'absolute', top: '5px', right: '5px' }} // Position the Rating component to top right
+          style={{ position: 'absolute', top: '15px', right: '5px' }} // Position the Rating component to top right
         />
       </div>
       {feedback.review !== "" && <Typography variant="body2"><strong>Review:</strong> {feedback.review}</Typography>}
