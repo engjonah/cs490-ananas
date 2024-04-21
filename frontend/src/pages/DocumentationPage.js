@@ -64,7 +64,7 @@ function DocumentationPage() {
         
         <h3>Authentication</h3>
         <p>
-          Authentication is handled through <b>Firebase API</b>. 
+          Authentication is handled through <b>Firebase API</b>. This includes user login and account creation as well as Two Factor Authentication.
         </p>
       </div>
       <div class="content">
