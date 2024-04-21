@@ -30,7 +30,7 @@ const FeedbackItem = ({ feedback }) => {
           style={{ position: 'absolute', top: '5px', right: '5px' }} // Position the Rating component to top right
         />
       </div>
-      <Typography variant="body2"><strong>Review:</strong> {feedback.review}</Typography>
+      {feedback.review !== "" && <Typography variant="body2"><strong>Review:</strong> {feedback.review}</Typography>}
     </StyledPaper>
   );
 };
