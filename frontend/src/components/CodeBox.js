@@ -62,7 +62,7 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
       inherit: true,
       rules: [],
       colors: {
-        'editor.background': '#ffffff',
+        'editor.background': '#f5f5f5',
       },
     });
     monaco.editor.setTheme('gray')
