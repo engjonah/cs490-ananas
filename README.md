@@ -33,3 +33,19 @@ Repo Structure:
 ├─ .gitignore
 └─ package.json
 ```
+
+Tech Stack:
+```
+M: MongoDB
+E: Express.js
+R: React
+N: Node.js
+```
+
+Miscellaneous:
+```
+Auth: Firebase
+AI-Powered Translation: GPT 3.5 Turbo
+Unit Testing: Jest
+```
+
