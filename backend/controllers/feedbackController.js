@@ -36,13 +36,28 @@ const getFeedbackCountByRating = async(req,res) => {
 
 const getFeedback = async (req, res) => {
     try {
-        // Aggregate to group by review and select one document per group
-        const uniqueFeedback = await Feedback.aggregate([
-            // Group by review field
-            { $group: { _id: '$review', doc: { $first: '$$ROOT' } } },
-            // Project to include only selected fields
-            { $project: { _id: 0, inputLang: '$doc.inputLang', outputLang: '$doc.outputLang', review: '$doc.review', rating: '$doc.rating' } }
-        ]);
+        // Get all feedback documents
+        const allFeedback = await Feedback.find({}, { review: 1, rating: 1, inputLang: 1, outputLang: 1 });
+
+        // Set to store unique combinations
+        const uniqueCombinations = new Set();
+
+        // Filter out duplicates and store unique combinations
+        allFeedback.forEach(feedback => {
+            const { review, rating, inputLang, outputLang } = feedback;
+            if (review != "")
+            {
+                const combination = `${review}-${rating}-${inputLang}-${outputLang}`;
+                uniqueCombinations.add(combination);
+            }
+                
+        });
+
+        // Convert set back to array of unique combinations
+        const uniqueFeedback = Array.from(uniqueCombinations).map(combination => {
+            const [review, rating, inputLang, outputLang] = combination.split('-');
+            return { review, rating, inputLang, outputLang };
+        });
 
         res.status(200).json({ AllFeedback: uniqueFeedback });
     } catch (error) {
