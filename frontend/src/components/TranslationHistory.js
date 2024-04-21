@@ -337,10 +337,10 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setClearMenuOpen(false)} color="primary">
+            <Button aria-label='cancelClearHistoryButton' onClick={() => setClearMenuOpen(false)} color="primary">
               Cancel
             </Button>
-            <Button onClick={() => handleClearHistory()} color="primary" autoFocus>
+            <Button aria-label='confirmClearHistoryButton' onClick={() => handleClearHistory()} color="primary" autoFocus>
               Confirm
             </Button>
           </DialogActions>
