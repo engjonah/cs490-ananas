@@ -22,7 +22,7 @@ describe('FeedbackForm component', () => {
   test('opens dialog when Feedback button is clicked', () => {
     useAuthContext.mockReturnValue({user : {token : 123}});
 
-    const { getByText, getByLabelText } = render(<FeedbackForm translationId="mockTranslationId" />);
+    const { getByText, getByLabelText } = render(<FeedbackForm translationId="mockTranslationId"/>);
     const feedbackButton = getByText('Feedback');
     fireEvent.click(feedbackButton);
     const dialogTitle = getByText('Rate This Translation');
@@ -34,7 +34,7 @@ describe('FeedbackForm component', () => {
   test('submits form when Submit button is clicked and rating/review fields are cleared', () => {
     useAuthContext.mockReturnValue({user : {token : 123}});
 
-    const { getByText, getByLabelText } = render(<FeedbackForm translationId="mockTranslationId" />);
+    const { getByText, getByLabelText } = render(<FeedbackForm translationId="mockTranslationId"/>);
     const feedbackButton = getByText('Feedback');
     fireEvent.click(feedbackButton);
     const submitButton = getByText('Submit');
