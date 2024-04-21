@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ApiUrl from '../ApiUrl';
-import { checkUserMFA, setRecaptchaVisibility, changePassword, firebaseOnlyUser, deleteAccount, enrollUserMfaBack } from '../firebase';
+import { enrollPhone, checkUserMFA, setRecaptchaVisibility, changePassword, firebaseOnlyUser, deleteAccount, enrollUserMfaBack } from '../firebase';
 import { Button, Typography, Container, Avatar, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import toast from 'react-hot-toast';
@@ -10,8 +10,6 @@ import { ErrorReport } from '../services/ErrorReport';
 import { useAuthContext } from '../hooks/useAuthContext';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { GetUID } from '../services/UserInfo';
-
-
 
 const AccountDetails = () => {
   const navigate = useNavigate();
@@ -28,7 +26,10 @@ const AccountDetails = () => {
   const [isFirstParty, setIsFirstParty] = useState(null);
   const { user } = useAuthContext();
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [hasMFA, setHasMFA] = useState(false);  // State to store MFA status
+  const [hasMFA, setHasMFA] = useState(false);
+  const [openTwoFAPopup, setOpenTwoFAPopup] = useState(false);
+  const [code, setCode] = useState('');
+  const [verificationId, setVerificationId] = useState('');
 
   useEffect(() => {
     async function checkFirebaseOnlyUser() {
@@ -101,6 +102,14 @@ const AccountDetails = () => {
     }
   };
 
+  const handle2faPopupOpen = () => {
+    setOpenTwoFAPopup(true);
+  };
+
+  const handle2faPopupClose = () => {
+    setOpenTwoFAPopup(false);
+  };
+
   const handleNameUpdateOpen = () => {
     setNameUpdateFormOpen(true);
   };
@@ -147,17 +156,33 @@ const AccountDetails = () => {
     try {
       const formattedNumber = formatPhoneNumber(phoneNumber);
       console.log('Formatted Phone Number:', formattedNumber);
-      await enrollUserMfaBack(formattedNumber);
       handleMobileFormClose();
+      handle2faPopupOpen();
+      const verificationId = await enrollUserMfaBack(formattedNumber);
+      setVerificationId(verificationId);
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message);
+      ErrorReport("Error in enroll MFA:" + error.message);
+    }
+  };
+
+  const inputVerifyCode = async () => {
+    try {
+      handle2faPopupClose();
+      await enrollPhone(verificationId, code);
+      toast.message("Success in MFA enroll!");
       setHasMFA(true);
     } catch (error) {
       console.log(error.message);
       toast.error(error.message);
       ErrorReport("Error in enroll MFA:" + error.message);
-    } finally {
+    }finally{
+      setCode('');
+      setVerificationId('');
       setRecaptchaVisibility('hidden');
     }
-  };
+  }
 
   const handleUpdatePassword = async () => {
     if (newPassword == null) {
@@ -311,6 +336,26 @@ const AccountDetails = () => {
             </Button>
           </DialogActions>
         </Dialog>
+
+        <Dialog open={openTwoFAPopup} onClose={handle2faPopupClose}>
+          <DialogTitle>Enter Verification Code</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Verification Code"
+              type="text"
+              fullWidth
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handle2faPopupClose}>Cancel</Button>
+            <Button onClick={inputVerifyCode} color="primary">Verify</Button>
+          </DialogActions>
+        </Dialog>
+
         <form style={{ width: '100%', marginTop: '16px' }} noValidate>
 
           <Button

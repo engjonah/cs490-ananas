@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { setRecaptchaVisibility, logInWithEmailAndPassword, signInWithGoogle, signInWithGithub } from '../firebase';
-import { Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Divider, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
+import { setRecaptchaVisibility, verifyCode, logInWithEmailAndPassword, signInWithGoogle, signInWithGithub } from '../firebase';
+import { Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Dialog, DialogActions, DialogContent, DialogTitle, Container, Divider, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import GoogleButton from 'react-google-button';
 import GithubButton from 'react-github-login-button/dist/react-github-button';
@@ -16,6 +16,38 @@ const SignInPage = () => {
   const [remember, setRemember] = useState(false);
   const { login } = useLogin();
   const navigate = useNavigate();
+  const [openTwoFAPopup, setOpenTwoFAPopup] = useState(false);
+  const [code, setCode] = useState('');
+  const [resolver, setResolver] = useState('');
+  const [verificationId, setVerificationId] = useState('');
+
+  const handle2faPopupOpen = () => {
+    setOpenTwoFAPopup(true);
+  };
+
+  const handle2faPopupClose = () => {
+    setOpenTwoFAPopup(false);
+  };
+
+  const inputVerifyCode = async () => {
+    try {
+      handle2faPopupClose();
+      const userCredential = await verifyCode(resolver, verificationId, code);
+      console.log(userCredential);
+      toast.success("Logged in!");
+      await login(email, userCredential.user.uid, remember);
+      navigate("/translate");
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message);
+      ErrorReport("Error in MFA:" + error.message);
+    } finally {
+      setCode('');
+      setResolver('');
+      setVerificationId('');
+      setRecaptchaVisibility('hidden');
+    }
+  }
 
   const onSubmitEmailPass = async () => {
     setRecaptchaVisibility('visible');
@@ -26,10 +58,15 @@ const SignInPage = () => {
       navigate("/translate");
     } catch (error) {
       console.log(error.message);
-      toast.error(error.message);
-      ErrorReport("Signin page:" + error.message);;
-    } finally {
-      setRecaptchaVisibility('hidden');
+      if (error.resolver && error.verificationId) {
+        toast.error("Multi-factor authentication required. Please verify your phone number.");
+        handle2faPopupOpen(true);
+        setResolver(error.resolver);
+        setVerificationId(error.verificationId);
+      } else {
+        toast.error(error.message);
+        ErrorReport("Signin page:" + error.message);
+      }
     }
   }
 
@@ -42,10 +79,16 @@ const SignInPage = () => {
       navigate("/translate");
     } catch (error) {
       console.log(error.message);
-      toast.error(error.message);
-      ErrorReport("Signin page:" + error.message);
-    } finally {
-      setRecaptchaVisibility('hidden');
+      if (error.resolver && error.verificationId) {
+        console.log("Resolver and Verification ID:", error.resolver, error.verificationId);
+        toast.error("Multi-factor authentication required. Please verify your phone number.");
+        setResolver(error.resolver);
+        setVerificationId(error.verificationId);
+        handle2faPopupOpen(true);
+      } else {
+        toast.error(error.message);
+        ErrorReport("Signin page:" + error.message);
+      }
     }
   }
   const onSubmitGithub = async (event) => {
@@ -57,10 +100,16 @@ const SignInPage = () => {
       navigate("/translate")
     } catch (error) {
       console.log(error.message);
-      toast.error(error.message);
-      ErrorReport("Signin page:" + error.message);
-    } finally {
-      setRecaptchaVisibility('hidden');
+      if (error.resolver && error.verificationId) {
+        console.log("Resolver and Verification ID:", error.resolver, error.verificationId);
+        toast.error("Multi-factor authentication required. Please verify your phone number.");
+        setResolver(error.resolver);
+        setVerificationId(error.verificationId);
+        handle2faPopupOpen(true);
+      } else {
+        toast.error(error.message);
+        ErrorReport("Signin page:" + error.message);
+      }
     }
   }
 
@@ -145,6 +194,24 @@ const SignInPage = () => {
             </Grid>
             <Divider color="black" />
           </Box>
+          <Dialog open={openTwoFAPopup} onClose={handle2faPopupClose}>
+            <DialogTitle>Enter Verification Code</DialogTitle>
+            <DialogContent>
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Verification Code"
+                type="text"
+                fullWidth
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handle2faPopupClose}>Cancel</Button>
+              <Button onClick={inputVerifyCode} color="primary">Verify</Button>
+            </DialogActions>
+          </Dialog>
           <Box marginTop={2}>
             <Grid container spacing={2}></Grid>
             <GoogleButton
