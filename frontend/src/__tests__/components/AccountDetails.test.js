@@ -23,8 +23,6 @@ jest.mock('../../hooks/useAuthContext', () => ({
   useAuthContext: jest.fn(),
 }));
 
-jest.mock
-
 describe('AccountDetails component', () => {
 
     let mockErrorReport;
