@@ -80,6 +80,18 @@ describe('/api/translateHistory', () => {
         expect(response.body.Message).toBe('Translation deleted successfully');
       });
   });  
+
+  test("DELETE /api/translateHistory/clearHistory/:uid", async () => {
+    const token = generateMockToken();
+    return await request(app)
+      .delete(`/api/translateHistory/clearHistory/user_id`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .then(response => {
+        expect(response.body.Message).toBe('Translation history cleared successfully');
+      });
+  });  
 });
 
 describe('Error Handling', () => {
