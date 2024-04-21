@@ -46,5 +46,6 @@ Miscellaneous:
 ```
 Auth: Firebase
 AI-Powered Translation: GPT 3.5 Turbo
+Unit Testing: Jest
 ```
 
