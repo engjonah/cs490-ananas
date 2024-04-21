@@ -10,7 +10,7 @@ router.use(requireAuth);
 // Rate limiter configuration
 const translateRateLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute window
-  max: 10, // limit each user to 10 requests per windowMs
+  max: 20, // limit each user to 10 requests per windowMs
   message: "Rate Limit Exceeded", // message to return when rate limit is exceeded
   keyGenerator: (req) => {
     // Assuming user identification through req.user.id, modify as per your auth setup
