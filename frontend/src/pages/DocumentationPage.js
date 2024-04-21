@@ -74,7 +74,7 @@ function DocumentationPage() {
           </p>
           <ul>
             <li><strong>User Details:</strong> We store emails and usernames. Passwords are handled through Firebase</li>
-            <li><strong>Translation History:</strong> We store the translation history to make improvements to our translation tool</li>
+            <li><strong>Translation History:</strong> We store the translation history to make improvements to our translation tool. Users are able to view and delete past translations in the translation history section. </li>
           </ul>
       </div>
     </div>
