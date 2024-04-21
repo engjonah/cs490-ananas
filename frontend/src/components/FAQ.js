@@ -15,6 +15,8 @@ function FAQ() {
     { question: 'Are there any limitations to how much code I can convert?', answer: 'Ananas currently supports a maximum of 100 lines of code in order to optimize performance, ensure translation accuracy, and minimize the size of API calls.' },
     { question: 'How frequently is Ananas updated?', answer: 'Currently, our developers update the application about every 2 weeks.' },
     { question: 'How can I delete or update my account?', answer: 'Navigate to the account page by clicking the person icon on the navigation bar. From there, you can either update your name or delete your account.' },
+    { question: 'How can I setup two factor authentication?', answer: 'You can setup two factor authentication by following the instructions on this guide: <a href="https://pudgypenguins.com/">2FA Guide</a>.' },
+
   ];
 
   const [searchTerm, setSearchTerm] = useState('');
