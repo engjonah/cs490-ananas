@@ -317,4 +317,22 @@ describe('TranslationHistory Component', () => {
     expect(getByLabelText('outputLabelRuby')).toBeInTheDocument();
     expect(queryByLabelText('outputLabelC++')).not.toBeInTheDocument();
   });
+
+  test('clear history button works', async () => {
+    useAuthContext.mockReturnValue({user : {token : 123}});
+    localStorage.setItem('user', JSON.stringify({ uid: '123' }));
+
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve({ Translations: sampleTranslations }),
+      }),
+    )
+
+    const { getByLabelText, queryByText, getByText} = render(<TranslationHistory testTranslations={sampleTranslations}/>);
+
+    expect(queryByText('You have no translations!')).not.toBeInTheDocument();
+    fireEvent.click(getByLabelText('clearHistoryButton'));
+    fireEvent.click(getByLabelText('confirmClearHistoryButton'));
+    expect(getByText('You have no translations!')).toBeInTheDocument();
+  });
 });
