@@ -33,7 +33,6 @@ const SignInPage = () => {
     try {
       handle2faPopupClose();
       const userCredential = await verifyCode(resolver, verificationId, code);
-      console.log(userCredential);
       toast.success("Logged in!");
       await login(userCredential.user.email, userCredential.user.uid, remember);
       navigate("/translate");
@@ -51,7 +50,6 @@ const SignInPage = () => {
 
   const mfaRequired = async (error) => {
     if (error.resolver && error.verificationId) {
-      console.log("Resolver and Verification ID:", error.resolver, error.verificationId);
       toast("Multi-factor authentication required. Please verify your phone number.");
       handle2faPopupOpen(true);
       setResolver(error.resolver);
@@ -70,7 +68,6 @@ const SignInPage = () => {
       toast.success("Logged in!");
       navigate("/translate");
     } catch (error) {
-      console.log(error.message);
       mfaRequired(error);
     }
   }
@@ -83,7 +80,6 @@ const SignInPage = () => {
       toast.success("Logged in!");
       navigate("/translate");
     } catch (error) {
-      console.log(error.message);
       mfaRequired(error);
     }
   }
@@ -95,7 +91,6 @@ const SignInPage = () => {
       toast.success("Logged in!");
       navigate("/translate")
     } catch (error) {
-      console.log(error.message);
       mfaRequired(error);
     }
   }
