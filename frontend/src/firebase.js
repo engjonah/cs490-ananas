@@ -39,11 +39,12 @@ const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
 
-let verifier;
 function initRecaptcha() {
-    verifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        size: 'invisible'
-    });
+    if (!window.verifier) {
+        window.verifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+            size: 'invisible'
+        });
+    }
 }
 
 function setRecaptchaVisibility(visible) {
@@ -75,7 +76,7 @@ const enrollUserMfaBack = async (phone) => {
             session: multiFactorSession
         };
         const phoneAuthProvider = new PhoneAuthProvider(auth);
-        const verificationId = await phoneAuthProvider.verifyPhoneNumber(phoneInfoOptions, verifier);
+        const verificationId = await phoneAuthProvider.verifyPhoneNumber(phoneInfoOptions, window.verifier);
         return verificationId;
     } catch (error) {
         if (error.code === 'auth/unverified-email') {
@@ -104,7 +105,7 @@ const handleMultiFactorAuth = async (error) => {
         session: resolver.session
     };
     const phoneAuthProvider = new PhoneAuthProvider(auth);
-    const verificationId = await phoneAuthProvider.verifyPhoneNumber(phoneInfoOptions, verifier);
+    const verificationId = await phoneAuthProvider.verifyPhoneNumber(phoneInfoOptions, window.verifier);
     return [resolver, verificationId];
 };
 
