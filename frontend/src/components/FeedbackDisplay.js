@@ -38,7 +38,7 @@ const FeedbackItem = ({ feedback }) => {
 const FeedbackDisplay = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [page, setPage] = useState(1);
-  const itemsPerPage = 10; // Number of items per page
+  const itemsPerPage = 5; // Number of items per page
 
   useEffect(() => {
     fetch(`${ApiUrl}/api/feedbackDisplay/`)
