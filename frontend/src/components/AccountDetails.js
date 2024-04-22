@@ -155,7 +155,6 @@ const AccountDetails = () => {
     setRecaptchaVisibility('visible');
     try {
       const formattedNumber = formatPhoneNumber(phoneNumber);
-      console.log('Formatted Phone Number:', formattedNumber);
       handleMobileFormClose();
       handle2faPopupOpen();
       const verificationId = await enrollUserMfaBack(formattedNumber);
