@@ -35,7 +35,7 @@ const SignInPage = () => {
       const userCredential = await verifyCode(resolver, verificationId, code);
       console.log(userCredential);
       toast.success("Logged in!");
-      await login(email, userCredential.user.uid, remember);
+      await login(userCredential.user.email, userCredential.user.uid, remember);
       navigate("/translate");
     } catch (error) {
       console.log(error.message);
@@ -82,9 +82,9 @@ const SignInPage = () => {
       if (error.resolver && error.verificationId) {
         console.log("Resolver and Verification ID:", error.resolver, error.verificationId);
         toast.error("Multi-factor authentication required. Please verify your phone number.");
+        handle2faPopupOpen(true);
         setResolver(error.resolver);
         setVerificationId(error.verificationId);
-        handle2faPopupOpen(true);
       } else {
         toast.error(error.message);
         ErrorReport("Signin page:" + error.message);
@@ -103,9 +103,9 @@ const SignInPage = () => {
       if (error.resolver && error.verificationId) {
         console.log("Resolver and Verification ID:", error.resolver, error.verificationId);
         toast.error("Multi-factor authentication required. Please verify your phone number.");
+        handle2faPopupOpen(true);
         setResolver(error.resolver);
         setVerificationId(error.verificationId);
-        handle2faPopupOpen(true);
       } else {
         toast.error(error.message);
         ErrorReport("Signin page:" + error.message);
