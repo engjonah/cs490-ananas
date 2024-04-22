@@ -9,6 +9,8 @@ import {useLogout} from '../hooks/useLogOut.js'
 import { useAuthContext } from '../hooks/useAuthContext.js';
 import ApiUrl from '../ApiUrl';
 import { ErrorReport } from '../services/ErrorReport';
+import NotesIcon from '@mui/icons-material/Notes';
+
 
 function Navbar() {
   const {logout} = useLogout()
@@ -80,6 +82,9 @@ function Navbar() {
         </Link>
         <Link to="/documentation">
           <Icon icon={DocumentationIcon} tooltip="Documentation" />
+        </Link>
+        <Link to="/releaseNotes">
+          <Icon icon={NotesIcon} tooltip="Release Notes"/>
         </Link>
         { user && (
           <Link to="/Account">
