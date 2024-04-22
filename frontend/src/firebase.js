@@ -187,4 +187,4 @@ const resetPasswordEmail = async (email) => {
 
 
 
-export { app , auth , registerWithEmailAndPassword, signInWithGoogle, signInWithGithub, logInWithEmailAndPassword, changePassword, firebaseOnlyUser, deleteAccount, resetPasswordEmail};
+export { app , auth , registerWithEmailAndPassword, signInWithGoogle, signInWithGithub, logInWithEmailAndPassword, changePassword, firebaseOnlyUser, deleteAccount, resetPasswordEmail, thirdPartySignin };
