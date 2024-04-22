@@ -49,6 +49,19 @@ const SignInPage = () => {
     }
   }
 
+  const mfaRequired = async (error) => {
+    if (error.resolver && error.verificationId) {
+      console.log("Resolver and Verification ID:", error.resolver, error.verificationId);
+      toast.error("Multi-factor authentication required. Please verify your phone number.");
+      handle2faPopupOpen(true);
+      setResolver(error.resolver);
+      setVerificationId(error.verificationId);
+    } else {
+      toast.error(error.message);
+      ErrorReport("Signin page:" + error.message);
+    }
+  }
+
   const onSubmitEmailPass = async () => {
     setRecaptchaVisibility('visible');
     try {
@@ -58,15 +71,7 @@ const SignInPage = () => {
       navigate("/translate");
     } catch (error) {
       console.log(error.message);
-      if (error.resolver && error.verificationId) {
-        toast.error("Multi-factor authentication required. Please verify your phone number.");
-        handle2faPopupOpen(true);
-        setResolver(error.resolver);
-        setVerificationId(error.verificationId);
-      } else {
-        toast.error(error.message);
-        ErrorReport("Signin page:" + error.message);
-      }
+      mfaRequired(error);
     }
   }
 
@@ -79,16 +84,7 @@ const SignInPage = () => {
       navigate("/translate");
     } catch (error) {
       console.log(error.message);
-      if (error.resolver && error.verificationId) {
-        console.log("Resolver and Verification ID:", error.resolver, error.verificationId);
-        toast.error("Multi-factor authentication required. Please verify your phone number.");
-        handle2faPopupOpen(true);
-        setResolver(error.resolver);
-        setVerificationId(error.verificationId);
-      } else {
-        toast.error(error.message);
-        ErrorReport("Signin page:" + error.message);
-      }
+      mfaRequired(error);
     }
   }
   const onSubmitGithub = async (event) => {
@@ -100,16 +96,7 @@ const SignInPage = () => {
       navigate("/translate")
     } catch (error) {
       console.log(error.message);
-      if (error.resolver && error.verificationId) {
-        console.log("Resolver and Verification ID:", error.resolver, error.verificationId);
-        toast.error("Multi-factor authentication required. Please verify your phone number.");
-        handle2faPopupOpen(true);
-        setResolver(error.resolver);
-        setVerificationId(error.verificationId);
-      } else {
-        toast.error(error.message);
-        ErrorReport("Signin page:" + error.message);
-      }
+      mfaRequired(error);
     }
   }
 
