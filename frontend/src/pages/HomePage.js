@@ -72,7 +72,7 @@ function Overview() {
             textAlign: { sm: 'left', md: 'center' },
           }}
         >
-          <Typography component="h2" variant="h2">
+          <Typography component="h2" variant="h2" sx={{fontWeight:'bold'}}>
             Overview
           </Typography>
           <Typography variant="body1" sx={{ color: 'grey.400' }}>
@@ -135,7 +135,7 @@ function Intro() {
           pb: { xs: 8, sm: 12 },
         }}
       >
-        <Stack spacing={2} useFlexGap sx={{ width: { xs: '100%', sm: '70%' } }}>
+        <Stack spacing={2} useFlexGap sx={{ width: { xs: '100%', sm: '80%' } }}>
           <Typography
             variant="h1"
             sx={{
@@ -144,6 +144,7 @@ function Intro() {
               alignSelf: 'center',
               textAlign: 'center',
               fontSize: 'clamp(3.5rem, 10vw, 4rem)',
+              fontWeight: 'bold'
             }}
           >
             Seamless Code Translations
@@ -247,64 +248,63 @@ const HomePage = () => {
       <Overview/>
       { averageRating > 0 && 
         <Container sx={{ py: { xs: 8, sm: 16 } }}>
-        <Grid container spacing={6}>
-          <Grid item xs={12} md={6}>
-            <div>
-              <Typography component="h2" variant="h3" color="text.primary">
-                Reviews
-              </Typography>
-              <Typography
-                variant="body1"
-                color="text.secondary"
-                sx={{ mb: { xs: 2, sm: 4 } }}
-              >
-                See what people have to say about our service
-              </Typography>
-            </div>
+          <Grid container spacing={6}>
+            <Grid item xs={12} md={6}>
+              <div>
+                <Typography variant="h3" color="text.primary" fontWeight='bold'>
+                  Reviews
+                </Typography>
+                <Typography
+                  variant="body1"
+                  color="text.secondary"
+                  sx={{ mb: { xs: 2, sm: 4 } }}
+                >
+                  See what people have to say about our service
+                </Typography>
+              </div>
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid container spacing={2} justifyContent="center" alignItems="left" className="HomePage-content">
-            <Grid item xs={10} sm={6}>
-              <FeedbackDisplay/>
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              md={6}
-              sx={{ display: { xs: 'none', sm: 'flex' }, width: '100%' }}
-            >
-            <Box
-              component={Card}
-              variant="outlined"
-              
-              sx={{
-                height: { xs: 200, sm: 500 },
-                width: '100%',
-                backgroundSize: 'cover',
-                borderRadius: '10px',
-                outline: '1px solid',
-                outlineColor:alpha('#c9c7c7', 0.5),
-                boxShadow:
-                  `0 0 12px 8px ${alpha('#c9c7c7', 0.2)}`
+            <Grid container spacing={2} justifyContent={"center"}>
+              <Grid item xs = {6}>    
+                  <FeedbackDisplay/>
+              </Grid>
+              <Grid item xs = {6}>
+                <Box
+                  component={Card}
+                  variant="outlined"
                   
-              }}
-            >
-              <Grid justifyContent="center" >
-                <Bar 
-                      options={options}
-                      data={data}/>
-              </Grid>
-              
-              <Grid justifyContent='center' >
-                <Grid item xs={10} sm={6}>
-                {averageRating > 0 && <h3>Average Rating: {averageRating} / 5</h3>}
-                </Grid>
-              </Grid>
+                  sx={{
+                    height: { xs: 200, sm: 500 },
+                    width: '100%',
+                    backgroundSize: 'cover',
+                    borderRadius: '10px',
+                    outline: '1px solid',
+                    outlineColor:alpha('#c9c7c7', 0.5),
+                    boxShadow:
+                      `0 0 12px 8px ${alpha('#c9c7c7', 0.2)}`
+                      
+                  }}
+                >
+                  <Grid sx={{margin:'2vw' }} >
+                    <Bar 
+                          options={options}
+                          data={data}/>
+                  </Grid>
+                  <Grid justifyItems={'center'} >
+                    <Grid item xs={10} sm={10}>
+                    {averageRating > 0 && 
+                      <Grid alignItems={'center'}>
+                          <Typography variant='h4' fontWeight='medium' marginLeft='9vw'>Average Rating:</Typography>
+                          <Typography variant='h3' fontWeight='bold' marginLeft='11vw'>{averageRating} / 5</Typography>
+                      </Grid>
+                    }
+                    </Grid>
+                  </Grid>
 
-          </Box>
+                </Box>
+              </Grid>
+          </Grid>
           
-        </Grid>
-        </Grid>
         </Container>
         
         }
