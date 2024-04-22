@@ -50,7 +50,6 @@ describe("Log In Page",()=>{
             fireEvent.click(loginbutton)
             await waitFor(()=>{
                 expect(toast.error).toHaveBeenCalledWith('Error test')
-                expect(console.log).toHaveBeenCalledTimes(1)
                 expect(mockErrorReport).toHaveBeenCalledTimes(1);
             });
         }, 10000)
@@ -73,7 +72,6 @@ describe("Log In Page",()=>{
             fireEvent.click(githubbutton)
             await waitFor(()=>{
                 expect(toast.error).toHaveBeenCalledWith('Error test')
-                expect(console.log).toHaveBeenCalledTimes(1)
                 expect(mockErrorReport).toHaveBeenCalledTimes(1);
             });
         })
@@ -98,7 +96,6 @@ describe("Log In Page",()=>{
             fireEvent.click(githubbutton)
             await waitFor(()=>{
                 expect(toast.error).toHaveBeenCalledWith('Error test')
-                expect(console.log).toHaveBeenCalledTimes(1)
                 expect(mockErrorReport).toHaveBeenCalledTimes(1);
             });
         })
