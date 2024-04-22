@@ -249,22 +249,25 @@ const HomePage = () => {
       { averageRating > 0 && 
         <Container sx={{ py: { xs: 8, sm: 16 } }}>
           <Grid container spacing={6}>
-            <Grid item xs={12} md={6}>
-              <div>
-                <Typography variant="h3" color="text.primary" fontWeight='bold'>
-                  Reviews
-                </Typography>
-                <Typography
-                  variant="body1"
-                  color="text.secondary"
-                  sx={{ mb: { xs: 2, sm: 4 } }}
-                >
-                  See what people have to say about our service
-                </Typography>
-              </div>
-              </Grid>
+            <Box
+            sx={{
+              width: { sm: '100%', md: '100%' },
+              textAlign: { sm: 'left', md: 'center' },
+            }}
+          >
+              <Typography component="h2" variant="h2" sx={{fontWeight:'bold'}}>
+                Reviews
+              </Typography>
+              <Typography
+              textAlign="center"
+              color="text.secondary"
+              sx={{ alignSelf: 'center', width: { sm: '100%', md: '100%' } }}
+              >
+                See what people have to say about our service
+              </Typography>
+            </Box>
             </Grid>
-            <Grid container spacing={2} justifyContent={"center"}>
+            <Grid container spacing={4} justifyContent={"center"} marginTop='2vh'>
               <Grid item xs = {6}>    
                   <FeedbackDisplay/>
               </Grid>
@@ -281,7 +284,7 @@ const HomePage = () => {
                     outline: '1px solid',
                     outlineColor:alpha('#c9c7c7', 0.5),
                     boxShadow:
-                      `0 0 12px 8px ${alpha('#c9c7c7', 0.2)}`
+                      `0 0 12px 8px ${alpha('#c9c7c7', .2)}`
                       
                   }}
                 >
@@ -293,8 +296,9 @@ const HomePage = () => {
                   <Grid justifyItems={'center'} >
                     <Grid item xs={10} sm={12}>
                     {averageRating > 0 && 
-                      <Grid alignItems={'center'}>
-                          <Typography variant='h4' fontWeight='medium' margin='5vw'>Average Rating: {averageRating} / 5</Typography>
+                      <Grid alignItems={'center'} sx={{textAlign: { sm: 'left', md: 'center' }}}>
+                          <Typography variant='h4' fontWeight='medium'>Average Rating:<br/>{averageRating} / 5</Typography>
+
                       </Grid>
                     }
                     </Grid>

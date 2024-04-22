@@ -5,21 +5,25 @@ import Rating from '@mui/material/Rating';
 import { ErrorReport } from '../services/ErrorReport';
 import ApiUrl from '../ApiUrl';
 import { styled } from '@mui/system'; // Import styled for custom styling
-
+import { alpha } from '@mui/material';
 
 const StyledPaper = styled(Paper)({
     padding: '15px',
-    marginBottom: '10px',
+    marginBottom: '2vh',
     backgroundColor: '#f5f5f5',
     textAlign: 'left',
     overflow: 'hidden',
     position: 'relative', // Add position relative to enable absolute positioning of Rating
+    borderRadius: '10px',
+    outline: '2px solid',
+    outlineColor:alpha('#c9c7c7', 0.5),
+    boxShadow:`0 0 12px 8px ${alpha('#c9c7c7', 0.25)}`
   });
 
 const FeedbackItem = ({ feedback }) => {
   return (
     <StyledPaper elevation={1}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ display: 'flex', alignItems: 'center'}}>
         <Typography variant="subtitle1" style={{ wordWrap: 'break-word' }}>
           <strong>{feedback.inputLang} <ArrowForwardIcon fontSize="15px" style={{ verticalAlign: 'middle' }} /> {feedback.outputLang}</strong>
         </Typography>
