@@ -52,7 +52,7 @@ const SignInPage = () => {
   const mfaRequired = async (error) => {
     if (error.resolver && error.verificationId) {
       console.log("Resolver and Verification ID:", error.resolver, error.verificationId);
-      toast.error("Multi-factor authentication required. Please verify your phone number.");
+      toast("Multi-factor authentication required. Please verify your phone number.");
       handle2faPopupOpen(true);
       setResolver(error.resolver);
       setVerificationId(error.verificationId);
