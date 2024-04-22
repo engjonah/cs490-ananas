@@ -4,14 +4,11 @@ import { MemoryRouter } from 'react-router-dom';
 import HomePage from '../../pages/HomePage';
 
 describe('HomePage', () => {
-  test('renders How to Use section', () => {
+  test('renders Overview section', () => {
     render(<HomePage />, { wrapper: MemoryRouter });
 
-    const howToUseHeader = screen.getByText('How to Use');
+    const howToUseHeader = screen.getByText('Overview');
     expect(howToUseHeader).toBeInTheDocument();
-
-    const howToUseList = screen.getByRole('list');
-    expect(howToUseList).toBeInTheDocument();
   });
 
   it('renders the average rating when average rating is greater than 0', async () => {
@@ -40,7 +37,7 @@ describe('HomePage', () => {
 
     const { container } = render(<HomePage />, { wrapper: MemoryRouter });
 
-    const translateButton = screen.getByRole('button', { name: 'Translate Now!' });
+    const translateButton = screen.getByRole('button', { name: 'Translate Now' });
     expect(translateButton).toBeInTheDocument();
 
     // Simulate a click on the Translate Now! button
