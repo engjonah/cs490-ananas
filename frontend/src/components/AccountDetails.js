@@ -171,7 +171,7 @@ const AccountDetails = () => {
     try {
       handle2faPopupClose();
       await enrollPhone(verificationId, code);
-      toast.message("Success in MFA enroll!");
+      toast.success("Success in MFA enroll!");
       setHasMFA(true);
     } catch (error) {
       console.log(error.message);
