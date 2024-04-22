@@ -81,7 +81,9 @@ const enrollUserMfaBack = async (phone) => {
     } catch (error) {
         if (error.code === 'auth/unverified-email') {
             await sendEmailVerification(user);
-            throw new Error("Email was not verified: ", error);
+            throw new Error("Email not verified");
+        } else if (error.code === 'auth/requires-recent-login') {
+            //ignore for now
         } else {
             throw new Error("Could not setup mfa: ", error);
         }

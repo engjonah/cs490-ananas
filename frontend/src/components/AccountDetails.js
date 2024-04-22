@@ -161,9 +161,14 @@ const AccountDetails = () => {
       const verificationId = await enrollUserMfaBack(formattedNumber);
       setVerificationId(verificationId);
     } catch (error) {
-      console.log(error.message);
-      toast.error(error.message);
-      ErrorReport("Error in enroll MFA:" + error.message);
+      if (error.message === "Email not verified") {
+        toast.error("Please verify your email before setting up 2FA");
+        handle2faPopupClose();
+      }
+      else {
+        toast.error(error.message);
+        ErrorReport("Error in enroll MFA:" + error.message);
+      }
     }
   };
 
