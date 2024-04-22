@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import './DocumentationPage.css'; // Import CSS for styling
 import userguide from "../assets/AnanasUserGuide.pdf";
+import Ananas2FAGuide from "../assets/2FAGuide.pdf";
 import FAQ from "../components/FAQ";
 
 function DocumentationPage() {
