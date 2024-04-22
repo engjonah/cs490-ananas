@@ -268,9 +268,8 @@ const resetPasswordEmail = async (email) => {
     }
 }
 
-
-
-function checkUserMFA() {
+async function checkUserMFA() {
+    await auth.authStateReady();
     var user = auth.currentUser;
     if (user) {
         // Check if there are any enrolled factors
