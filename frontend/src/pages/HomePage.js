@@ -297,7 +297,7 @@ const HomePage = () => {
                     <Grid item xs={10} sm={12}>
                     {averageRating > 0 && 
                       <Grid alignItems={'center'} sx={{textAlign: { sm: 'left', md: 'center' }}}>
-                          <Typography variant='h4' fontWeight='medium'>Average Rating:<br/>{averageRating} / 5</Typography>
+                          <Typography variant='h4' fontWeight='medium'>Average Rating: {averageRating} / 5</Typography>
 
                       </Grid>
                     }
