@@ -291,11 +291,10 @@ const HomePage = () => {
                           data={data}/>
                   </Grid>
                   <Grid justifyItems={'center'} >
-                    <Grid item xs={10} sm={10}>
+                    <Grid item xs={10} sm={12}>
                     {averageRating > 0 && 
                       <Grid alignItems={'center'}>
-                          <Typography variant='h4' fontWeight='medium' marginLeft='9vw'>Average Rating:</Typography>
-                          <Typography variant='h3' fontWeight='bold' marginLeft='11vw'>{averageRating} / 5</Typography>
+                          <Typography variant='h4' fontWeight='medium' margin='5vw'>Average Rating: {averageRating} / 5</Typography>
                       </Grid>
                     }
                     </Grid>
