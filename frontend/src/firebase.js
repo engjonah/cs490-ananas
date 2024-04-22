@@ -152,7 +152,9 @@ const signInWithGoogle = async () => {
         const { name, email, uid } = await thirdPartySignin(googleProvider);
         return { name, email, uid };
     } catch (error) {
+        console.log(error);
         if (error.code === 'auth/multi-factor-auth-required') {
+            console.log('auth/multi-factor-auth-required');
             const [resolver, verificationId] = await handleMultiFactorAuth(error);
             const customError = new Error("Multi-factor authentication required");
             customError.resolver = resolver;
@@ -170,7 +172,9 @@ const signInWithGithub = async () => {
         const { name, email, uid } = await thirdPartySignin(githubProvider);
         return { name: name, email: email, uid: uid }
     } catch (error) {
+        console.log(error);
         if (error.code === 'auth/multi-factor-auth-required') {
+            console.log('auth/multi-factor-auth-required');
             const [resolver, verificationId] = await handleMultiFactorAuth(error);
             const customError = new Error("Multi-factor authentication required");
             customError.resolver = resolver;
@@ -193,7 +197,9 @@ const logInWithEmailAndPassword = async (email, password) => {
         const user = response.user
         return user.uid
     } catch (error) {
+        console.log(error);
         if (error.code === 'auth/multi-factor-auth-required') {
+            console.log('auth/multi-factor-auth-required');
             const [resolver, verificationId] = await handleMultiFactorAuth(error);
             const customError = new Error("Multi-factor authentication required");
             customError.resolver = resolver;
