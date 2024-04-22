@@ -54,7 +54,7 @@ function Overview() {
         pt: { xs: 4, sm: 12 },
         pb: { xs: 8, sm: 16 },
         color: 'white',
-        bgcolor: '#06090a',
+        bgcolor: '#292d2e',
       }}
     >
       <Container
@@ -72,7 +72,7 @@ function Overview() {
             textAlign: { sm: 'left', md: 'center' },
           }}
         >
-          <Typography component="h2" variant="h4">
+          <Typography component="h2" variant="h2">
             Overview
           </Typography>
           <Typography variant="body1" sx={{ color: 'grey.400' }}>
@@ -122,7 +122,7 @@ function Intro() {
         width: '100%',
         backgroundImage:
           'linear-gradient(180deg, #c9c7c7, #FFF)',
-        backgroundSize: '100% 20%',
+        backgroundSize: '100% 80%',
         backgroundRepeat: 'no-repeat',
       }}
     >

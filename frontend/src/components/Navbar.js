@@ -71,7 +71,7 @@ function Navbar() {
             }}>
         <Link style={{ color: 'inherit', textDecoration: 'none' }} to="/">
           <Tooltip title="Home">
-            <Typography variant='h4' style={{ color: 'black'}} edge="start">Ananas</Typography>
+            <Typography variant='h4' style={{ color: 'black', fontWeight:'bold'}} edge="start">Ananas</Typography>
           </Tooltip>
         </Link>
         <div style={{ flexGrow: 1 }} />
@@ -91,8 +91,8 @@ function Navbar() {
           Sign In
         </Link>
         )} */}
-        { !user && ( <Button sx={{color:'black'}} onClick={handleSignIn}>Sign In</Button>)}
-        { user && ( <Button sx={{color:'black'}} onClick={handleClick}>Logout</Button>)}
+        { !user && ( <Button sx={{color:'black',fontWeight:'bold'}} onClick={handleSignIn}>Sign In</Button>)}
+        { user && ( <Button sx={{color:'black', fontWeight:'bold'}} onClick={handleClick}>Logout</Button>)}
        
       </Toolbar>
     </AppBar>
