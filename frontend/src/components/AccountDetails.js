@@ -389,6 +389,16 @@ const AccountDetails = () => {
             >
               Add Phone Number 2FA
             </Button>)}
+          {hasMFA && (
+            <Button type="button"
+              disabled
+              fullWidth
+              variant="contained"
+              color="primary"
+              style={{ marginTop: '16px' }}
+            >
+              2FA Enrolled
+            </Button>)}
           <Button
             type="button"
             fullWidth
