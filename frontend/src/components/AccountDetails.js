@@ -249,7 +249,7 @@ const AccountDetails = () => {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ marginTop: '25%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Avatar style={{ margin: '8px', backgroundColor: '#1976d2' }}>
           <ManageAccountsIcon />
         </Avatar>

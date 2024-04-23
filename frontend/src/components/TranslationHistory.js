@@ -131,6 +131,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
         .then(data => {
           const sortedTranslations = data.Translations.sort((a, b) => new Date(b.translatedAt) - new Date(a.translatedAt));
           setTranslations(sortedTranslations);
+          setExpandedIndex(null);
         })
         .catch(error => {
           ErrorReport("Translation History Fetch:" + error.message);
@@ -336,10 +337,10 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setClearMenuOpen(false)} color="primary">
+            <Button aria-label='cancelClearHistoryButton' onClick={() => setClearMenuOpen(false)} color="primary">
               Cancel
             </Button>
-            <Button onClick={() => handleClearHistory()} color="primary" autoFocus>
+            <Button aria-label='confirmClearHistoryButton' onClick={() => handleClearHistory()} color="primary" autoFocus>
               Confirm
             </Button>
           </DialogActions>

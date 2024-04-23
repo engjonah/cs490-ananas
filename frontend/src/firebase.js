@@ -279,4 +279,4 @@ async function checkUserMFA() {
     }
 }
 
-export { app, auth, enrollPhone, checkUserMFA, setRecaptchaVisibility, initRecaptcha, registerWithEmailAndPassword, signInWithGoogle, signInWithGithub, logInWithEmailAndPassword, changePassword, firebaseOnlyUser, deleteAccount, resetPasswordEmail, RecaptchaVerifier, signInWithPhoneNumber, enrollUserMfaBack, verifyCode };
+export { app, auth, enrollPhone, checkUserMFA, setRecaptchaVisibility, initRecaptcha, registerWithEmailAndPassword, signInWithGoogle, signInWithGithub, logInWithEmailAndPassword, changePassword, firebaseOnlyUser, deleteAccount, resetPasswordEmail, RecaptchaVerifier, signInWithPhoneNumber, enrollUserMfaBack, verifyCode, thirdPartySignin };

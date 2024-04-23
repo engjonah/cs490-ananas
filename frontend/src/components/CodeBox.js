@@ -78,7 +78,7 @@ export default function CodeBox({ defaultValue, readOnly, outputLang, setOutputL
         method: "POST",
         body: JSON.stringify({
           uid: user.uid,
-          inputLang: inputLang === "this unknown language"? "Detect Language" : inputLang,
+          inputLang: inputLang === "this unknown language"? "Unknown" : inputLang,
           outputLang: outputLang,
           inputCode: inputCode,
           outputCode: outputCode,

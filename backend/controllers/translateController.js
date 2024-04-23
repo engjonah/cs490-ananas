@@ -1,23 +1,33 @@
 const axios = require('axios')
 
-let cache = []
-
-const clearCache = () => {
-    cache = []
+let cache = {
+    contents: [],
+    add: (content) => {
+        cache.contents.push(content)
+        if (cache.contents.length > 10) cache.contents.shift()
+    },
+    get: ({ inputCode, inputLang, outputLang }) => {
+        for (let i = 0; i < cache.contents.length; i++) {
+            let entry = cache.contents[i]
+            if (entry.inputCode === inputCode && entry.inputLang === inputLang && entry.outputLang === outputLang) {
+                return entry.outputCode
+            }
+        }
+        return null
+    },
+    clear: () => cache.contents = []
 }
 
 const getTranslation = async (req, res) => {
         const { inputLang, outputLang, inputCode } = req.body
         // check cache for same input code, input language, and output language
         console.time('apiCall');
-        for (let i = 0; i < cache.length; i++) {
-            let entry = cache[i]
-            if (entry.inputCode === inputCode && entry.inputLang === inputLang && entry.outputLang === outputLang) {
-                res.status(200).json({translation: entry.outputCode})
-                console.log("Saved API Call With Cache")
-                console.timeEnd('apiCall')
-                return
-            }
+        const cacheOutput = cache.get({inputCode, inputLang, outputLang})
+        if (cacheOutput) {
+            res.status(200).json({translation: cacheOutput})
+            // console.log("Saved API Call With Cache")
+            console.timeEnd('apiCall')
+            return
         }
         const message = `Translate the following code without adding additional functions, imports, examples, or wrappers from ${inputLang} to ${outputLang}. For packages/libraries, find the equivalent libraries in the output languages.
         If equivalent packages/libraries do not exist in the output langauge, then make sure to write a comment stating they do not exist. For methods/functions used in the input code, find the equivalent methods for the output code. If none exist, make sure to write a comment
@@ -35,9 +45,7 @@ const getTranslation = async (req, res) => {
         .then(async (response) => {
             const outputCode = response.data.choices[0].message.content
             // add successful translation to cache
-            cache.unshift({inputLang, outputLang, inputCode, outputCode})
-            if (cache.length > 3) cache.pop()
-            // console.log("Cached Translation")
+            cache.add({inputLang, outputLang, inputCode, outputCode})
             res.status(200).json({translation: outputCode})
         }).catch(error => {
             const status = error.response.status
@@ -55,6 +63,5 @@ const getTranslation = async (req, res) => {
 
 module.exports = {
     getTranslation,
-    clearCache,
-    cache
+    cache,
 }
