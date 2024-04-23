@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import DOMPurify from 'dompurify'
 import { TextField } from '@mui/material'
-import ananas2FAGuide from "../assets/2FAGuide.pdf";
 
 //import './DocumentationPage.css'; // Import CSS for styling
 
