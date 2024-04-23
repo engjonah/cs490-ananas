@@ -43,7 +43,12 @@ const getTranslation = async (req, res) => {
         }
         await axios.post('https://api.openai.com/v1/chat/completions', requestData, {headers: headers})
         .then(async (response) => {
-            const outputCode = response.data.choices[0].message.content
+            let outputCode = response.data.choices[0].message.content
+            //cut out code syntax block if used
+            if (outputCode.slice(0, 3) === '```') {
+              outputCode = outputCode.substring(outputCode.indexOf("\n") + 1);
+              outputCode = outputCode.substring(outputCode.lastIndexOf("\n") + 1, -1 );
+            }
             // add successful translation to cache
             cache.add({inputLang, outputLang, inputCode, outputCode})
             res.status(200).json({translation: outputCode})
