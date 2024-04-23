@@ -199,6 +199,10 @@ const logInWithEmailAndPassword = async (email, password) => {
             customError.resolver = resolver;
             customError.verificationId = verificationId;
             throw customError;
+        } else if (
+          error.code === AuthErrorCodes.INVALID_IDP_RESPONSE || 
+          error.code === AuthErrorCodes.INVALID_LOGIN_CREDENTIALS) {
+          throw new Error("The email and/or password you entered is incorrect!");
         } else if (error.message.includes(AuthErrorCodes.NEED_CONFIRMATION)) {
             throw new Error("This email is in use through a different service!");
         } else if (error.name === 'TimeoutError') {
