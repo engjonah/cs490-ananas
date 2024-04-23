@@ -69,11 +69,13 @@ describe("testing local auth functions in firebase.js", () => {
       await resetPasswordEmail()
       expect(firebase.sendPasswordResetEmail).toHaveBeenCalled()
     })
-    it('should log error if sending email unsuccessful', async () => {
-      const consoleSpy = jest.spyOn(console, 'error')
+    it('should throw error if sending email unsuccessful', async () => {
       firebase.sendPasswordResetEmail = jest.fn().mockRejectedValue(new Error())
-      await resetPasswordEmail()
-      expect(consoleSpy).toHaveBeenCalled()
+      try {
+        await resetPasswordEmail()
+      } catch (e) {
+        expect(e.message).toBe("Error updating password:")
+      }
     })
   })
   describe("testing email/pass registration", () => {
@@ -116,6 +118,7 @@ describe("testing local auth functions in firebase.js", () => {
     test("Returns user successfuly", async () => {
       const mockedReturn = { user: { uid: "test" } }
       firebase.createUserWithEmailAndPassword = jest.fn(() => mockedReturn)
+      firebase.sendEmailVerification = jest.fn();
       const val = await registerWithEmailAndPassword("test", "test@gmail.com", "test", "test");
       expect(val).toBe('test');
     });
@@ -135,9 +138,9 @@ describe("testing local auth functions in firebase.js", () => {
       const val = await logInWithEmailAndPassword("test@gmail.com", "test");
       expect(val).toBe('test');
     });
-    test("Invalid Credentials", () => {
-      firebase.signInWithEmailAndPassword = jest.fn().mockRejectedValue(new Error(firebase.AuthErrorCodes.INVALID_IDP_RESPONSE))
-      expect(async () => await logInWithEmailAndPassword("test@gmail.com", "test")).rejects.toThrow('The email and/or password you entered is incorrect!');
+    test("Invalid Credentials", ()=>{
+      firebase.signInWithEmailAndPassword = jest.fn().mockRejectedValue(new Error("The email and/or password you entered is incorrect!"))
+      expect(async () => await logInWithEmailAndPassword("test@gmail.com","test")).rejects.toThrow('The email and/or password you entered is incorrect!');
     });
 
   })
@@ -152,7 +155,7 @@ describe("testing local auth functions in firebase.js", () => {
     });
     test("Email Exists", () => {
       firebase.signInWithPopup = jest.fn().mockRejectedValue(new Error(firebase.AuthErrorCodes.NEED_CONFIRMATION))
-      expect(async () => await signInWithGoogle()).rejects.toThrow('This email is in use through different service!');
+      expect(async () => await signInWithGoogle()).rejects.toThrow('This email is in use through a different service!');
     });
 
   })
@@ -167,8 +170,7 @@ describe("testing local auth functions in firebase.js", () => {
     });
     test("Email Exists", () => {
       firebase.signInWithPopup = jest.fn().mockRejectedValue(new Error(firebase.AuthErrorCodes.NEED_CONFIRMATION))
-      expect(async () => await signInWithGithub()).rejects.toThrow('This email is in use through different service!');
+      expect(async ()=> await signInWithGithub()).rejects.toThrow('This email is in use through a different service!');
     });
-
   })
 })

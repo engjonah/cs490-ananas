@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ApiUrl from '../ApiUrl';
-import { changePassword, firebaseOnlyUser, deleteAccount } from '../firebase';
+import { enrollPhone, checkUserMFA, setRecaptchaVisibility, changePassword, firebaseOnlyUser, deleteAccount, enrollUserMfaBack } from '../firebase';
 import { Button, Typography, Container, Avatar, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import { useLogout } from '../hooks/useLogOut';
@@ -12,9 +13,10 @@ import { GetUID } from '../services/UserInfo';
 
 const AccountDetails = () => {
   const navigate = useNavigate();
-  const {logout} = useLogout()
+  const { logout } = useLogout()
   const [userInfo, setUserInfo] = useState(null);
   const [error, setError] = useState(null);
+  const [mobileFormOpen, setMobileFormOpen] = useState(false);
   const [passwordUpdateFormOpen, setPasswordUpdateFormOpen] = useState(false);
   const [nameUpdateFormOpen, setNameUpdateFormOpen] = useState(false);
   const [newPassword, setNewPassword] = useState('');
@@ -22,7 +24,12 @@ const AccountDetails = () => {
   const [verifyNewPassword, setVerifyNewPassword] = useState('');
   const userId = GetUID();
   const [isFirstParty, setIsFirstParty] = useState(null);
-  const {user} = useAuthContext();
+  const { user } = useAuthContext();
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [hasMFA, setHasMFA] = useState(false);
+  const [openTwoFAPopup, setOpenTwoFAPopup] = useState(false);
+  const [code, setCode] = useState('');
+  const [verificationId, setVerificationId] = useState('');
 
   useEffect(() => {
     async function checkFirebaseOnlyUser() {
@@ -33,9 +40,17 @@ const AccountDetails = () => {
   }, [])
 
   useEffect(() => {
+    async function fetchMFAStatus() {
+      const mfaStatus = await checkUserMFA();
+      setHasMFA(mfaStatus);
+    }
+    fetchMFAStatus();
+  }, [user]);
+
+  useEffect(() => {
     fetch(`${ApiUrl}/api/account/${userId}`, {
       headers: {
-        'Authorization':`Bearer ${user.token}`
+        'Authorization': `Bearer ${user.token}`
       }
     })
       .then(response => {
@@ -52,8 +67,23 @@ const AccountDetails = () => {
         toast.error(error.message);
         setError(error.message);
       });
-  }, [userId, user.token]); 
+  }, [userId, user.token]);
 
+  const formatPhoneNumber = (value) => {
+    const phoneNumber = parsePhoneNumberFromString(value, 'US');
+    if (phoneNumber) {
+      return phoneNumber.formatInternational();
+    }
+    return value;
+  };
+
+  const handleMobileFormOpen = () => {
+    setMobileFormOpen(true);
+  };
+
+  const handleMobileFormClose = () => {
+    setMobileFormOpen(false);
+  };
   const handlePasswordUpdateOpen = () => {
     setPasswordUpdateFormOpen(true);
   };
@@ -66,10 +96,18 @@ const AccountDetails = () => {
     if (newPassword === verifyNewPassword) {
       setNewPassword(newPassword);
       handleUpdatePassword();
-      handlePasswordUpdateClose(); 
+      handlePasswordUpdateClose();
     } else {
       toast.error('Passwords do not match!');
     }
+  };
+
+  const handle2faPopupOpen = () => {
+    setOpenTwoFAPopup(true);
+  };
+
+  const handle2faPopupClose = () => {
+    setOpenTwoFAPopup(false);
   };
 
   const handleNameUpdateOpen = () => {
@@ -84,7 +122,7 @@ const AccountDetails = () => {
     if (newName) {
       setNewName(newName);
       handleUpdateName();
-      handleNameUpdateClose(); 
+      handleNameUpdateClose();
     } else {
       toast.error('Name cannot be blank');
     }
@@ -95,23 +133,60 @@ const AccountDetails = () => {
       fetch(`${ApiUrl}/api/account/${userId}`, {
         method: 'PUT',
         headers: {
-          'Authorization':`Bearer ${user.token}`,
+          'Authorization': `Bearer ${user.token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ name: newName }),
       })
-      .then(response => response.json())
-      .then(data => {
-        setUserInfo(data);
-        toast.success("Name Updated!")
-      })
-      .catch(error => {
-        ErrorReport("Account Details Update:" + error.message);
-        toast.error(error.message);
-        console.log("error:" + error);
-      });
+        .then(response => response.json())
+        .then(data => {
+          setUserInfo(data);
+          toast.success("Name Updated!")
+        })
+        .catch(error => {
+          ErrorReport("Account Details Update:" + error.message);
+          toast.error(error.message);
+          console.log("error:" + error);
+        });
     }
   };
+
+  const enrollUserMfa = async () => {
+    setRecaptchaVisibility('visible');
+    try {
+      const formattedNumber = formatPhoneNumber(phoneNumber);
+      handleMobileFormClose();
+      handle2faPopupOpen();
+      const verificationId = await enrollUserMfaBack(formattedNumber);
+      setVerificationId(verificationId);
+    } catch (error) {
+      if (error.message === "Email not verified") {
+        toast.error("Please verify your email before setting up 2FA");
+        handle2faPopupClose();
+      }
+      else {
+        toast.error(error.message);
+        ErrorReport("Error in enroll MFA:" + error.message);
+      }
+    }
+  };
+
+  const inputVerifyCode = async () => {
+    try {
+      handle2faPopupClose();
+      await enrollPhone(verificationId, code);
+      toast.success("Success in MFA enroll!");
+      setHasMFA(true);
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message);
+      ErrorReport("Error in enroll MFA:" + error.message);
+    }finally{
+      setCode('');
+      setVerificationId('');
+      setRecaptchaVisibility('hidden');
+    }
+  }
 
   const handleUpdatePassword = async () => {
     if (newPassword == null) {
@@ -119,6 +194,7 @@ const AccountDetails = () => {
     }
     if (!isFirstParty) {
       toast.error("Refer to third party provider to update password!");
+      ErrorReport("Refer to third party provider to update password!");
       return;
     }
     if (newPassword.length <= 5) {
@@ -142,26 +218,27 @@ const AccountDetails = () => {
 
   const handleDeleteAccount = () => {
     if (window.confirm("Delete this account?")) {
-      fetch(`${ApiUrl}/api/account/${userId}`, { 
+      fetch(`${ApiUrl}/api/account/${userId}`, {
         method: 'DELETE',
         headers: {
-          'Authorization':`Bearer ${user.token}`,
+          'Authorization': `Bearer ${user.token}`,
           'Content-Type': 'application/json',
-        },})
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('User not found! Please sign up!');
-        }
-        return response.json();
+        },
       })
-      .then(data => {
-        setUserInfo(data);
-      })
-      .catch(error => {
-        ErrorReport("Account Details Delete Acc:" + error.message);
-        toast.error(error.message)
-        setError(error.message);
-      });
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('User not found! Please sign up!');
+          }
+          return response.json();
+        })
+        .then(data => {
+          setUserInfo(data);
+        })
+        .catch(error => {
+          ErrorReport("Account Details Delete Acc:" + error.message);
+          toast.error(error.message)
+          setError(error.message);
+        });
       deleteAccount();
       logout();
       toast.success("Account Deleted");
@@ -179,17 +256,17 @@ const AccountDetails = () => {
         <Typography component="h1" variant="h4" paddingBottom={2}>
           Account Details
         </Typography>
-        <div style={{alignItems: 'left'}}>
-        {userInfo && (
+        <div style={{ alignItems: 'left' }}>
+          {userInfo && (
             <>
-            <Typography variant="h5" gutterBottom>
-              <b>Name:</b> {userInfo.name}
-            </Typography>
-            <Typography variant="h5" gutterBottom >
-              <b>Email:</b> {userInfo.email}
-            </Typography>
+              <Typography variant="h5" gutterBottom>
+                <b>Name:</b> {userInfo.name}
+              </Typography>
+              <Typography variant="h5" gutterBottom >
+                <b>Email:</b> {userInfo.email}
+              </Typography>
             </>
-        )}
+          )}
         </div>
         <Dialog open={passwordUpdateFormOpen} onClose={handlePasswordUpdateClose} fullWidth={true}>
           <DialogTitle>Change Password</DialogTitle>
@@ -221,6 +298,25 @@ const AccountDetails = () => {
             </Button>
           </DialogActions>
         </Dialog>
+        <Dialog open={mobileFormOpen} onClose={handleMobileFormClose}>
+          <DialogTitle>Update Phone Number</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Phone Number"
+              type="text"
+              fullWidth
+              value={phoneNumber}
+              onChange={e => setPhoneNumber(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleMobileFormClose}>Cancel</Button>
+            <Button onClick={enrollUserMfa}>Verify Phone</Button>
+          </DialogActions>
+        </Dialog>
+
 
         <Dialog open={nameUpdateFormOpen} onClose={handleNameUpdateClose} fullWidth={true}>
           <DialogTitle>Change Name</DialogTitle>
@@ -244,8 +340,28 @@ const AccountDetails = () => {
             </Button>
           </DialogActions>
         </Dialog>
+
+        <Dialog open={openTwoFAPopup} onClose={handle2faPopupClose}>
+          <DialogTitle>Enter Verification Code</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Verification Code"
+              type="text"
+              fullWidth
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handle2faPopupClose}>Cancel</Button>
+            <Button onClick={inputVerifyCode} color="primary">Verify</Button>
+          </DialogActions>
+        </Dialog>
+
         <form style={{ width: '100%', marginTop: '16px' }} noValidate>
-          
+
           <Button
             type="button"
             fullWidth
@@ -256,7 +372,7 @@ const AccountDetails = () => {
           >
             Update Name
           </Button>
-          {isFirstParty && ( 
+          {isFirstParty && (
             <Button
               type="button"
               fullWidth
@@ -267,12 +383,31 @@ const AccountDetails = () => {
             >
               Update Password
             </Button>
-            )}
+          )}
+          {!hasMFA && (
+            <Button type="button"
+              fullWidth
+              variant="contained"
+              color="primary"
+              style={{ marginTop: '16px' }} onClick={handleMobileFormOpen}
+            >
+              Add Phone Number 2FA
+            </Button>)}
+          {hasMFA && (
+            <Button type="button"
+              disabled
+              fullWidth
+              variant="contained"
+              color="primary"
+              style={{ marginTop: '16px' }}
+            >
+              2FA Enrolled
+            </Button>)}
           <Button
             type="button"
             fullWidth
             variant="contained"
-            style={{ marginTop: '16px', backgroundColor: 'darkRed'}}
+            style={{ marginTop: '16px', backgroundColor: 'darkRed' }}
             onClick={handleDeleteAccount}
           >
             Delete Account
