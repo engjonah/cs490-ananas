@@ -11,7 +11,7 @@ import {Toaster} from 'react-hot-toast';
 import { useAuthContext } from './hooks/useAuthContext';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import { initRecaptcha } from './firebase';
-
+import ReleaseNotesPage from './pages/ReleaseNotesPage';
 
 function App() {
   const {user} = useAuthContext();
@@ -28,6 +28,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/documentation" element={<DocumentationPage />} />
+          <Route path="/releaseNotes" element={<ReleaseNotesPage />} />
           <Route path="/translate" element={user ? <TranslatePage /> : <Navigate to='/SignIn' replace/> } />
           <Route path="/SignIn" element={!user ? <SignInPage/> : <Navigate to='/translate' replace/>}/>
           <Route path="/SignUp" element={!user ? <SignUpPage/> : <Navigate to='/translate' replace/>}/>

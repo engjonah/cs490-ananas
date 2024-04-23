@@ -43,7 +43,7 @@ describe("Navbar component", () => {
         render(<RoutedNavbar />)
         act(() => {
             const triggerElements = screen.getAllByRole("link")
-            const pageNames = ["/", "/translate", "/documentation", "/SignIn, /account"]
+            const pageNames = ["/", "/translate", "/documentation","/releaseNotes", "/SignIn" ,"/account"]
             for (let i = 0; i < triggerElements.length; i++) {
                 userEvent.click(triggerElements[i])
                 expect(window.location.pathname).toBe(pageNames[i]);
@@ -58,7 +58,7 @@ describe("Navbar component", () => {
             global.innerHeight = 480;
             global.dispatchEvent(new Event('resize'));
             const triggerElements = screen.getAllByRole("link")
-            const pageNames = ["/", "/translate", "/documentation", "/SignIn"]
+            const pageNames = ["/", "/translate", "/documentation", "/releaseNotes", "/SignIn",  "/account"]
             for (let i = 0; i < triggerElements.length; i++) {
                 userEvent.click(triggerElements[i])
                 expect(window.location.pathname).toBe(pageNames[i]);
