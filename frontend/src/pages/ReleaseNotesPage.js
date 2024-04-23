@@ -30,12 +30,15 @@ function ReleaseNotesPage() {
             <Typography marginTop='1vw'>For this release, our team has worked on creating the best user experience possible.</Typography>
             <ul marginTop='1vw'>
                 <li><Typography>Authentication through Firebase</Typography></li>
+                <li><Typography>Connection to Google + Github account </Typography></li>
+                <li><Typography>Full account management features - password reset, name change, account deletion </Typography></li>
                 <li><Typography>2FA security layer through Firebase</Typography></li>
                 <li><Typography>Powered by GPT-3.5 Turbo Model</Typography></li>
                 <li><Typography>Full access to translation history</Typography></li>
                 <li><Typography>Ability to sort translations chronologically or input/output language</Typography></li>
                 <li><Typography>Fast UI optimized for performance</Typography></li>
                 <li><Typography>User feedback on per translation basis</Typography></li>
+                <li><Typography>Historical user reviews and rating distrubtion</Typography></li>
                 <li><Typography>Extensive documentation page + user guide and walkthrough</Typography></li>
             </ul>
         </Card>
