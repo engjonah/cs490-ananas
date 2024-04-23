@@ -300,7 +300,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
   const endIndex = Math.min(startIndex + itemsPerPage, translations.length); // Adjust endIndex
 
   return (
-    <Container style={{ borderRadius: '5px', padding: "20px", alignItems: "left"}}>
+    <Container style={{ borderRadius: '5px', padding: "20px", alignItems: "left", textAlign: "left"}}>
       <Typography variant="h4" gutterBottom>Translation History</Typography>
       <div style={{ marginBottom: '10px', display:'flex', alignItems: 'center' }}>
         <Typography variant="subtitle1" style={{ display: 'inline-block', marginRight: '10px'}}><strong>Sort By:</strong></Typography>
@@ -325,7 +325,7 @@ const TranslationHistory = ({testTranslations, outputLoading, setEditCalled, set
           </IconButton>
         </Tooltip>
         <Tooltip title={'Clear History'}>
-          <Button aria-label='clearHistoryButton' onClick={() => setClearMenuOpen(true)}>
+          <Button aria-label='clearHistoryButton' variant="outlined" endIcon={<DeleteIcon />} onClick={() => setClearMenuOpen(true)}>
             Clear History
           </Button>
         </Tooltip>

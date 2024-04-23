@@ -28,7 +28,7 @@ function TranslatePage() {
   return (
     <div className="App">
       <div className="div">
-        <Container id="translation" disableGutters={true} maxWidth="lg" style={{"marginTop":"5%"}}>
+        <Container id="translation" disableGutters={true} maxWidth="lg" style={{"marginTop":"8%"}}>
           <Grid container spacing={4}>
             <Grid xs={12} md={6}>
               <Container maxWidth="sm" disableGutters={true} style={{"display": "inline-block", "minHeight": "10vh"}}>
