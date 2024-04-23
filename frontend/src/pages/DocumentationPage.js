@@ -17,8 +17,8 @@ function DocumentationPage() {
       thumbnail.addEventListener("click", function() {
           // Replace the thumbnail with the iframe
           videoContainer.innerHTML = `
-              <iframe class="video-frame" title="Ananas Walkthrough" 
-              src="https://www.youtube.com/embed/K17iPxd6xAg?si=08ZKWO7rMgK-HvXLtgbNymZ7vqY" 
+              <iframe class="video-frame" title="Ananas Final Walkthrough" 
+              src="https://www.youtube.com/embed/JVIpPHcqXLY?si=_a8G9yAh9Pe4-qQ5" 
               frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
               referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
               </iframe>

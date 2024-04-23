@@ -32,7 +32,7 @@ describe('DocumentationPage component', () => {
     fireEvent.click(thumbnail)
     const videoElement = container.querySelector('iframe')
     expect(videoElement).toBeInTheDocument()
-    expect(videoElement).toHaveAttribute('src', 'https://www.youtube.com/embed/K17iPxd6xAg?si=08ZKWO7rMgK-HvXLtgbNymZ7vqY')
+    expect(videoElement).toHaveAttribute('src', 'https://www.youtube.com/embed/JVIpPHcqXLY?si=_a8G9yAh9Pe4-qQ5')
     const majorItems = ['MongoDB:', 'Express.js:', 'React.js:', 'Node.js:', 'GPT-3.5 Turbo Model', 'Firebase API', 'User Details:', 'Translation History:']
     let majorItem
     for (let i = 0; i < majorItems.length; i++) {
