@@ -69,11 +69,13 @@ describe("testing local auth functions in firebase.js", () => {
       await resetPasswordEmail()
       expect(firebase.sendPasswordResetEmail).toHaveBeenCalled()
     })
-    it('should log error if sending email unsuccessful', async () => {
-      const consoleSpy = jest.spyOn(console, 'error')
+    it('should throw error if sending email unsuccessful', async () => {
       firebase.sendPasswordResetEmail = jest.fn().mockRejectedValue(new Error())
-      await resetPasswordEmail()
-      expect(consoleSpy).toHaveBeenCalled()
+      try {
+        await resetPasswordEmail()
+      } catch (e) {
+        expect(e.message).toBe("Error updating password:")
+      }
     })
   })
   describe("testing email/pass registration", () => {
@@ -116,6 +118,7 @@ describe("testing local auth functions in firebase.js", () => {
     test("Returns user successfuly", async () => {
       const mockedReturn = { user: { uid: "test" } }
       firebase.createUserWithEmailAndPassword = jest.fn(() => mockedReturn)
+      firebase.sendEmailVerification = jest.fn();
       const val = await registerWithEmailAndPassword("test", "test@gmail.com", "test", "test");
       expect(val).toBe('test');
     });
