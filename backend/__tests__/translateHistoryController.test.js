@@ -1,17 +1,19 @@
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
 const app = require('../app');
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Translation = require('../models/Translation.model');
 
 function generateMockToken() {
-  return jwt.sign({ userId: 'mockUserId' }, process.env.JWT_TOKEN_KEY, { expiresIn: '1h' });
+  return jwt.sign({ userId: 'mockUserId' }, process.env.JWT_TOKEN_KEY, {
+    expiresIn: '1h',
+  });
 }
 
-afterAll(done => {
-  mongoose.connection.close()
-  done()
-})
+afterAll((done) => {
+  mongoose.connection.close();
+  done();
+});
 
 describe('/api/translateHistory', () => {
   let translationId;
@@ -22,41 +24,44 @@ describe('/api/translateHistory', () => {
     inputCode: '# test comment',
     outputCode: '// test comment',
     status: 200,
-    translatedAt: new Date('December 17, 1995 03:24:00')
+    translatedAt: new Date('December 17, 1995 03:24:00'),
   };
 
   beforeEach(async () => {
-      const newTranslation = await Translation.create(translationData);
-      translationId = newTranslation._id;
-    });
+    const newTranslation = await Translation.create(translationData);
+    translationId = newTranslation._id;
+  });
 
-  test("POST /api/translateHistory", async () => {
+  test('POST /api/translateHistory', async () => {
     const token = generateMockToken();
     return await request(app)
-      .post("/api/translateHistory")
+      .post('/api/translateHistory')
       .send(translationData)
       .set('Authorization', `Bearer ${token}`)
       .expect(200)
       .expect('Content-Type', /json/)
-      .then(response => {
+      .then((response) => {
         expect(response.body.Message).toEqual('Translation saved!');
       });
   });
 
-  test("GET /api/translateHistory/:uid", async () => {
+  test('GET /api/translateHistory/:uid', async () => {
     const token = generateMockToken();
     return await request(app)
       .get(`/api/translateHistory/${translationData.uid}`)
       .set('Authorization', `Bearer ${token}`)
       .expect(200)
       .expect('Content-Type', /json/)
-      .then(response => {
+      .then((response) => {
         expect(response.body.Translations.length).toBeGreaterThan(0);
       });
   });
 
-  test("PUT /api/translateHistory/:id", async () => {
-    const updatedTranslationData = { ...translationData, inputLang: 'JavaScript' };
+  test('PUT /api/translateHistory/:id', async () => {
+    const updatedTranslationData = {
+      ...translationData,
+      inputLang: 'JavaScript',
+    };
     const token = generateMockToken();
     return await request(app)
       .put(`/api/translateHistory/${translationId}`)
@@ -64,34 +69,36 @@ describe('/api/translateHistory', () => {
       .set('Authorization', `Bearer ${token}`)
       .expect(200)
       .expect('Content-Type', /json/)
-      .then(response => {
+      .then((response) => {
         expect(response.body.UpdatedTranslation.inputLang).toBe('JavaScript');
       });
   });
 
-  test("DELETE /api/translateHistory/:id", async () => {
+  test('DELETE /api/translateHistory/:id', async () => {
     const token = generateMockToken();
     return await request(app)
       .delete(`/api/translateHistory/${translationId}`)
       .set('Authorization', `Bearer ${token}`)
       .expect(200)
       .expect('Content-Type', /json/)
-      .then(response => {
+      .then((response) => {
         expect(response.body.Message).toBe('Translation deleted successfully');
       });
-  });  
+  });
 
-  test("DELETE /api/translateHistory/clearHistory/:uid", async () => {
+  test('DELETE /api/translateHistory/clearHistory/:uid', async () => {
     const token = generateMockToken();
     return await request(app)
       .delete(`/api/translateHistory/clearHistory/user_id`)
       .set('Authorization', `Bearer ${token}`)
       .expect(200)
       .expect('Content-Type', /json/)
-      .then(response => {
-        expect(response.body.Message).toBe('Translation history cleared successfully');
+      .then((response) => {
+        expect(response.body.Message).toBe(
+          'Translation history cleared successfully'
+        );
       });
-  });  
+  });
 });
 
 describe('Error Handling', () => {
@@ -99,7 +106,7 @@ describe('Error Handling', () => {
     const token = generateMockToken();
     const incompleteData = {
       inputLang: 'Python',
-      outputLang: 'Java'
+      outputLang: 'Java',
     };
 
     await request(app)
@@ -108,8 +115,10 @@ describe('Error Handling', () => {
       .set('Authorization', `Bearer ${token}`)
       .expect(500)
       .expect('Content-Type', /json/)
-      .then(response => {
-        expect(response.body.error).toBe('Translation validation failed: uid: Path `uid` is required., inputCode: Path `inputCode` is required., outputCode: Path `outputCode` is required., status: Path `status` is required., translatedAt: Path `translatedAt` is required.');
+      .then((response) => {
+        expect(response.body.error).toBe(
+          'Translation validation failed: uid: Path `uid` is required., inputCode: Path `inputCode` is required., outputCode: Path `outputCode` is required., status: Path `status` is required., translatedAt: Path `translatedAt` is required.'
+        );
       });
   });
 
@@ -123,7 +132,7 @@ describe('Error Handling', () => {
       .set('Authorization', `Bearer ${token}`)
       .expect(404)
       .expect('Content-Type', /json/)
-      .then(response => {
+      .then((response) => {
         expect(response.body.error).toBe('Translation not found.');
       });
   });
@@ -137,9 +146,10 @@ describe('Error Handling', () => {
       .set('Authorization', `Bearer ${token}`)
       .expect(500)
       .expect('Content-Type', /json/)
-      .then(response => {
-        expect(response.body.error).toBe(`Cast to ObjectId failed for value \"${invalidTranslationId}\" (type string) at path \"_id\" for model \"Translation\"`);
+      .then((response) => {
+        expect(response.body.error).toBe(
+          `Cast to ObjectId failed for value \"${invalidTranslationId}\" (type string) at path \"_id\" for model \"Translation\"`
+        );
       });
   });
 });
-

@@ -3,9 +3,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const testSchema = new Schema({
-    test: {
-        type: String,
-    },
+  test: {
+    type: String,
+  },
 });
 
 const Test = mongoose.model('Test', testSchema);
