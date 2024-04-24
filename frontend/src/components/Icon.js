@@ -1,4 +1,4 @@
-import { Tooltip, IconButton, SvgIcon } from '@mui/material'
+import { Tooltip, IconButton, SvgIcon } from '@mui/material';
 
 export function Icon(props) {
   return (

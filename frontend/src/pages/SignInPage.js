@@ -1,7 +1,31 @@
 import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
-import { setRecaptchaVisibility, verifyCode, logInWithEmailAndPassword, signInWithGoogle, signInWithGithub } from '../firebase';
-import { Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Dialog, DialogActions, DialogContent, DialogTitle, Container, Divider, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import {
+  setRecaptchaVisibility,
+  verifyCode,
+  logInWithEmailAndPassword,
+  signInWithGoogle,
+  signInWithGithub,
+} from '../firebase';
+import {
+  Avatar,
+  Button,
+  CssBaseline,
+  TextField,
+  Link,
+  Grid,
+  Box,
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Container,
+  Divider,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+} from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import GoogleButton from 'react-google-button';
 import GithubButton from 'react-github-login-button/dist/react-github-button';
@@ -10,7 +34,6 @@ import { useLogin } from '../hooks/useLogIn';
 import { ErrorReport } from '../services/ErrorReport';
 
 const SignInPage = () => {
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
@@ -33,70 +56,72 @@ const SignInPage = () => {
     try {
       handle2faPopupClose();
       const userCredential = await verifyCode(resolver, verificationId, code);
-      toast.success("Logged in!");
+      toast.success('Logged in!');
       await login(userCredential.user.email, userCredential.user.uid, remember);
-      navigate("/translate");
+      navigate('/translate');
     } catch (error) {
       console.log(error.message);
       toast.error(error.message);
-      ErrorReport("Error in MFA:" + error.message);
+      ErrorReport('Error in MFA:' + error.message);
     } finally {
       setCode('');
       setResolver('');
       setVerificationId('');
       setRecaptchaVisibility('hidden');
     }
-  }
+  };
 
   const mfaRequired = async (error) => {
     if (error.resolver && error.verificationId) {
-      toast("Multi-factor authentication required. Please verify your phone number.");
+      toast(
+        'Multi-factor authentication required. Please verify your phone number.'
+      );
       handle2faPopupOpen(true);
       setResolver(error.resolver);
       setVerificationId(error.verificationId);
     } else {
       toast.error(error.message);
-      ErrorReport("Signin page:" + error.message);
+      ErrorReport('Signin page:' + error.message);
     }
-  }
+  };
 
   const onSubmitEmailPass = async () => {
     setRecaptchaVisibility('visible');
     try {
       const uid = await logInWithEmailAndPassword(email, password);
       await login(email, uid, remember);
-      toast.success("Logged in!");
-      navigate("/translate");
+      toast.success('Logged in!');
+      navigate('/translate');
     } catch (error) {
       mfaRequired(error);
     }
-  }
+  };
 
   const onSubmitGoogle = async () => {
     setRecaptchaVisibility('visible');
     try {
       const { email, uid } = await signInWithGoogle();
       await login(email, uid, remember);
-      toast.success("Logged in!");
-      navigate("/translate");
+      toast.success('Logged in!');
+      navigate('/translate');
     } catch (error) {
       mfaRequired(error);
     }
-  }
+  };
   const onSubmitGithub = async (event) => {
     setRecaptchaVisibility('visible');
     try {
       const { email, uid } = await signInWithGithub();
       await login(email, uid, remember);
-      toast.success("Logged in!");
-      navigate("/translate")
+      toast.success('Logged in!');
+      navigate('/translate');
     } catch (error) {
       mfaRequired(error);
     }
-  }
+  };
 
   return (
-    <main >
+    <main>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -143,8 +168,8 @@ const SignInPage = () => {
                     margin={5}
                     control={<Checkbox />}
                     checked={remember}
-                    onChange={e => {
-                      setRemember(e.target.checked)
+                    onChange={(e) => {
+                      setRemember(e.target.checked);
                     }}
                     label="Remember Me"
                   />
@@ -191,17 +216,18 @@ const SignInPage = () => {
             </DialogContent>
             <DialogActions>
               <Button onClick={handle2faPopupClose}>Cancel</Button>
-              <Button onClick={inputVerifyCode} color="primary">Verify</Button>
+              <Button onClick={inputVerifyCode} color="primary">
+                Verify
+              </Button>
             </DialogActions>
           </Dialog>
           <Box marginTop={2}>
             <Grid container spacing={2}></Grid>
             <GoogleButton
-
               type="dark"
               onClick={onSubmitGoogle}
               variant="contained"
-              title='google-button'
+              title="google-button"
             >
               Log In With Google
             </GoogleButton>
@@ -209,7 +235,7 @@ const SignInPage = () => {
               type="dark"
               onClick={onSubmitGithub}
               variant="contained"
-              title='github-button'
+              title="github-button"
             >
               Log In With Github
             </GithubButton>
@@ -217,7 +243,7 @@ const SignInPage = () => {
         </Box>
       </Container>
     </main>
-  )
-}
+  );
+};
 
-export default SignInPage
+export default SignInPage;

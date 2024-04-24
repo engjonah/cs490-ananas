@@ -1,4 +1,4 @@
-import React,  { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Chart as ChartJS,
@@ -11,22 +11,24 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import ApiUrl from '../ApiUrl';
-import { Button, Grid } from '@mui/material';
 import './HomePage.css'; // Import the CSS file for HomePage
 import { ErrorReport } from '../services/ErrorReport';
 import FeedbackDisplay from '../components/FeedbackDisplay';
-import { alpha } from '@mui/material';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import Card from '@mui/material/Card';
+import {
+  alpha,
+  Box,
+  Button,
+  Card,
+  Container,
+  Grid,
+  Stack,
+  Typography,
+} from '@mui/material';
 import SettingsSuggestRoundedIcon from '@mui/icons-material/SettingsSuggestRounded';
 import ThumbUpAltRoundedIcon from '@mui/icons-material/ThumbUpAltRounded';
 import TerminalIcon from '@mui/icons-material/Terminal';
 
 const steps = [
-  
   {
     icon: <TerminalIcon />,
     title: 'Code + Language',
@@ -36,14 +38,12 @@ const steps = [
   {
     icon: <SettingsSuggestRoundedIcon />,
     title: 'Convert ',
-    description:
-      'Simply hit translate to get your result',
+    description: 'Simply hit translate to get your result',
   },
   {
     icon: <ThumbUpAltRoundedIcon />,
     title: 'Feedback',
-    description:
-      'Provide feedback on the accuracy of the conversion',
+    description: 'Provide feedback on the accuracy of the conversion',
   },
 ];
 function Overview() {
@@ -72,7 +72,7 @@ function Overview() {
             textAlign: { sm: 'left', md: 'center' },
           }}
         >
-          <Typography component="h2" variant="h2" sx={{fontWeight:'bold'}}>
+          <Typography component="h2" variant="h2" sx={{ fontWeight: 'bold' }}>
             Overview
           </Typography>
           <Typography variant="body1" sx={{ color: 'grey.400' }}>
@@ -120,8 +120,7 @@ function Intro() {
       id="Intro"
       sx={{
         width: '100%',
-        backgroundImage:
-          'linear-gradient(180deg, #c9c7c7, #FFF)',
+        backgroundImage: 'linear-gradient(180deg, #c9c7c7, #FFF)',
         backgroundSize: '100% 80%',
         backgroundRepeat: 'no-repeat',
       }}
@@ -144,7 +143,7 @@ function Intro() {
               alignSelf: 'center',
               textAlign: 'center',
               fontSize: 'clamp(3.5rem, 10vw, 4rem)',
-              fontWeight: 'bold'
+              fontWeight: 'bold',
             }}
           >
             Seamless Code Translations
@@ -154,7 +153,8 @@ function Intro() {
             color="text.secondary"
             sx={{ alignSelf: 'center', width: { sm: '100%', md: '80%' } }}
           >
-            Explore our cutting-edge translation capabilities. Quickly and accurately convert your code from one language to another.
+            Explore our cutting-edge translation capabilities. Quickly and
+            accurately convert your code from one language to another.
           </Typography>
           <Stack
             direction={{ xs: 'column', sm: 'row' }}
@@ -163,12 +163,20 @@ function Intro() {
             useFlexGap
             sx={{ pt: 2, width: { xs: '100%', sm: 'auto' } }}
           >
-          
-          <Link to="/translate">
-            <Button variant="contained" style={{ backgroundColor: '#CACACA', color: 'black'}}>Translate Now</Button>
-          </Link>
+            <Link to="/translate">
+              <Button
+                variant="contained"
+                style={{ backgroundColor: '#CACACA', color: 'black' }}
+              >
+                Translate Now
+              </Button>
+            </Link>
           </Stack>
-          <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>
+          <Typography
+            variant="caption"
+            textAlign="center"
+            sx={{ opacity: 0.8 }}
+          >
             Powered by ChatGPT 3.5
           </Typography>
         </Stack>
@@ -177,31 +185,27 @@ function Intro() {
   );
 }
 
-
-
 const HomePage = () => {
-  const [ratingCounts, setRatingCounts] = useState([0,0,0,0,0]);
+  const [ratingCounts, setRatingCounts] = useState([0, 0, 0, 0, 0]);
   const [averageRating, setAverageRating] = useState(0);
-
-
 
   useEffect(() => {
     fetch(`${ApiUrl}/api/feedbackDisplay/metrics`)
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
           throw new Error('Error retrieving feedback');
         }
         return response.json();
       })
-      .then(data => {
+      .then((data) => {
         setRatingCounts(data.RatingCounts);
         setAverageRating(data.AverageRating);
       })
-      .catch(error => {
-        ErrorReport("Account Details:" + error.message);
+      .catch((error) => {
+        ErrorReport('Account Details:' + error.message);
         console.log(error);
       });
-  }, []); 
+  }, []);
 
   ChartJS.register(
     CategoryScale,
@@ -226,10 +230,8 @@ const HomePage = () => {
     },
   };
 
-
-
   const labels = ['1', '2', '3', '4', '5'];
-  
+
   const data = {
     labels,
     datasets: [
@@ -238,83 +240,80 @@ const HomePage = () => {
         data: ratingCounts,
         backgroundColor: 'pink',
       },
-
     ],
   };
 
   return (
     <div className="HomePage">
-      <Intro/>
-      <Overview/>
-      { averageRating > 0 && 
+      <Intro />
+      <Overview />
+      {averageRating > 0 && (
         <Container sx={{ py: { xs: 8, sm: 16 } }}>
           <Grid container spacing={6}>
             <Box
-            sx={{
-              width: { sm: '100%', md: '100%' },
-              textAlign: { sm: 'left', md: 'center' },
-            }}
-          >
-              <Typography component="h2" variant="h2" sx={{fontWeight:'bold'}}>
+              sx={{
+                width: { sm: '100%', md: '100%' },
+                textAlign: { sm: 'left', md: 'center' },
+              }}
+            >
+              <Typography
+                component="h2"
+                variant="h2"
+                sx={{ fontWeight: 'bold' }}
+              >
                 Reviews
               </Typography>
               <Typography
-              textAlign="center"
-              color="text.secondary"
-              sx={{ alignSelf: 'center', width: { sm: '100%', md: '100%' } }}
+                textAlign="center"
+                color="text.secondary"
+                sx={{ alignSelf: 'center', width: { sm: '100%', md: '100%' } }}
               >
                 See what people have to say about our service
               </Typography>
             </Box>
-            </Grid>
-            <Grid container spacing={4} justifyContent={"center"} marginTop='2vh'>
-              <Grid item xs = {6}>    
-                  <FeedbackDisplay/>
-              </Grid>
-              <Grid item xs = {6}>
-                <Box
-                  component={Card}
-                  variant="outlined"
-                  
-                  sx={{
-                    height: { xs: 200, sm: 500 },
-                    width: '100%',
-                    backgroundSize: 'cover',
-                    borderRadius: '10px',
-                    outline: '1px solid',
-                    outlineColor:alpha('#c9c7c7', 0.5),
-                    boxShadow:
-                      `0 0 12px 8px ${alpha('#c9c7c7', .2)}`
-                      
-                  }}
-                >
-                  <Grid sx={{margin:'2vw' }} >
-                    <Bar 
-                          options={options}
-                          data={data}/>
-                  </Grid>
-                  <Grid justifyItems={'center'} >
-                    <Grid item xs={10} sm={12}>
-                    {averageRating > 0 && 
-                      <Grid alignItems={'center'} sx={{textAlign: { sm: 'left', md: 'center' }}}>
-                          <Typography variant='h4' fontWeight='medium'>Average Rating: {averageRating} / 5</Typography>
-
-                      </Grid>
-                    }
-                    </Grid>
-                  </Grid>
-
-                </Box>
-              </Grid>
           </Grid>
-          
+          <Grid container spacing={4} justifyContent={'center'} marginTop="2vh">
+            <Grid item xs={6}>
+              <FeedbackDisplay />
+            </Grid>
+            <Grid item xs={6}>
+              <Box
+                component={Card}
+                variant="outlined"
+                sx={{
+                  height: { xs: 200, sm: 500 },
+                  width: '100%',
+                  backgroundSize: 'cover',
+                  borderRadius: '10px',
+                  outline: '1px solid',
+                  outlineColor: alpha('#c9c7c7', 0.5),
+                  boxShadow: `0 0 12px 8px ${alpha('#c9c7c7', 0.2)}`,
+                }}
+              >
+                <Grid sx={{ margin: '2vw' }}>
+                  <Bar options={options} data={data} />
+                </Grid>
+                <Grid justifyItems={'center'}>
+                  <Grid item xs={10} sm={12}>
+                    {averageRating > 0 && (
+                      <Grid
+                        alignItems={'center'}
+                        sx={{ textAlign: { sm: 'left', md: 'center' } }}
+                      >
+                        <Typography variant="h4" fontWeight="medium">
+                          Average Rating: {averageRating} / 5
+                        </Typography>
+                      </Grid>
+                    )}
+                  </Grid>
+                </Grid>
+              </Box>
+            </Grid>
+          </Grid>
         </Container>
-        
-        }
-
-      
+      )}
     </div>
   );
-}
+};
 
 export default HomePage;

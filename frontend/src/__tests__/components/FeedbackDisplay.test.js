@@ -1,5 +1,10 @@
 import React from 'react';
-import { render, waitFor, fireEvent, queryByText } from '@testing-library/react';
+import {
+  render,
+  waitFor,
+  fireEvent,
+  queryByText,
+} from '@testing-library/react';
 import FeedbackDisplay from '../../components/FeedbackDisplay';
 
 describe('FeedbackDisplay Component', () => {
@@ -18,7 +23,18 @@ describe('FeedbackDisplay Component', () => {
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
-        json: () => Promise.resolve({ AllFeedback: [{ id: 1, inputLang: 'English', outputLang: 'Spanish', rating: '4', review: 'Great translation!' }] }),
+        json: () =>
+          Promise.resolve({
+            AllFeedback: [
+              {
+                id: 1,
+                inputLang: 'English',
+                outputLang: 'Spanish',
+                rating: '4',
+                review: 'Great translation!',
+              },
+            ],
+          }),
       })
     );
 
@@ -28,7 +44,15 @@ describe('FeedbackDisplay Component', () => {
   });
 
   test('displays feedback items properly', async () => {
-    const feedbackData = [{ id: 1, inputLang: 'English', outputLang: 'Spanish', rating: '4', review: 'Great translation!' }];
+    const feedbackData = [
+      {
+        id: 1,
+        inputLang: 'English',
+        outputLang: 'Spanish',
+        rating: '4',
+        review: 'Great translation!',
+      },
+    ];
     // Mock fetch function
     global.fetch = jest.fn(() =>
       Promise.resolve({
@@ -65,7 +89,9 @@ describe('FeedbackDisplay Component', () => {
 
   test('handles API fetch error', async () => {
     // Mock fetch function to return an error response
-    global.fetch = jest.fn(() => Promise.reject(new Error('Error fetching data')));
+    global.fetch = jest.fn(() =>
+      Promise.reject(new Error('Error fetching data'))
+    );
 
     const { getByText } = render(<FeedbackDisplay />);
     await waitFor(() => getByText('No feedback available.'));

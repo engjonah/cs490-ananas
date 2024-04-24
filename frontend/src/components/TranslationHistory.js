@@ -1,5 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { Paper, Typography, IconButton, Grid, Divider, Collapse, Pagination, Container, Tooltip, MenuItem, Select, FormControlLabel, Checkbox, Menu, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import {
+  Button,
+  Checkbox,
+  Collapse,
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Divider,
+  FormControlLabel,
+  Grid,
+  IconButton,
+  Menu,
+  MenuItem,
+  Pagination,
+  Paper,
+  Select,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import ApiUrl from '../ApiUrl';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -14,14 +35,25 @@ import Editor from '@monaco-editor/react';
 import toast from 'react-hot-toast';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { ErrorReport } from '../services/ErrorReport';
-import { nameToLanguage, languageMap } from '../constants'
+import { nameToLanguage, languageMap } from '../constants';
 import { GetUID } from '../services/UserInfo';
 
-const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onEdit }) => {
-  const { inputLang, outputLang, inputCode, outputCode, status, translatedAt } = translation;
+const TranslationHistoryItem = ({
+  translation,
+  onDelete,
+  onExpand,
+  expanded,
+  onEdit,
+}) => {
+  const { inputLang, outputLang, inputCode, outputCode, status, translatedAt } =
+    translation;
 
-  const inputLanguageSyntax = languageMap.find((item) => item.name === inputLang)?.syntaxName;
-  const outputLanguageSyntax = languageMap.find((item) => item.name === outputLang)?.syntaxName;
+  const inputLanguageSyntax = languageMap.find(
+    (item) => item.name === inputLang
+  )?.syntaxName;
+  const outputLanguageSyntax = languageMap.find(
+    (item) => item.name === outputLang
+  )?.syntaxName;
 
   function handleEditorDidMount(editor, monaco) {
     monaco.editor.defineTheme('gray', {
@@ -32,32 +64,60 @@ const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onE
         'editor.background': '#ffffff',
       },
     });
-    monaco.editor.setTheme('gray')
+    monaco.editor.setTheme('gray');
   }
 
   return (
-    <Paper elevation={1} style={{ padding: '15px', marginBottom: '10px', overflow: 'hidden', backgroundColor: "#f5f5f5", textAlign: "left" }}>
+    <Paper
+      elevation={1}
+      style={{
+        padding: '15px',
+        marginBottom: '10px',
+        overflow: 'hidden',
+        backgroundColor: '#f5f5f5',
+        textAlign: 'left',
+      }}
+    >
       <Grid container alignItems="center">
         <Grid item xs={8}>
           <Grid container alignItems="center">
-            <Typography aria-label={`inputLabel${inputLang}`} variant="subtitle1"><strong>{`${inputLang}  `}</strong> </Typography>
+            <Typography
+              aria-label={`inputLabel${inputLang}`}
+              variant="subtitle1"
+            >
+              <strong>{`${inputLang}  `}</strong>{' '}
+            </Typography>
             <ArrowForwardIcon fontSize="15px" />
-            <Typography aria-label={`outputLabel${outputLang}`} variant="subtitle1"><strong>{`  ${outputLang}`}</strong></Typography>
+            <Typography
+              aria-label={`outputLabel${outputLang}`}
+              variant="subtitle1"
+            >
+              <strong>{`  ${outputLang}`}</strong>
+            </Typography>
           </Grid>
-          <Typography variant="body2"><strong>Date: </strong>{new Date(translatedAt).toLocaleString()}</Typography>
+          <Typography variant="body2">
+            <strong>Date: </strong>
+            {new Date(translatedAt).toLocaleString()}
+          </Typography>
         </Grid>
-        <Grid item xs={4} container justifyContent="flex-end" alignItems="center">
-          <Tooltip title={expanded ? "Collapse" : "Expand"}>
+        <Grid
+          item
+          xs={4}
+          container
+          justifyContent="flex-end"
+          alignItems="center"
+        >
+          <Tooltip title={expanded ? 'Collapse' : 'Expand'}>
             <IconButton aria-label="expand" onClick={onExpand}>
               {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </IconButton>
           </Tooltip>
-          <Tooltip title={"View"}>
+          <Tooltip title={'View'}>
             <IconButton aria-label="edit" onClick={onEdit}>
               <VisibilityIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title={"Delete"}>
+          <Tooltip title={'Delete'}>
             <IconButton aria-label="delete" onClick={onDelete}>
               <DeleteIcon />
             </IconButton>
@@ -70,12 +130,18 @@ const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onE
             <strong>Input Code: </strong>
           </Typography>
           <br />
-          <Container style={{ "borderRadius": '15px', "padding": "6px", "backgroundColor": "#ffffff" }}>
+          <Container
+            style={{
+              borderRadius: '15px',
+              padding: '6px',
+              backgroundColor: '#ffffff',
+            }}
+          >
             <Editor
               height="15vh"
               defaultLanguage={inputLanguageSyntax}
               defaultValue={inputCode}
-              options={{ "readOnly": true }}
+              options={{ readOnly: true }}
               onMount={handleEditorDidMount}
             />
           </Container>
@@ -84,35 +150,56 @@ const TranslationHistoryItem = ({ translation, onDelete, onExpand, expanded, onE
             <strong>Output Code: </strong>
           </Typography>
           <br />
-          <Container style={{ "borderRadius": '15px', "padding": "6px", "backgroundColor": "#ffffff" }}>
+          <Container
+            style={{
+              borderRadius: '15px',
+              padding: '6px',
+              backgroundColor: '#ffffff',
+            }}
+          >
             <Editor
               height="15vh"
               defaultLanguage={outputLanguageSyntax}
               defaultValue={outputCode}
-              options={{ "readOnly": true }}
+              options={{ readOnly: true }}
               onMount={handleEditorDidMount}
             />
           </Container>
-          <Typography variant="body2"><strong>Status: </strong> {status}</Typography>
+          <Typography variant="body2">
+            <strong>Status: </strong> {status}
+          </Typography>
         </div>
       </Collapse>
     </Paper>
   );
 };
 
-
-
-const TranslationHistory = ({ testTranslations, outputLoading, setEditCalled, setCodeUpload, setOutputCode, setInputLang, setOutputLang }) => {
-
-  const [translations, setTranslations] = useState(testTranslations ? testTranslations : []);
-  const [filteredTranslations, setFilteredTranslations] = useState(testTranslations ? testTranslations : []);
+const TranslationHistory = ({
+  testTranslations,
+  outputLoading,
+  setEditCalled,
+  setCodeUpload,
+  setOutputCode,
+  setInputLang,
+  setOutputLang,
+}) => {
+  const [translations, setTranslations] = useState(
+    testTranslations ? testTranslations : []
+  );
+  const [filteredTranslations, setFilteredTranslations] = useState(
+    testTranslations ? testTranslations : []
+  );
   const [page, setPage] = useState(1);
   const itemsPerPage = 5; // Number of items per page
   const [expandedIndex, setExpandedIndex] = useState(null);
   const [sortCriteria, setSortCriteria] = useState('translatedAt');
   const [sortOrder, setSortOrder] = useState('desc'); // 'desc' for descending, 'asc' for ascending
-  const [selectedInputLanguages, setSelectedInputLanguages] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8]);
-  const [selectedOutputLanguages, setSelectedOutputLanguages] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+  const [selectedInputLanguages, setSelectedInputLanguages] = useState([
+    0, 1, 2, 3, 4, 5, 6, 7, 8,
+  ]);
+  const [selectedOutputLanguages, setSelectedOutputLanguages] = useState([
+    0, 1, 2, 3, 4, 5, 6, 7, 8,
+  ]);
   const userId = GetUID();
   const { user } = useAuthContext();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -123,18 +210,20 @@ const TranslationHistory = ({ testTranslations, outputLoading, setEditCalled, se
       fetch(`${ApiUrl}/api/translateHistory/${userId}`, {
         method: 'GET',
         headers: {
-          "Content-type": "application/json",
-          'Authorization': `Bearer ${user.token}`
+          'Content-type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
         },
       })
-        .then(response => response.json())
-        .then(data => {
-          const sortedTranslations = data.Translations.sort((a, b) => new Date(b.translatedAt) - new Date(a.translatedAt));
+        .then((response) => response.json())
+        .then((data) => {
+          const sortedTranslations = data.Translations.sort(
+            (a, b) => new Date(b.translatedAt) - new Date(a.translatedAt)
+          );
           setTranslations(sortedTranslations);
           setExpandedIndex(null);
         })
-        .catch(error => {
-          ErrorReport("Translation History Fetch:" + error.message);
+        .catch((error) => {
+          ErrorReport('Translation History Fetch:' + error.message);
           toast.error(error.message);
           console.error('Error fetching translations:', error);
         });
@@ -143,36 +232,39 @@ const TranslationHistory = ({ testTranslations, outputLoading, setEditCalled, se
 
   useEffect(() => {
     if (outputLoading) {
-      setSortOrder('desc')
-      setSortCriteria('translatedAt')
+      setSortOrder('desc');
+      setSortCriteria('translatedAt');
     }
   }, [outputLoading, sortOrder, sortCriteria]);
 
   // filtering
   useEffect(() => {
-    const newFilteredTranslations = translations.filter(translation => {
-      const inputLanguageSelected = selectedInputLanguages.includes(nameToLanguage[translation.inputLang]);
-      const outputLanguageSelected = selectedOutputLanguages.includes(nameToLanguage[translation.outputLang]);
+    const newFilteredTranslations = translations.filter((translation) => {
+      const inputLanguageSelected = selectedInputLanguages.includes(
+        nameToLanguage[translation.inputLang]
+      );
+      const outputLanguageSelected = selectedOutputLanguages.includes(
+        nameToLanguage[translation.outputLang]
+      );
       return inputLanguageSelected && outputLanguageSelected;
     });
     setFilteredTranslations(newFilteredTranslations);
   }, [translations, selectedInputLanguages, selectedOutputLanguages]);
 
-
   const handleDelete = async (index) => {
     fetch(`${ApiUrl}/api/translateHistory/${translations[index]._id}`, {
       method: 'DELETE',
       headers: {
-        "Content-type": "application/json",
-        'Authorization': `Bearer ${user.token}`
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${user.token}`,
       },
     })
-      .then(response => response.json())
-      .then(data => {
-        toast.success("Deleted translation!");
+      .then((response) => response.json())
+      .then((data) => {
+        toast.success('Deleted translation!');
       })
-      .catch(error => {
-        ErrorReport("Translation History Delete:" + error.message);
+      .catch((error) => {
+        ErrorReport('Translation History Delete:' + error.message);
         toast.error(error.message);
         console.error('Error fetching translations:', error);
         return;
@@ -189,16 +281,16 @@ const TranslationHistory = ({ testTranslations, outputLoading, setEditCalled, se
     fetch(`${ApiUrl}/api/translateHistory/clearHistory/${userId}`, {
       method: 'DELETE',
       headers: {
-        "Content-type": "application/json",
-        'Authorization': `Bearer ${user.token}`
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${user.token}`,
       },
     })
-      .then(response => response.json())
-      .then(data => {
-        toast.success("Cleared translation history!");
+      .then((response) => response.json())
+      .then((data) => {
+        toast.success('Cleared translation history!');
       })
-      .catch(error => {
-        ErrorReport("Translation History Clear:" + error.message);
+      .catch((error) => {
+        ErrorReport('Translation History Clear:' + error.message);
         toast.error(error.message);
         return;
       });
@@ -211,9 +303,12 @@ const TranslationHistory = ({ testTranslations, outputLoading, setEditCalled, se
   const handleSort = (criteria, order) => {
     const sortedTranslations = [...translations].sort((a, b) => {
       if (criteria === 'translatedAt') {
-        return order === 'asc' ? new Date(a[criteria]) - new Date(b[criteria]) : new Date(b[criteria]) - new Date(a[criteria]);
+        return order === 'asc'
+          ? new Date(a[criteria]) - new Date(b[criteria])
+          : new Date(b[criteria]) - new Date(a[criteria]);
       } else {
-        const comparison = a[criteria] < b[criteria] ? -1 : a[criteria] > b[criteria] ? 1 : 0;
+        const comparison =
+          a[criteria] < b[criteria] ? -1 : a[criteria] > b[criteria] ? 1 : 0;
         return order === 'asc' ? comparison : -comparison;
       }
     });
@@ -225,17 +320,17 @@ const TranslationHistory = ({ testTranslations, outputLoading, setEditCalled, se
 
   const handleCheckboxChange = (language, type) => {
     if (type === 'input') {
-      setSelectedInputLanguages(prevLanguages => {
+      setSelectedInputLanguages((prevLanguages) => {
         if (prevLanguages.includes(language)) {
-          return prevLanguages.filter(lang => lang !== language);
+          return prevLanguages.filter((lang) => lang !== language);
         } else {
           return [...prevLanguages, language];
         }
       });
     } else if (type === 'output') {
-      setSelectedOutputLanguages(prevLanguages => {
+      setSelectedOutputLanguages((prevLanguages) => {
         if (prevLanguages.includes(language)) {
-          return prevLanguages.filter(lang => lang !== language);
+          return prevLanguages.filter((lang) => lang !== language);
         } else {
           return [...prevLanguages, language];
         }
@@ -245,17 +340,17 @@ const TranslationHistory = ({ testTranslations, outputLoading, setEditCalled, se
 
   const handleCheckboxSelectAll = (type) => {
     if (type === 'input') {
-      setSelectedInputLanguages([0, 1, 2, 3, 4, 5, 6, 7, 8])
+      setSelectedInputLanguages([0, 1, 2, 3, 4, 5, 6, 7, 8]);
     } else if (type === 'output') {
-      setSelectedOutputLanguages([0, 1, 2, 3, 4, 5, 6, 7, 8])
+      setSelectedOutputLanguages([0, 1, 2, 3, 4, 5, 6, 7, 8]);
     }
   };
 
   const handleCheckboxClearAll = (type) => {
     if (type === 'input') {
-      setSelectedInputLanguages([])
+      setSelectedInputLanguages([]);
     } else if (type === 'output') {
-      setSelectedOutputLanguages([])
+      setSelectedOutputLanguages([]);
     }
   };
 
@@ -272,7 +367,7 @@ const TranslationHistory = ({ testTranslations, outputLoading, setEditCalled, se
     if (page !== 1 && page > Math.ceil(translations.length / itemsPerPage)) {
       setPage(page - 1);
     }
-  }, [page, translations])
+  }, [page, translations]);
 
   const handleExpand = (index) => {
     if (index === expandedIndex) {
@@ -283,13 +378,13 @@ const TranslationHistory = ({ testTranslations, outputLoading, setEditCalled, se
   };
 
   const handleEdit = (index) => {
-    setEditCalled(true)
-    setCodeUpload(translations[index].inputCode)
-    setOutputCode(translations[index].outputCode)
-    setInputLang(nameToLanguage[translations[index].inputLang] || 0)
-    setOutputLang(nameToLanguage[translations[index].outputLang] || 0)
-    setEditCalled(false)
-    window.scroll({ top: 0, left: 0, behavior: 'smooth' })
+    setEditCalled(true);
+    setCodeUpload(translations[index].inputCode);
+    setOutputCode(translations[index].outputCode);
+    setInputLang(nameToLanguage[translations[index].inputLang] || 0);
+    setOutputLang(nameToLanguage[translations[index].outputLang] || 0);
+    setEditCalled(false);
+    window.scroll({ top: 0, left: 0, behavior: 'smooth' });
   };
 
   const handleChangePage = (event, newPage) => {
@@ -300,32 +395,75 @@ const TranslationHistory = ({ testTranslations, outputLoading, setEditCalled, se
   const endIndex = Math.min(startIndex + itemsPerPage, translations.length); // Adjust endIndex
 
   return (
-    <Container style={{ borderRadius: '5px', padding: "20px", alignItems: "left", textAlign: "left" }}>
-      <Typography variant="h4" gutterBottom>Translation History</Typography>
-      <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
-        <Typography variant="subtitle1" style={{ display: 'inline-block', marginRight: '10px' }}><strong>Sort By:</strong></Typography>
+    <Container
+      style={{
+        borderRadius: '5px',
+        padding: '20px',
+        alignItems: 'left',
+        textAlign: 'left',
+      }}
+    >
+      <Typography variant="h4" gutterBottom>
+        Translation History
+      </Typography>
+      <div
+        style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}
+      >
+        <Typography
+          variant="subtitle1"
+          style={{ display: 'inline-block', marginRight: '10px' }}
+        >
+          <strong>Sort By:</strong>
+        </Typography>
         <Select
           value={sortCriteria || ''}
           onChange={(e) => handleSort(e.target.value, sortOrder)}
           style={{ minWidth: '175px', maxHeight: '30px' }}
           aria-label="sortCategoriesButton"
         >
-          <MenuItem aria-label='inputLangSortCategoriesButton' value="inputLang">Input Language</MenuItem>
-          <MenuItem aria-label='outputLangSortCategoriesButton' value="outputLang">Output Language</MenuItem>
-          <MenuItem aria-label='dateSortCategoriesButton' value="translatedAt">Date</MenuItem>
+          <MenuItem
+            aria-label="inputLangSortCategoriesButton"
+            value="inputLang"
+          >
+            Input Language
+          </MenuItem>
+          <MenuItem
+            aria-label="outputLangSortCategoriesButton"
+            value="outputLang"
+          >
+            Output Language
+          </MenuItem>
+          <MenuItem aria-label="dateSortCategoriesButton" value="translatedAt">
+            Date
+          </MenuItem>
         </Select>
         <Tooltip title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}>
-          <IconButton aria-label='sortOrderButton' onClick={() => handleSort(sortCriteria, sortOrder === 'asc' ? 'desc' : 'asc')}>
+          <IconButton
+            aria-label="sortOrderButton"
+            onClick={() =>
+              handleSort(sortCriteria, sortOrder === 'asc' ? 'desc' : 'asc')
+            }
+          >
             {sortOrder === 'asc' ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}
           </IconButton>
         </Tooltip>
         <Tooltip title={'Filter'}>
-          <IconButton aria-label='filterButton' onClick={handleMenuOpen}>
+          <IconButton aria-label="filterButton" onClick={handleMenuOpen}>
             <FilterAltIcon />
           </IconButton>
         </Tooltip>
         <Tooltip title={'Clear History'}>
-          <Button aria-label='clearHistoryButton' variant="outlined" style={{ borderColor: "#A52A2A", color: "#A52A2A", maxHeight: '32px'}} endIcon={<DeleteIcon />} onClick={() => setClearMenuOpen(true)}>
+          <Button
+            aria-label="clearHistoryButton"
+            variant="outlined"
+            style={{
+              borderColor: '#A52A2A',
+              color: '#A52A2A',
+              maxHeight: '32px',
+            }}
+            endIcon={<DeleteIcon />}
+            onClick={() => setClearMenuOpen(true)}
+          >
             Clear History
           </Button>
         </Tooltip>
@@ -337,10 +475,21 @@ const TranslationHistory = ({ testTranslations, outputLoading, setEditCalled, se
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button aria-label='cancelClearHistoryButton' variant="outlined" onClick={() => setClearMenuOpen(false)} color="primary">
+            <Button
+              aria-label="cancelClearHistoryButton"
+              variant="outlined"
+              onClick={() => setClearMenuOpen(false)}
+              color="primary"
+            >
               Cancel
             </Button>
-            <Button aria-label='confirmClearHistoryButton' variant='contained' onClick={() => handleClearHistory()} color="primary" autoFocus>
+            <Button
+              aria-label="confirmClearHistoryButton"
+              variant="contained"
+              onClick={() => handleClearHistory()}
+              color="primary"
+              autoFocus
+            >
               Confirm
             </Button>
           </DialogActions>
@@ -351,74 +500,131 @@ const TranslationHistory = ({ testTranslations, outputLoading, setEditCalled, se
           onClose={handleMenuClose}
         >
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <IconButton aria-label="closeFilterMenuButton" onClick={handleMenuClose} style={{ fontSize: 'small', position: 'absolute', top: 5, right: 0 }}>
+            <IconButton
+              aria-label="closeFilterMenuButton"
+              onClick={handleMenuClose}
+              style={{
+                fontSize: 'small',
+                position: 'absolute',
+                top: 5,
+                right: 0,
+              }}
+            >
               <CloseIcon />
             </IconButton>
           </div>
-          <div style={{ display: 'flex', marginTop: '10px', marginLeft: '20px', marginRight: '10px' }}>
+          <div
+            style={{
+              display: 'flex',
+              marginTop: '10px',
+              marginLeft: '20px',
+              marginRight: '10px',
+            }}
+          >
             <div style={{ marginRight: '20px' }}>
               <Typography variant="subtitle1">Input Languages:</Typography>
               <div>
-                {Object.keys(nameToLanguage).map(language => (
-                  <FormControlLabel style={{ display: 'block' }}
+                {Object.keys(nameToLanguage).map((language) => (
+                  <FormControlLabel
+                    style={{ display: 'block' }}
                     key={language}
                     control={
                       <Checkbox
                         aria-label={`input${language}Checkbox`}
-                        checked={selectedInputLanguages.includes(nameToLanguage[language])}
-                        onChange={() => handleCheckboxChange(nameToLanguage[language], 'input')}
+                        checked={selectedInputLanguages.includes(
+                          nameToLanguage[language]
+                        )}
+                        onChange={() =>
+                          handleCheckboxChange(
+                            nameToLanguage[language],
+                            'input'
+                          )
+                        }
                       />
                     }
                     label={language}
                   />
                 ))}
               </div>
-              <Button aria-label='selectAllInputFilterButton' onClick={() => handleCheckboxSelectAll('input')}>SELECT ALL</Button>
-              <Button aria-label='clearAllInputFilterButton' onClick={() => handleCheckboxClearAll('input')}>CLEAR</Button>
+              <Button
+                aria-label="selectAllInputFilterButton"
+                onClick={() => handleCheckboxSelectAll('input')}
+              >
+                SELECT ALL
+              </Button>
+              <Button
+                aria-label="clearAllInputFilterButton"
+                onClick={() => handleCheckboxClearAll('input')}
+              >
+                CLEAR
+              </Button>
             </div>
             <div>
               <Typography variant="subtitle1">Output Languages:</Typography>
               <div>
-                {Object.keys(nameToLanguage).map(language => (
-                  <FormControlLabel style={{ display: 'block' }}
+                {Object.keys(nameToLanguage).map((language) => (
+                  <FormControlLabel
+                    style={{ display: 'block' }}
                     key={language}
                     control={
                       <Checkbox
                         aria-label={`output${language}Checkbox`}
-                        checked={selectedOutputLanguages.includes(nameToLanguage[language])}
-                        onChange={() => handleCheckboxChange(nameToLanguage[language], 'output')}
+                        checked={selectedOutputLanguages.includes(
+                          nameToLanguage[language]
+                        )}
+                        onChange={() =>
+                          handleCheckboxChange(
+                            nameToLanguage[language],
+                            'output'
+                          )
+                        }
                       />
                     }
                     label={language}
                   />
                 ))}
               </div>
-              <Button aria-label='selectAllOutputFilterButton' onClick={() => handleCheckboxSelectAll('output')}>SELECT ALL</Button>
-              <Button aria-label='clearAllOutputFilterButton' onClick={() => handleCheckboxClearAll('output')}>CLEAR</Button>
+              <Button
+                aria-label="selectAllOutputFilterButton"
+                onClick={() => handleCheckboxSelectAll('output')}
+              >
+                SELECT ALL
+              </Button>
+              <Button
+                aria-label="clearAllOutputFilterButton"
+                onClick={() => handleCheckboxClearAll('output')}
+              >
+                CLEAR
+              </Button>
             </div>
           </div>
         </Menu>
       </div>
       {filteredTranslations.length === 0 ? (
-        (translations.length === 0) ? (
+        translations.length === 0 ? (
           <Typography variant="subtitle1">You have no translations!</Typography>
         ) : (
-          <Typography variant="subtitle1">No translations match that filtering!</Typography>
+          <Typography variant="subtitle1">
+            No translations match that filtering!
+          </Typography>
         )
       ) : (
         <>
-          {filteredTranslations.slice(startIndex, endIndex).map((translation, index) => (
-            <React.Fragment key={startIndex + index}>
-              <TranslationHistoryItem
-                translation={translation}
-                onDelete={() => handleDelete(startIndex + index)}
-                onEdit={() => handleEdit(startIndex + index)}
-                onExpand={() => handleExpand(startIndex + index)}
-                expanded={startIndex + index === expandedIndex}
-              />
-              {index !== itemsPerPage - 1 && index !== translations.length - 1 && <Divider />}
-            </React.Fragment>
-          ))}
+          {filteredTranslations
+            .slice(startIndex, endIndex)
+            .map((translation, index) => (
+              <React.Fragment key={startIndex + index}>
+                <TranslationHistoryItem
+                  translation={translation}
+                  onDelete={() => handleDelete(startIndex + index)}
+                  onEdit={() => handleEdit(startIndex + index)}
+                  onExpand={() => handleExpand(startIndex + index)}
+                  expanded={startIndex + index === expandedIndex}
+                />
+                {index !== itemsPerPage - 1 &&
+                  index !== translations.length - 1 && <Divider />}
+              </React.Fragment>
+            ))}
           <Pagination
             count={Math.ceil(filteredTranslations.length / itemsPerPage)}
             page={page}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, waitFor} from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { resetPasswordEmail } from '../../firebase';
 import ResetPasswordPage from '../../pages/ResetPasswordPage';
@@ -16,7 +16,9 @@ describe('ResetPasswordPage', () => {
       </Router>
     );
 
-    expect(getByRole('button', { name: /reset password/i })).toBeInTheDocument();
+    expect(
+      getByRole('button', { name: /reset password/i })
+    ).toBeInTheDocument();
   });
 
   it('submits the form correctly', async () => {
