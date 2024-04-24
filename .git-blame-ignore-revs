@@ -1,0 +1,5 @@
+# .git-blame-ignore-revs
+#format frontend components
+019b60b1b157e4022f88192e37db8e47ee3f0410
+#format backend components
+ce271900d3efd00a5139ebda5c0be67e4cf644a4 
