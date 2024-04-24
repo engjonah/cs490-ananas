@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AppBar, Button, Toolbar, Tooltip, Typography } from '@mui/material'
 import { Icon } from './Icon.js'
@@ -17,42 +17,40 @@ function Navbar() {
   const {user} = useAuthContext();
   const navigate = useNavigate();
 
-  let [test, setTest] = useState(null);
+  const handleLogout = useCallback(() =>{
+    logout();
+    navigate('/signin');
+  }, [logout, navigate]);
+  
+  const handleSignIn = useCallback(() =>{
+    navigate('/signin');
+  }, [navigate]);
 
   useEffect(()=>{
-    if (user){
-      fetch(`${ApiUrl}/api/test`, {
-        headers: {
-          'Authorization':`Bearer ${user.token}`
-        }
-      })
-        .then(res => {
-          if (res.status === 401) {
-            logout();
-            navigate('/signin');
-          }
-          else if (!res.ok) {
-            ErrorReport("Auth Check: Something went wrong");
-            throw new Error("something went wrong");
-          }
-          setTest(test);
-          setTest(res);
-          return res;
-        })
-        .catch((err) => {
-          ErrorReport("Navbar:" + err.message);
-          console.log('error here', err);
-        })
+    if (!user) {
+      return;
+    }
+    fetch(`${ApiUrl}/api/test`, {
+      headers: {
+        'Authorization':`Bearer ${user.token}`
       }
-  },[user, test, navigate, logout]);
+    })
+      .then(res => {
+        if (res.status === 401) {
+          handleLogout();
+        }
+        else if (!res.ok) {
+          ErrorReport("Auth Check: Something went wrong");
+          throw new Error("something went wrong");
+        }
+        return res;
+      })
+      .catch((err) => {
+        ErrorReport("Navbar:" + err.message);
+        console.log('error here', err);
+      })
+  }, [user, handleLogout]);
 
-  const handleClick = () =>{
-    navigate('/');
-    logout()
-  }
-  const handleSignIn = () =>{
-    navigate('/signin');
-  }
   return (
     <AppBar position="fixed" sx={{boxShadow: 0, width:'85%', bgcolor: 'transparent', backgroundImage: 'none', mt: 2, paddingRight:'15%'}}>
       <Toolbar  variant="regular"
@@ -97,7 +95,7 @@ function Navbar() {
         </Link>
         )} */}
         { !user && ( <Button sx={{color:'black',fontWeight:'bold'}} onClick={handleSignIn}>Sign In</Button>)}
-        { user && ( <Button sx={{color:'black', fontWeight:'bold'}} onClick={handleClick}>Logout</Button>)}
+        { user && ( <Button sx={{color:'black', fontWeight:'bold'}} onClick={handleLogout}>Logout</Button>)}
        
       </Toolbar>
     </AppBar>
