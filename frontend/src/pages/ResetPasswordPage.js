@@ -29,7 +29,7 @@ const ResetPasswordPage = () => {
     } catch (error) {
       console.log(error.message);
       toast.error(error.message);
-      ErrorReport("Signin page:" + error.message);
+      ErrorReport('Signin page:' + error.message);
     }
   };
 
@@ -51,7 +51,12 @@ const ResetPasswordPage = () => {
           <Typography component="h1" variant="h5">
             Reset Password
           </Typography>
-          <Box component="form" noValidate onSubmit={onSubmitResetPassword} sx={{ mt: 3 }}>
+          <Box
+            component="form"
+            noValidate
+            onSubmit={onSubmitResetPassword}
+            sx={{ mt: 3 }}
+          >
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -69,7 +74,12 @@ const ResetPasswordPage = () => {
                   Reset Password
                 </Button>
               </Grid>
-              <Grid container justifyContent="center" alignContent="center" margin={1}>
+              <Grid
+                container
+                justifyContent="center"
+                alignContent="center"
+                margin={1}
+              >
                 <Link href="/signin" variant="body2">
                   Remembered your password? Sign in
                 </Link>

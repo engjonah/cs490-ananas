@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import DOMPurify from 'dompurify'
-import { TextField } from '@mui/material'
+import DOMPurify from 'dompurify';
+import { TextField } from '@mui/material';
 
 //import './DocumentationPage.css'; // Import CSS for styling
 
@@ -17,11 +17,10 @@ function FAQ() {
     { question: 'How frequently is Ananas updated?', answer: 'Currently, our developers update the application about every 2 weeks.' },
     { question: 'How can I delete or update my account?', answer: 'Navigate to the account page by clicking the person icon on the navigation bar. From there, you can either update your name or delete your account.' },
     { question: 'How can I setup two factor authentication?', answer: 'You can setup two factor authentication by following the instructions on this guide: <a href="https://web.njit.edu/~sd96/2fa-guide.pdf" target="_blank" rel="noopener noreferrer">2FA Guide</a>.' },
-
   ];
 
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   // Filter FAQ items based on search term
   const filteredFAQ = faqData.filter((item) =>
     item.question.toLowerCase().includes(searchTerm.toLowerCase())
@@ -30,12 +29,23 @@ function FAQ() {
   return (
     <div className="faq">
       <h3>Frequently Asked Questions</h3>
-      <TextField placeholder="Search FAQ" label="Search FAQ" variant="outlined" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} fullWidth />
+      <TextField
+        placeholder="Search FAQ"
+        label="Search FAQ"
+        variant="outlined"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        fullWidth
+      />
       <ul>
         {filteredFAQ.map((item, index) => (
           <div key={index}>
             <strong>{item.question}</strong>
-             <p dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(item.answer)}}></p>
+            <p
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(item.answer),
+              }}
+            />
           </div>
         ))}
       </ul>

@@ -1,19 +1,24 @@
 import React, { useState } from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import TextField from '@mui/material/TextField';
-import Tooltip from '@mui/material/Tooltip';
-import Rating from '@mui/material/Rating';
+import {
+  Box,
+  Button,
+  Container,
+  CssBaseline,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Rating,
+  TextField,
+  Tooltip,
+} from '@mui/material';
 import ApiUrl from '../ApiUrl';
 import { ErrorReport } from '../services/ErrorReport';
 import { useAuthContext } from '../hooks/useAuthContext';
-import { CssBaseline, Container, Box, Grid } from '@mui/material';
 import toast from 'react-hot-toast';
 import { GetUID } from '../services/UserInfo';
-import {languageMap} from '../constants.js';
+import { languageMap } from '../constants.js';
 
 function FeedbackForm(props) {
   const [open, setOpen] = useState(false);
@@ -53,11 +58,11 @@ function FeedbackForm(props) {
   };
 
   const storeFeedback = async () => {
-    inputLang = languageMap[inputLang-1]?.name || "Unknown";
-    outputLang = languageMap[outputLang-1]?.name || "Unknown";
+    inputLang = languageMap[inputLang - 1]?.name || 'Unknown';
+    outputLang = languageMap[outputLang - 1]?.name || 'Unknown';
 
     await fetch(`${ApiUrl}/api/feedback`, {
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify({
         uid,
         inputLang,
@@ -67,15 +72,15 @@ function FeedbackForm(props) {
         review,
       }),
       headers: {
-        "Content-type": "application/json",
-        'Authorization': `Bearer ${user.token}`,
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${user.token}`,
       },
     })
       .then(() => {
         toast.success('Feedback Submitted!');
       })
       .catch((err) => {
-        ErrorReport("Feedback Form:" + err.message);
+        ErrorReport('Feedback Form:' + err.message);
         toast.error(err.message);
         console.log(err.message);
       });
@@ -88,31 +93,48 @@ function FeedbackForm(props) {
 
   return (
     <Container>
-      <Tooltip title={translationId ? "Submit Feedback" : "Translate something first!"}>
+      <Tooltip
+        title={translationId ? 'Submit Feedback' : 'Translate something first!'}
+      >
         <span>
-          <Button disabled={!translationId} variant="contained" style={{ backgroundColor: '#CACACA', color: 'black'}} onClick={handleOpen}>
+          <Button
+            disabled={!translationId}
+            variant="contained"
+            style={{ backgroundColor: '#CACACA', color: 'black' }}
+            onClick={handleOpen}
+          >
             Feedback
           </Button>
         </span>
       </Tooltip>
-      <CssBaseline/>
+      <CssBaseline />
       <Dialog open={open} onClose={handleClose} maxWidth="xs">
-        <Box sx={{ width:'auto', maxWidth: '600px', backgroundColor: '#d3d3d3' }}>
+        <Box
+          sx={{ width: 'auto', maxWidth: '600px', backgroundColor: '#d3d3d3' }}
+        >
           <Grid container direction="column">
-            <Grid item >
-              <DialogTitle style={{ fontSize: '30px', fontWeight: 'normal', textAlign: 'center'}}>
-                Rate This Translation 
+            <Grid item>
+              <DialogTitle
+                style={{
+                  fontSize: '30px',
+                  fontWeight: 'normal',
+                  textAlign: 'center',
+                }}
+              >
+                Rate This Translation
               </DialogTitle>
             </Grid>
-            <Grid item style={{textAlign:'center'}}>
+            <Grid item style={{ textAlign: 'center' }}>
               <Rating
                 name="feedback-rating"
                 value={rating}
-                onChange={(event, newValue) => { handleRatingChange(newValue); }}
+                onChange={(event, newValue) => {
+                  handleRatingChange(newValue);
+                }}
                 size="large"
               />
             </Grid>
-            <Grid item style={{width:'400px'}}>
+            <Grid item style={{ width: '400px' }}>
               <DialogContent>
                 <TextField
                   autoFocus
@@ -124,19 +146,18 @@ function FeedbackForm(props) {
                   onChange={handleReviewChange}
                   multiline={true}
                   inputProps={{
-                    maxLength: characterLimit // Sets the maximum character length
+                    maxLength: characterLimit, // Sets the maximum character length
                   }}
-                  
                   helperText={`${review.length}/${characterLimit} characters`} // Shows character count
                 />
               </DialogContent>
             </Grid>
             <Grid item>
               <DialogActions>
-                <Button onClick={handleClose} style={{color: 'black'}}>
+                <Button onClick={handleClose} style={{ color: 'black' }}>
                   Cancel
                 </Button>
-                <Button onClick={handleSubmit} style={{color: 'black'}}>
+                <Button onClick={handleSubmit} style={{ color: 'black' }}>
                   Submit
                 </Button>
               </DialogActions>
@@ -147,6 +168,5 @@ function FeedbackForm(props) {
     </Container>
   );
 }
-
 
 export default FeedbackForm;

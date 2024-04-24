@@ -15,7 +15,8 @@ describe('HomePage', () => {
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
-        json: () => Promise.resolve({ RatingCounts: [1, 2, 3, 4, 5], AverageRating: 3 }),
+        json: () =>
+          Promise.resolve({ RatingCounts: [1, 2, 3, 4, 5], AverageRating: 3 }),
       })
     );
 
@@ -26,18 +27,21 @@ describe('HomePage', () => {
 
     expect(screen.getByText('Average Rating: 3 / 5')).toBeInTheDocument();
   });
-  
+
   test('renders Translate Now! button and routes correctly', () => {
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
-        json: () => Promise.resolve({ RatingCounts: [1, 2, 3, 4, 5], AverageRating: 3 }),
+        json: () =>
+          Promise.resolve({ RatingCounts: [1, 2, 3, 4, 5], AverageRating: 3 }),
       })
     );
 
     const { container } = render(<HomePage />, { wrapper: MemoryRouter });
 
-    const translateButton = screen.getByRole('button', { name: 'Translate Now' });
+    const translateButton = screen.getByRole('button', {
+      name: 'Translate Now',
+    });
     expect(translateButton).toBeInTheDocument();
 
     // Simulate a click on the Translate Now! button

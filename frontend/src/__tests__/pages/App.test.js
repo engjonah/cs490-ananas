@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import App from '../../App.js';
 import { useAuthContext } from '../../hooks/useAuthContext.js';
 import { initRecaptcha } from '../../firebase';
-let firebase = require('firebase/auth')
+let firebase = require('firebase/auth');
 
 jest.mock('../../hooks/useAuthContext', () => ({
   useAuthContext: jest.fn(),

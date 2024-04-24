@@ -3,7 +3,9 @@ import { render } from '@testing-library/react';
 import AccountPage from '../../pages/AccountPage';
 
 // Mocking AccountDetails component
-jest.mock('../../components/AccountDetails', () => () => <div data-testid="mock-account-details">Mock AccountDetails</div>);
+jest.mock('../../components/AccountDetails', () => () => (
+  <div data-testid="mock-account-details">Mock AccountDetails</div>
+));
 
 describe('AccountPage component', () => {
   it('renders AccountDetails component', () => {

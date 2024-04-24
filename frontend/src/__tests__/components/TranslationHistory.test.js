@@ -10,15 +10,15 @@ jest.mock('../../hooks/useAuthContext', () => ({
 }));
 
 const languageNames = [
-  "Unknown",
-  "Python",
-  "Java",
-  "C++",
-  "Ruby",
-  "C#",
-  "JavaScript",
-  "Kotlin",
-  "Objective-C",
+  'Unknown',
+  'Python',
+  'Java',
+  'C++',
+  'Ruby',
+  'C#',
+  'JavaScript',
+  'Kotlin',
+  'Objective-C',
 ];
 
 const sampleTranslations = languageNames.map((lang, index) => ({
@@ -37,76 +37,90 @@ describe('TranslationHistory Component', () => {
   });
 
   test('renders translation history correctly', async () => {
-    useAuthContext.mockReturnValue({user : {token : 123}});
+    useAuthContext.mockReturnValue({ user: { token: 123 } });
     localStorage.setItem('user', JSON.stringify({ uid: '123' }));
 
     global.fetch = jest.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve({ Translations: sampleTranslations }),
-      }),
-    )
+      })
+    );
 
-    const { getByText, getByLabelText } = render(<TranslationHistory testTranslations={sampleTranslations}/>);
+    const { getByText, getByLabelText } = render(
+      <TranslationHistory testTranslations={sampleTranslations} />
+    );
 
     expect(getByText('Translation History')).toBeInTheDocument();
     expect(getByLabelText('inputLabelPython')).toBeInTheDocument();
   });
 
   test('deletes translation on button click', async () => {
-    useAuthContext.mockReturnValue({user : {token : 123}});
+    useAuthContext.mockReturnValue({ user: { token: 123 } });
     localStorage.setItem('user', JSON.stringify({ uid: '123' }));
 
     global.fetch = jest.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve({ Translations: sampleTranslations }),
-      }),
-    )
+      })
+    );
 
-    const { getByText, getByLabelText, queryByText } = render(<TranslationHistory 
-      testTranslations={[{
-        _id: '1',
-        inputLang: `Python`,
-        outputLang: `Java`,
-        inputCode: `inputcode1`,
-        outputCode: `outputcode1`,
-        status: 200,
-        translatedAt: Date.now(),
-      }]}
-    />);
-    
+    const { getByText, getByLabelText, queryByText } = render(
+      <TranslationHistory
+        testTranslations={[
+          {
+            _id: '1',
+            inputLang: `Python`,
+            outputLang: `Java`,
+            inputCode: `inputcode1`,
+            outputCode: `outputcode1`,
+            status: 200,
+            translatedAt: Date.now(),
+          },
+        ]}
+      />
+    );
+
     expect(queryByText('Python')).toBeInTheDocument();
 
     fireEvent.click(getByLabelText('delete'));
-    expect(global.fetch).toHaveBeenCalledWith(`${ApiUrl}/api/translateHistory/1`, { 
-      method: 'DELETE',
-      headers: {
-        "Content-type": "application/json",
-        'Authorization':`Bearer 123`
-      }});
+    expect(global.fetch).toHaveBeenCalledWith(
+      `${ApiUrl}/api/translateHistory/1`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-type': 'application/json',
+          Authorization: `Bearer 123`,
+        },
+      }
+    );
     expect(getByText('You have no translations!')).toBeInTheDocument();
   });
 
   test('expands translation on button click', async () => {
-    useAuthContext.mockReturnValue({user : {token : 123}});
+    useAuthContext.mockReturnValue({ user: { token: 123 } });
     localStorage.setItem('user', JSON.stringify({ uid: '123' }));
 
     global.fetch = jest.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve({ Translations: sampleTranslations }),
-      }),
-    )
+      })
+    );
 
-    const { getByText, getByLabelText } = render(<TranslationHistory 
-      testTranslations={[{
-        _id: '1',
-        inputLang: `Python`,
-        outputLang: `Java`,
-        inputCode: `inputcode1`,
-        outputCode: `outputcode1`,
-        status: 200,
-        translatedAt: Date.now(),
-      }]}
-    />);
+    const { getByText, getByLabelText } = render(
+      <TranslationHistory
+        testTranslations={[
+          {
+            _id: '1',
+            inputLang: `Python`,
+            outputLang: `Java`,
+            inputCode: `inputcode1`,
+            outputCode: `outputcode1`,
+            status: 200,
+            translatedAt: Date.now(),
+          },
+        ]}
+      />
+    );
 
     fireEvent.click(getByLabelText('expand'));
     expect(getByText('Input Code:')).toBeInTheDocument();
@@ -114,16 +128,18 @@ describe('TranslationHistory Component', () => {
   });
 
   test('handles pagination correctly', async () => {
-    useAuthContext.mockReturnValue({user : {token : 123}});
+    useAuthContext.mockReturnValue({ user: { token: 123 } });
     localStorage.setItem('user', JSON.stringify({ uid: '123' }));
 
     global.fetch = jest.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve({ Translations: sampleTranslations }),
-      }),
-    )
+      })
+    );
 
-    const { getByText, queryByText, getByLabelText, queryByLabelText } = render(<TranslationHistory testTranslations={sampleTranslations}/>);
+    const { getByText, queryByText, getByLabelText, queryByLabelText } = render(
+      <TranslationHistory testTranslations={sampleTranslations} />
+    );
 
     expect(getByLabelText('inputLabelPython')).toBeInTheDocument();
     expect(queryByLabelText('inputLabelJavaScript')).not.toBeInTheDocument();
@@ -135,16 +151,18 @@ describe('TranslationHistory Component', () => {
   });
 
   test('renders filtering correctly', async () => {
-    useAuthContext.mockReturnValue({user : {token : 123}});
+    useAuthContext.mockReturnValue({ user: { token: 123 } });
     localStorage.setItem('user', JSON.stringify({ uid: '123' }));
 
     global.fetch = jest.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve({ Translations: sampleTranslations }),
-      }),
-    )
+      })
+    );
 
-    const { getByText, queryByText, getByLabelText, queryByLabelText } = render(<TranslationHistory testTranslations={sampleTranslations}/>);
+    const { getByText, queryByText, getByLabelText, queryByLabelText } = render(
+      <TranslationHistory testTranslations={sampleTranslations} />
+    );
 
     expect(queryByText('Input Languages:')).not.toBeInTheDocument();
     expect(queryByText('Output Languages:')).not.toBeInTheDocument();
@@ -158,16 +176,18 @@ describe('TranslationHistory Component', () => {
   });
 
   test('clear filters button and select all filters button', async () => {
-    useAuthContext.mockReturnValue({user : {token : 123}});
+    useAuthContext.mockReturnValue({ user: { token: 123 } });
     localStorage.setItem('user', JSON.stringify({ uid: '123' }));
 
     global.fetch = jest.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve({ Translations: sampleTranslations }),
-      }),
-    )
+      })
+    );
 
-    const { getByText, getByLabelText, queryByText, queryByLabelText } = render(<TranslationHistory testTranslations={sampleTranslations}/>);
+    const { getByText, getByLabelText, queryByText, queryByLabelText } = render(
+      <TranslationHistory testTranslations={sampleTranslations} />
+    );
 
     expect(getByLabelText('inputLabelUnknown')).toBeInTheDocument();
     expect(getByLabelText('inputLabelPython')).toBeInTheDocument();
@@ -179,7 +199,9 @@ describe('TranslationHistory Component', () => {
     fireEvent.click(getByLabelText('clearAllInputFilterButton'));
     fireEvent.click(getByLabelText('closeFilterMenuButton'));
 
-    expect(getByText('No translations match that filtering!')).toBeInTheDocument();
+    expect(
+      getByText('No translations match that filtering!')
+    ).toBeInTheDocument();
 
     expect(queryByLabelText('inputLabelUnknown')).not.toBeInTheDocument();
     expect(queryByLabelText('inputLabelPython')).not.toBeInTheDocument();
@@ -191,7 +213,9 @@ describe('TranslationHistory Component', () => {
     fireEvent.click(getByLabelText('selectAllInputFilterButton'));
     fireEvent.click(getByLabelText('closeFilterMenuButton'));
 
-    expect(queryByText('No translations match that filtering!')).not.toBeInTheDocument();
+    expect(
+      queryByText('No translations match that filtering!')
+    ).not.toBeInTheDocument();
 
     expect(getByLabelText('inputLabelUnknown')).toBeInTheDocument();
     expect(getByLabelText('inputLabelPython')).toBeInTheDocument();
@@ -201,17 +225,19 @@ describe('TranslationHistory Component', () => {
   });
 
   test('input filter checkboxes', async () => {
-    useAuthContext.mockReturnValue({user : {token : 123}});
+    useAuthContext.mockReturnValue({ user: { token: 123 } });
     localStorage.setItem('user', JSON.stringify({ uid: '123' }));
 
     global.fetch = jest.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve({ Translations: sampleTranslations }),
-      }),
-    )
+      })
+    );
 
-    const { queryByLabelText, getByLabelText} = render(<TranslationHistory testTranslations={sampleTranslations}/>);
-    
+    const { queryByLabelText, getByLabelText } = render(
+      <TranslationHistory testTranslations={sampleTranslations} />
+    );
+
     fireEvent.click(getByLabelText('filterButton'));
     fireEvent.click(getByLabelText('clearAllInputFilterButton'));
     fireEvent.click(getByLabelText('closeFilterMenuButton'));
@@ -222,12 +248,14 @@ describe('TranslationHistory Component', () => {
       fireEvent.click(getByLabelText('filterButton'));
       fireEvent.click(getByLabelText(`input${language}Checkbox`));
       fireEvent.click(getByLabelText('closeFilterMenuButton'));
-      
+
       expect(getByLabelText(`inputLabel${language}`)).toBeInTheDocument();
       languageNames
         .filter((lang) => lang !== language)
         .forEach((otherLanguage) => {
-          expect(queryByLabelText(`inputLabel${otherLanguage}`)).not.toBeInTheDocument();
+          expect(
+            queryByLabelText(`inputLabel${otherLanguage}`)
+          ).not.toBeInTheDocument();
         });
 
       fireEvent.click(getByLabelText('filterButton'));
@@ -237,33 +265,39 @@ describe('TranslationHistory Component', () => {
   });
 
   test('output filter checkboxes', async () => {
-    useAuthContext.mockReturnValue({user : {token : 123}});
+    useAuthContext.mockReturnValue({ user: { token: 123 } });
     localStorage.setItem('user', JSON.stringify({ uid: '123' }));
 
     global.fetch = jest.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve({ Translations: sampleTranslations }),
-      }),
-    )
+      })
+    );
 
-    const { queryByLabelText, getByLabelText} = render(<TranslationHistory testTranslations={sampleTranslations}/>);
-    
+    const { queryByLabelText, getByLabelText } = render(
+      <TranslationHistory testTranslations={sampleTranslations} />
+    );
+
     fireEvent.click(getByLabelText('filterButton'));
     fireEvent.click(getByLabelText('clearAllOutputFilterButton'));
     fireEvent.click(getByLabelText('closeFilterMenuButton'));
 
     languageNames.forEach((language) => {
-      expect(queryByLabelText(`outputLabel${language}`)).not.toBeInTheDocument();
+      expect(
+        queryByLabelText(`outputLabel${language}`)
+      ).not.toBeInTheDocument();
 
       fireEvent.click(getByLabelText('filterButton'));
       fireEvent.click(getByLabelText(`output${language}Checkbox`));
       fireEvent.click(getByLabelText('closeFilterMenuButton'));
-      
+
       expect(getByLabelText(`outputLabel${language}`)).toBeInTheDocument();
       languageNames
         .filter((lang) => lang !== language)
         .forEach((otherLanguage) => {
-          expect(queryByLabelText(`outputLabel${otherLanguage}`)).not.toBeInTheDocument();
+          expect(
+            queryByLabelText(`outputLabel${otherLanguage}`)
+          ).not.toBeInTheDocument();
         });
 
       fireEvent.click(getByLabelText('filterButton'));
@@ -273,16 +307,18 @@ describe('TranslationHistory Component', () => {
   });
 
   test('sort order change', async () => {
-    useAuthContext.mockReturnValue({user : {token : 123}});
+    useAuthContext.mockReturnValue({ user: { token: 123 } });
     localStorage.setItem('user', JSON.stringify({ uid: '123' }));
 
     global.fetch = jest.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve({ Translations: sampleTranslations }),
-      }),
-    )
+      })
+    );
 
-    const { queryByLabelText, getByLabelText} = render(<TranslationHistory testTranslations={sampleTranslations}/>);
+    const { queryByLabelText, getByLabelText } = render(
+      <TranslationHistory testTranslations={sampleTranslations} />
+    );
 
     expect(getByLabelText('inputLabelPython')).toBeInTheDocument();
     expect(queryByLabelText('inputLabelKotlin')).not.toBeInTheDocument();
@@ -292,43 +328,53 @@ describe('TranslationHistory Component', () => {
   });
 
   test('sort categories change', async () => {
-    useAuthContext.mockReturnValue({user : {token : 123}});
+    useAuthContext.mockReturnValue({ user: { token: 123 } });
     localStorage.setItem('user', JSON.stringify({ uid: '123' }));
 
     global.fetch = jest.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve({ Translations: sampleTranslations }),
-      }),
-    )
+      })
+    );
 
-    const { queryByLabelText, getByLabelText} = render(<TranslationHistory testTranslations={sampleTranslations}/>);
+    const { queryByLabelText, getByLabelText } = render(
+      <TranslationHistory testTranslations={sampleTranslations} />
+    );
 
     expect(getByLabelText('inputLabelPython')).toBeInTheDocument();
     expect(queryByLabelText('inputLabelKotlin')).not.toBeInTheDocument();
-    fireEvent.change(getByLabelText('sortCategoriesButton').querySelector('input'), {
-      target: { value: "inputLang" }
-    });
+    fireEvent.change(
+      getByLabelText('sortCategoriesButton').querySelector('input'),
+      {
+        target: { value: 'inputLang' },
+      }
+    );
     expect(getByLabelText('inputLabelRuby')).toBeInTheDocument();
     expect(queryByLabelText('inputLabelC++')).not.toBeInTheDocument();
 
-    fireEvent.change(getByLabelText('sortCategoriesButton').querySelector('input'), {
-      target: { value: "outputLang" }
-    });
+    fireEvent.change(
+      getByLabelText('sortCategoriesButton').querySelector('input'),
+      {
+        target: { value: 'outputLang' },
+      }
+    );
     expect(getByLabelText('outputLabelRuby')).toBeInTheDocument();
     expect(queryByLabelText('outputLabelC++')).not.toBeInTheDocument();
   });
 
   test('clear history button works', async () => {
-    useAuthContext.mockReturnValue({user : {token : 123}});
+    useAuthContext.mockReturnValue({ user: { token: 123 } });
     localStorage.setItem('user', JSON.stringify({ uid: '123' }));
 
     global.fetch = jest.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve({ Translations: sampleTranslations }),
-      }),
-    )
+      })
+    );
 
-    const { getByLabelText, queryByText, getByText} = render(<TranslationHistory testTranslations={sampleTranslations}/>);
+    const { getByLabelText, queryByText, getByText } = render(
+      <TranslationHistory testTranslations={sampleTranslations} />
+    );
 
     expect(queryByText('You have no translations!')).not.toBeInTheDocument();
     fireEvent.click(getByLabelText('clearHistoryButton'));
