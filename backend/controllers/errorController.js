@@ -1,4 +1,4 @@
-let Error = require("../models/Error.model");
+let Error = require('../models/Error.model');
 
 const insertError = async (req, res) => {
   try {
@@ -8,7 +8,7 @@ const insertError = async (req, res) => {
       error,
     });
     await newError.save();
-    res.status(201).json({ Message: "Error saved!" });
+    res.status(201).json({ Message: 'Error saved!' });
   } catch (error) {
     console.log(`error occured : ${error.message}`);
   }
